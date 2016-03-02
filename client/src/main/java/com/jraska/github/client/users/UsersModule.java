@@ -19,7 +19,7 @@ public final class UsersModule {
     return retrofit.create(GitHubUsersApi.class);
   }
 
-  @Provides @PerApp UsersApi provideUsersApi(GitHubUsersApi gitHubUsersApi) {
-    return new UsersApiImpl(gitHubUsersApi);
+  @Provides @PerApp UsersRepository provideUsersApi(GitHubUsersApi gitHubUsersApi) {
+    return new UsersRepositoryImpl(gitHubUsersApi);
   }
 }

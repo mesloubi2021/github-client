@@ -6,10 +6,10 @@ import rx.Observable;
 import java.util.ArrayList;
 import java.util.List;
 
-final class UsersApiImpl implements UsersApi {
+final class UsersRepositoryImpl implements UsersRepository {
   private final GitHubUsersApi _gitHubUsersApi;
 
-  public UsersApiImpl(@NonNull GitHubUsersApi gitHubUsersApi) {
+  public UsersRepositoryImpl(@NonNull GitHubUsersApi gitHubUsersApi) {
     _gitHubUsersApi = gitHubUsersApi;
   }
 

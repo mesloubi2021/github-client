@@ -4,6 +4,6 @@ import rx.Observable;
 
 import java.util.List;
 
-public interface UsersApi {
+public interface UsersRepository {
   Observable<List<User>> getUsers(int since);
 }

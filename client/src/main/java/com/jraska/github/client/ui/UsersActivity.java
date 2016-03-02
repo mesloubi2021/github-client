@@ -10,7 +10,7 @@ import butterknife.ButterKnife;
 import com.jraska.github.client.GitHubClientApp;
 import com.jraska.github.client.R;
 import com.jraska.github.client.users.User;
-import com.jraska.github.client.users.UsersApi;
+import com.jraska.github.client.users.UsersRepository;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -22,7 +22,7 @@ public class UsersActivity extends AppCompatActivity {
   @Bind(R.id.toolbar) Toolbar _toolbar;
   @Bind(R.id.users_recycler) RecyclerView _usersRecyclerView;
 
-  @Inject UsersApi _usersApi;
+  @Inject UsersRepository _usersRepository;
   @Inject UsersAdapter _usersAdapter;
 
   GitHubClientApp getApp() {
@@ -41,7 +41,7 @@ public class UsersActivity extends AppCompatActivity {
     _usersRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     _usersRecyclerView.setAdapter(_usersAdapter);
 
-    _usersApi.getUsers(0)
+    _usersRepository.getUsers(0)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(this::onUsersLoaded);
