@@ -5,7 +5,7 @@ package com.jraska.github.client.users;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class GitHubUser {
+final class GitHubUser {
 
   @SerializedName("login")
   @Expose

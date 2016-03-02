@@ -8,7 +8,7 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module
-public class UsersModule {
+public final class UsersModule {
   @Provides @PerApp GitHubUsersApi provideGitHubUsersApi() {
     Retrofit retrofit = new Retrofit.Builder()
         .baseUrl("https://api.github.com")

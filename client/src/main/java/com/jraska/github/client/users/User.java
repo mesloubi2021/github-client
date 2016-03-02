@@ -2,7 +2,7 @@ package com.jraska.github.client.users;
 
 import android.support.annotation.NonNull;
 
-public class User {
+public final class User {
   @NonNull
   public final String _login;
 
