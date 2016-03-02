@@ -5,6 +5,7 @@ import rx.Observable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 final class UsersRepositoryImpl implements UsersRepository {
   private final GitHubUsersApi _gitHubUsersApi;
@@ -14,7 +15,9 @@ final class UsersRepositoryImpl implements UsersRepository {
   }
 
   @Override public Observable<List<User>> getUsers(int since) {
-    return _gitHubUsersApi.getUsers(since).map(this::translateUsers);
+    return _gitHubUsersApi.getUsers(since)
+        .debounce(5, TimeUnit.SECONDS)
+        .map(this::translateUsers);
   }
 
   List<User> translateUsers(List<GitHubUser> gitHubUsers) {
@@ -27,6 +30,7 @@ final class UsersRepositoryImpl implements UsersRepository {
   }
 
   private User translateUser(GitHubUser gitHubUser) {
-    return new User(gitHubUser.login);
+    boolean isAdmin = gitHubUser.siteAdmin == null ? false : gitHubUser.siteAdmin;
+    return new User(gitHubUser.login, gitHubUser.avatarUrl, isAdmin);
   }
 }

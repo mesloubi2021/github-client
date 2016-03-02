@@ -1,11 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="64dp">
+    android:layout_height="@dimen/list_item_height"
+    android:background="@android:drawable/list_selector_background"
+    android:id="@+id/user_container"
+    tools:background="#bbbbbb">
+
+    <ImageView
+        android:id="@+id/user_avatar"
+        android:layout_width="@dimen/icon_size"
+        android:layout_height="@dimen/icon_size"
+        android:layout_marginTop="@dimen/list_item_vertical_margin"
+        android:layout_marginLeft="@dimen/side_padding"
+        android:layout_marginRight="@dimen/side_padding"
+        tools:src="@android:drawable/ic_dialog_info"/>
 
     <TextView
         android:id="@+id/user_login"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-</LinearLayout>
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:layout_toEndOf="@id/user_avatar"
+        android:layout_toRightOf="@id/user_avatar"
+        android:layout_toLeftOf="@+id/user_admin_image"
+        android:layout_toStartOf="@+id/user_admin_image"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:textSize="@dimen/textTitle"
+        android:textColor="@color/textMain"
+        tools:text="Long title when the user types too much" />
+
+    <ImageView
+        android:id="@+id/user_admin_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:src="@drawable/ic_admin_24dp"
+        android:padding="@dimen/padding_small"
+        android:layout_marginTop="@dimen/padding_medium"
+        android:layout_marginRight="@dimen/padding_small"
+        android:layout_marginEnd="@dimen/padding_small"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:clickable="true"
+        android:background="@android:drawable/list_selector_background"
+        tools:visibility="visible"/>
+
+</RelativeLayout>
