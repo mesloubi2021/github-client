@@ -7,7 +7,9 @@ import dagger.Component;
 
 @PerApp
 @Component(modules = {
-    UsersModule.class
+    UsersModule.class,
+    SystemServicesModule.class,
+    AppModule.class
 })
 public interface AppComponent {
   void inject(UsersActivity usersActivity);

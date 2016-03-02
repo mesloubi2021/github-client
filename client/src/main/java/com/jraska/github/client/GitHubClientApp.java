@@ -14,7 +14,9 @@ public class GitHubClientApp extends Application {
   public void onCreate() {
     super.onCreate();
 
-    _appComponent = DaggerAppComponent.builder().build();
+    _appComponent = DaggerAppComponent.builder()
+        .appModule(new AppModule(this))
+        .build();
 
     Timber.plant(new Timber.DebugTree());
   }
