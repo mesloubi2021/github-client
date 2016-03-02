@@ -6,11 +6,15 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
 public class UsersActivityTest {
   @Test
-  public void whenCreated_thenNoException() throws Exception {
-    Robolectric.setupActivity(UsersActivity.class);
+  public void whenCreated_thenUsersApiInjected() throws Exception {
+    UsersActivity usersActivity = Robolectric.setupActivity(UsersActivity.class);
+
+    assertThat(usersActivity._usersApi).isNotNull();
   }
 }
