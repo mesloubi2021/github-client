@@ -1,8 +1,8 @@
 package com.jraska.github.client.users;
 
-import android.database.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
+import rx.Observable;
 
 import java.util.List;
 
