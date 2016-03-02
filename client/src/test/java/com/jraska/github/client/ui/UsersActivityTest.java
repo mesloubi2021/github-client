@@ -1,5 +1,7 @@
-package com.jraska.github.client;
+package com.jraska.github.client.ui;
 
+import com.jraska.github.client.BuildConfig;
+import com.jraska.github.client.ui.UsersActivity;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;

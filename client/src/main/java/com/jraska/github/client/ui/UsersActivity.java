@@ -1,10 +1,12 @@
-package com.jraska.github.client;
+package com.jraska.github.client.ui;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import com.jraska.github.client.GitHubClientApp;
+import com.jraska.github.client.R;
 import com.jraska.github.client.users.UsersApi;
 
 import javax.inject.Inject;
