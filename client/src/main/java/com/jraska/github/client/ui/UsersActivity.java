@@ -17,27 +17,19 @@ import rx.schedulers.Schedulers;
 import javax.inject.Inject;
 import java.util.List;
 
-public class UsersActivity extends AppCompatActivity {
+public class UsersActivity extends BaseActivity {
 
-  @Bind(R.id.toolbar) Toolbar _toolbar;
   @Bind(R.id.users_recycler) RecyclerView _usersRecyclerView;
 
   @Inject UsersRepository _usersRepository;
   @Inject UsersAdapter _usersAdapter;
 
-  GitHubClientApp getApp() {
-    return (GitHubClientApp) getApplication();
-  }
-
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_users_list);
+    getComponent().inject(this);
 
-    getApp().getComponent().inject(this);
-    ButterKnife.bind(this);
-
-    setSupportActionBar(_toolbar);
     _usersRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     _usersRecyclerView.setAdapter(_usersAdapter);
 

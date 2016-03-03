@@ -15,9 +15,7 @@ final class UsersRepositoryImpl implements UsersRepository {
   }
 
   @Override public Observable<List<User>> getUsers(int since) {
-    return _gitHubUsersApi.getUsers(since)
-        .debounce(5, TimeUnit.SECONDS)
-        .map(this::translateUsers);
+    return _gitHubUsersApi.getUsers(since).map(this::translateUsers);
   }
 
   List<User> translateUsers(List<GitHubUser> gitHubUsers) {
