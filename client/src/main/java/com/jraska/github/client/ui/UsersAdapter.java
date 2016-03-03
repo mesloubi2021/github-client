@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -24,15 +23,21 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserHolder> 
   private final LayoutInflater _inflater;
   private final Picasso _picasso;
 
+  private UserClickListener _userClickListener;
+
   @Inject
   public UsersAdapter(LayoutInflater inflater, Picasso picasso) {
     _inflater = inflater;
     _picasso = picasso;
   }
 
+  public void setUserClickListener(UserClickListener userClickListener) {
+    _userClickListener = userClickListener;
+  }
+
   @Override public UserHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     View inflated = _inflater.inflate(R.layout.item_row_user, parent, false);
-    return new UserHolder(inflated);
+    return new UserHolder(this, inflated);
   }
 
   @Override public void onBindViewHolder(UserHolder holder, int position) {
@@ -56,18 +61,32 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserHolder> 
     _users.addAll(users);
   }
 
+  void onItemClicked(int position) {
+    if (_userClickListener != null) {
+      User user = _users.get(position);
+      _userClickListener.onUserClicked(user);
+    }
+  }
+
+  interface UserClickListener {
+    void onUserClicked(User user);
+  }
+
   public static class UserHolder extends RecyclerView.ViewHolder {
     @Bind(R.id.user_login) TextView _loginTextView;
     @Bind(R.id.user_avatar) ImageView _avatarView;
     @Bind(R.id.user_admin_image) View _adminView;
 
-    public UserHolder(View itemView) {
+    private final UsersAdapter _adapter;
+
+    public UserHolder(UsersAdapter adapter, View itemView) {
       super(itemView);
       ButterKnife.bind(this, itemView);
+      _adapter = adapter;
     }
 
     @OnClick(R.id.user_container) void onItemClick() {
-      Toast.makeText(_loginTextView.getContext(), "Item " + getAdapterPosition(), Toast.LENGTH_SHORT).show();
+      _adapter.onItemClicked(getAdapterPosition());
     }
   }
 }

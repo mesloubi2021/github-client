@@ -5,7 +5,6 @@ import rx.Observable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 final class UsersRepositoryImpl implements UsersRepository {
   private final GitHubUsersApi _gitHubUsersApi;
@@ -29,6 +28,6 @@ final class UsersRepositoryImpl implements UsersRepository {
 
   private User translateUser(GitHubUser gitHubUser) {
     boolean isAdmin = gitHubUser.siteAdmin == null ? false : gitHubUser.siteAdmin;
-    return new User(gitHubUser.login, gitHubUser.avatarUrl, isAdmin);
+    return new User(gitHubUser.login, gitHubUser.avatarUrl, isAdmin, gitHubUser.htmlUrl);
   }
 }
