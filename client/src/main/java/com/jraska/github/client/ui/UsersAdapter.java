@@ -22,12 +22,12 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserHolder> 
   private final List<User> _users = new ArrayList<>();
   private final LayoutInflater _inflater;
   private final Picasso _picasso;
-  private GitHubIconClickedHandler _handler;
+  private GitHubIconClickHandler _handler;
 
   private UserClickListener _userClickListener;
 
   @Inject
-  public UsersAdapter(LayoutInflater inflater, Picasso picasso, GitHubIconClickedHandler handler) {
+  public UsersAdapter(LayoutInflater inflater, Picasso picasso, GitHubIconClickHandler handler) {
     _inflater = inflater;
     _picasso = picasso;
     _handler = handler;

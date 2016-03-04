@@ -9,8 +9,6 @@ import butterknife.ButterKnife;
 import com.jraska.github.client.GitHubClientApp;
 import com.jraska.github.client.R;
 
-import javax.inject.Inject;
-
 public class BaseActivity extends AppCompatActivity {
 
   @Bind(R.id.toolbar) protected Toolbar _toolbar;

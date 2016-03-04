@@ -19,7 +19,7 @@ public class UserDetailActivity extends BaseActivity {
   @Bind(R.id.user_detail_avatar) ImageView _avatarView;
 
   @Inject Picasso _picasso;
-  @Inject GitHubIconClickedHandler _gitHubIconClickedHandler;
+  @Inject GitHubIconClickHandler _gitHubIconClickHandler;
 
   private User _user;
 
@@ -36,7 +36,7 @@ public class UserDetailActivity extends BaseActivity {
   }
 
   @OnClick(R.id.user_detail_github_fab) void gitHubFabClicked() {
-    _gitHubIconClickedHandler.userGitHubClicked(_user);
+    _gitHubIconClickHandler.userGitHubClicked(_user);
   }
 
   public static void start(Activity inActivity, User user) {

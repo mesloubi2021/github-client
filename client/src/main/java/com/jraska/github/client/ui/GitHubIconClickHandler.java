@@ -7,11 +7,11 @@ import com.jraska.github.client.users.User;
 
 import javax.inject.Inject;
 
-public class GitHubIconClickedHandler {
+public class GitHubIconClickHandler {
   private final Activity _activity;
 
   @Inject
-  public GitHubIconClickedHandler(Activity activity) {
+  public GitHubIconClickHandler(Activity activity) {
     _activity = activity;
   }
 
