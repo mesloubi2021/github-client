@@ -16,7 +16,7 @@ public class ActivityModule {
     return baseActivity;
   }
 
-  @Provides BaseActivity provideActivity() {
+  @Provides BaseActivity provideBaseActivity() {
     return _activity;
   }
 }
