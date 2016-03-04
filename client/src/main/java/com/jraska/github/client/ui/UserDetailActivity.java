@@ -2,7 +2,6 @@ package com.jraska.github.client.ui;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.widget.ImageView;
 import butterknife.Bind;
@@ -20,6 +19,7 @@ public class UserDetailActivity extends BaseActivity {
   @Bind(R.id.user_detail_avatar) ImageView _avatarView;
 
   @Inject Picasso _picasso;
+  @Inject GitHubIconClickedHandler _gitHubIconClickedHandler;
 
   private User _user;
 
@@ -35,10 +35,8 @@ public class UserDetailActivity extends BaseActivity {
     _picasso.load(_user._avatarUrl).into(_avatarView);
   }
 
-  @OnClick(R.id.user_detail_github_fab) void showGitHub() {
-    Intent intent = new Intent(Intent.ACTION_VIEW);
-    intent.setData(Uri.parse(_user._gitHubUrl));
-    startActivity(intent);
+  @OnClick(R.id.user_detail_github_fab) void gitHubFabClicked() {
+    _gitHubIconClickedHandler.userGitHubClicked(_user);
   }
 
   public static void start(Activity inActivity, User user) {

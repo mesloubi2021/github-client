@@ -6,9 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import com.jraska.github.client.AppComponent;
 import com.jraska.github.client.GitHubClientApp;
 import com.jraska.github.client.R;
+
+import javax.inject.Inject;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -41,7 +42,7 @@ public class BaseActivity extends AppCompatActivity {
     return (GitHubClientApp) getApplication();
   }
 
-  protected AppComponent getComponent() {
-    return getApp().getComponent();
+  protected ActivityComponent getComponent() {
+    return getApp().getComponent().activityComponent(new ActivityModule(this));
   }
 }

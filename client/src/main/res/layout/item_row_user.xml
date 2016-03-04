@@ -24,8 +24,8 @@
         android:gravity="center_vertical"
         android:layout_toEndOf="@id/user_avatar"
         android:layout_toRightOf="@id/user_avatar"
-        android:layout_toLeftOf="@+id/user_admin_image"
-        android:layout_toStartOf="@+id/user_admin_image"
+        android:layout_toLeftOf="@+id/user_item_gitHub_icon"
+        android:layout_toStartOf="@+id/user_item_gitHub_icon"
         android:singleLine="true"
         android:ellipsize="end"
         android:textSize="@dimen/textTitle"
@@ -40,13 +40,21 @@
         android:src="@drawable/ic_admin_24dp"
         android:padding="@dimen/padding_small"
         android:layout_marginTop="@dimen/padding_medium"
-        android:layout_marginRight="@dimen/padding_small"
-        android:layout_marginEnd="@dimen/padding_small"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/user_item_gitHub_icon"
+        android:layout_toStartOf="@+id/user_item_gitHub_icon"
         android:clickable="true"
         android:background="@android:drawable/list_selector_background"
         tools:visibility="visible"/>
+
+    <ImageView
+        android:id="@+id/user_item_gitHub_icon"
+        android:layout_width="@dimen/icon_size"
+        android:layout_height="@dimen/icon_size"
+        android:layout_marginTop="@dimen/list_item_vertical_margin"
+        android:layout_marginRight="@dimen/side_padding"
+        android:src="@drawable/ic_github_48dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:background="@android:drawable/list_selector_background"/>
 
 </RelativeLayout>

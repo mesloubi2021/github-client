@@ -22,13 +22,15 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserHolder> 
   private final List<User> _users = new ArrayList<>();
   private final LayoutInflater _inflater;
   private final Picasso _picasso;
+  private GitHubIconClickedHandler _handler;
 
   private UserClickListener _userClickListener;
 
   @Inject
-  public UsersAdapter(LayoutInflater inflater, Picasso picasso) {
+  public UsersAdapter(LayoutInflater inflater, Picasso picasso, GitHubIconClickedHandler handler) {
     _inflater = inflater;
     _picasso = picasso;
+    _handler = handler;
   }
 
   public void setUserClickListener(UserClickListener userClickListener) {
@@ -68,6 +70,10 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserHolder> 
     }
   }
 
+  void onGitHubIconClicked(int adapterPosition) {
+    _handler.userGitHubClicked(_users.get(adapterPosition));
+  }
+
   interface UserClickListener {
     void onUserClicked(User user);
   }
@@ -87,6 +93,10 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserHolder> 
 
     @OnClick(R.id.user_container) void onItemClick() {
       _adapter.onItemClicked(getAdapterPosition());
+    }
+
+    @OnClick(R.id.user_item_gitHub_icon) void onGitHubIconClicked() {
+      _adapter.onGitHubIconClicked(getAdapterPosition());
     }
   }
 }
