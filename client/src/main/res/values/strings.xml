@@ -2,6 +2,7 @@
     <string name="app_name">github-client</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_user_detail">UserDetailActivity</string>
+    <string name="user_detail_joined_template">  Joined on %s</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 
