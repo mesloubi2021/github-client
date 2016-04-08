@@ -5,22 +5,27 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.OnClick;
 import com.jraska.github.client.R;
+import com.jraska.github.client.rx.ActivityErrorMethod;
+import com.jraska.github.client.rx.ActivityNextMethod;
+import com.jraska.github.client.rx.ObservableLoader;
 import com.jraska.github.client.users.User;
 import com.jraska.github.client.users.UserDetail;
 import com.jraska.github.client.users.UserStats;
 import com.jraska.github.client.users.UsersRepository;
 import com.squareup.picasso.Picasso;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 import javax.inject.Inject;
 import java.text.DateFormat;
 import java.util.Date;
 
 public class UserDetailActivity extends BaseActivity {
+
+  static final ActivityNextMethod<UserDetail, UserDetailActivity> SET_USER_METHOD = UserDetailActivity::setUserDetail;
+  static final ActivityErrorMethod<UserDetailActivity> USER_LOAD_ERROR_METHOD = UserDetailActivity::onUserLoadError;
 
   static final DateFormat JOINED_FORMAT = DateFormat.getDateInstance(DateFormat.MEDIUM);
   static final String EXTRA_USER_KEY = "user";
@@ -34,6 +39,7 @@ public class UserDetailActivity extends BaseActivity {
   @Inject Picasso _picasso;
   @Inject GitHubIconClickHandler _gitHubIconClickHandler;
   @Inject UsersRepository _usersRepository;
+  @Inject ObservableLoader _observableLoader;
 
   private User _user;
 
@@ -48,10 +54,7 @@ public class UserDetailActivity extends BaseActivity {
     setTitle(_user._login);
     _picasso.load(_user._avatarUrl).into(_avatarView);
 
-    _usersRepository.getUserDetail(_user._login)
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(this::setUserDetail);
+    _observableLoader.load(_usersRepository.getUserDetail(_user._login), SET_USER_METHOD, USER_LOAD_ERROR_METHOD);
   }
 
   @OnClick(R.id.user_detail_github_fab) void gitHubFabClicked() {
@@ -68,6 +71,10 @@ public class UserDetailActivity extends BaseActivity {
     String joinedDateText = formatJoinedDate(basicStats._joined);
     String joinedText = getString(R.string.user_detail_joined_template, joinedDateText);
     _joinedTextView.setText(joinedText);
+  }
+
+  void onUserLoadError(Throwable error) {
+    Toast.makeText(this, error.toString(), Toast.LENGTH_LONG).show();
   }
 
   static String formatJoinedDate(Date joinedDate) {
