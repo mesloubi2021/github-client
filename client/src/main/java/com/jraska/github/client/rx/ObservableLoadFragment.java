@@ -6,8 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import rx.Observable;
 import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 public class ObservableLoadFragment<TResult, TActivity extends Activity> extends Fragment {
@@ -63,8 +61,7 @@ public class ObservableLoadFragment<TResult, TActivity extends Activity> extends
 
   private void load() {
     Timber.d("Subscribing");
-    _observable.subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
+    _observable.compose(IOPoolTransformer.get())
         .subscribe(new LoadingSubscriber());
   }
 
