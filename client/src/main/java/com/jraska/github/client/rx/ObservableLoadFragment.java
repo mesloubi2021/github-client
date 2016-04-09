@@ -9,7 +9,7 @@ import rx.Subscriber;
 import timber.log.Timber;
 
 public class ObservableLoadFragment<TResult, TActivity extends Activity> extends Fragment {
-  public static final String TAG = "LoadingFragment";
+  public static final String TAG = ObservableLoadFragment.class.getSimpleName();
 
   private final Observable<TResult> _observable;
   private final ActivityNextMethod<TResult, TActivity> _resultMethod;
@@ -21,10 +21,8 @@ public class ObservableLoadFragment<TResult, TActivity extends Activity> extends
 
   public ObservableLoadFragment() {
     this(null, null, null);
-  }
 
-  public boolean isValid() {
-    return _validInstance;
+    _validInstance = false;
   }
 
   private ObservableLoadFragment(Observable<TResult> observable,
@@ -37,6 +35,10 @@ public class ObservableLoadFragment<TResult, TActivity extends Activity> extends
     _observable = observable;
     _resultMethod = resultMethod;
     _errorMethod = errorMethod;
+  }
+
+  public boolean isValid() {
+    return _validInstance;
   }
 
   @Override
