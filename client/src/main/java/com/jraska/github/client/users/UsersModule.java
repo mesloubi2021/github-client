@@ -1,8 +1,10 @@
 package com.jraska.github.client.users;
 
+import com.jraska.github.client.BuildConfig;
 import com.jraska.github.client.dagger.PerApp;
 import dagger.Module;
 import dagger.Provides;
+import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -22,9 +24,11 @@ public final class UsersModule {
     return retrofit.create(GitHubUserDetailApi.class);
   }
 
-  @Provides @PerApp Retrofit provideRetrofit() {
+  @Provides @PerApp Retrofit provideRetrofit(OkHttpClient okHttpClient) {
     Retrofit retrofit = new Retrofit.Builder()
         .baseUrl("https://api.github.com")
+        .validateEagerly(BuildConfig.DEBUG)
+        .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create())
         .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
         .build();
