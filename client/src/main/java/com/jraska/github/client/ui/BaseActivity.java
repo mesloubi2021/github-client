@@ -1,5 +1,6 @@
 package com.jraska.github.client.ui;
 
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -34,6 +35,10 @@ public class BaseActivity extends AppCompatActivity {
   protected void onSetContentView() {
     ButterKnife.bind(this);
     setSupportActionBar(_toolbar);
+  }
+
+  protected Fragment findFragmentById(int id){
+    return getSupportFragmentManager().findFragmentById(id);
   }
 
   protected GitHubClientApp getApp() {

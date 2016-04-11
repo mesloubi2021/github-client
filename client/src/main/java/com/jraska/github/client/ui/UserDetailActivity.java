@@ -31,8 +31,10 @@ public class UserDetailActivity extends BaseActivity {
   @Inject GitHubIconClickHandler _gitHubIconClickHandler;
   @Inject UsersRepository _usersRepository;
   @Inject ObservableLoader _observableLoader;
+  @Inject ReposAdapter _reposAdapter;
 
   private UserStatsFragment _userStatsFragment;
+  private ReposFragment _reposFragment;
 
   private User _user;
 
@@ -42,7 +44,8 @@ public class UserDetailActivity extends BaseActivity {
     setContentView(R.layout.activity_user_detail);
     getComponent().inject(this);
 
-    _userStatsFragment = (UserStatsFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_user_stats);
+    _userStatsFragment = (UserStatsFragment) findFragmentById(R.id.fragment_user_stats);
+    _reposFragment = (ReposFragment) findFragmentById(R.id.fragment_user_repos);
 
     _user = getIntent().getParcelableExtra(EXTRA_USER_KEY);
 
@@ -58,6 +61,9 @@ public class UserDetailActivity extends BaseActivity {
 
   void setUserDetail(UserDetail userDetail) {
     _userStatsFragment.setUserStats(userDetail._basicStats);
+
+    _reposAdapter.setRepos(userDetail._popularRepos);
+    _reposFragment.setReposAdapter(_reposAdapter);
   }
 
   void onUserLoadError(Throwable error) {

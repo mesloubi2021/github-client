@@ -29,7 +29,7 @@ public class UsersActivity extends BaseActivity implements UsersAdapter.UserClic
     setContentView(R.layout.activity_users_list);
     getComponent().inject(this);
 
-    _usersFragment = (UsersFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_users);
+    _usersFragment = (UsersFragment) findFragmentById(R.id.fragment_users);
 
     _usersFragment.setUsersAdapter(_usersAdapter);
     _usersAdapter.setUserClickListener(this);
