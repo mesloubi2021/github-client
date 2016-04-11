@@ -57,16 +57,19 @@ final class GitHubApiUsersRepository implements UsersRepository {
 
     Collections.sort(gitHubRepos, BY_STARS_REPO_COMPARATOR);
 
-    List<Repo> repos = new ArrayList<>(MAX_REPOS_TO_DISPLAY);
-//    for (int i = 0, size = gitHubRepos.size(); i < size && i < MAX_REPOS_TO_DISPLAY; i++) {
-//      repos.add(translateRepo(gitHubRepos.get(i)));
-//    }
+    List<Repo> usersRepos = new ArrayList<>();
+    List<Repo> contributedRepos = new ArrayList<>();
 
-    for (int i = 0, size = gitHubRepos.size(); i < size; i++) {
-      repos.add(translateRepo(gitHubRepos.get(i)));
+    for (GitHubRepo gitHubRepo : gitHubRepos) {
+      Repo repo = translateRepo(gitHubRepo);
+      if (gitHubUserDetail.login.equals(gitHubRepo.owner.login)) {
+        usersRepos.add(repo);
+      } else {
+        contributedRepos.add(repo);
+      }
     }
 
-    return new UserDetail(stats, repos);
+    return new UserDetail(stats, usersRepos, contributedRepos);
   }
 
   Repo translateRepo(GitHubRepo gitHubRepo) {

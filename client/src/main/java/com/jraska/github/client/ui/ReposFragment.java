@@ -11,6 +11,9 @@ import android.view.ViewGroup;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.jraska.github.client.R;
+import com.jraska.github.client.users.Repo;
+
+import java.util.List;
 
 public class ReposFragment extends Fragment {
   @Bind(R.id.repos_recycler) RecyclerView _reposRecyclerView;
@@ -25,11 +28,13 @@ public class ReposFragment extends Fragment {
     return view;
   }
 
-  void setReposAdapter(RecyclerView.Adapter adapter) {
+  void setRepos(List<Repo> repos) {
     if(_reposRecyclerView == null){
       throw new IllegalStateException("View was not created yet");
     }
 
-    _reposRecyclerView.setAdapter(adapter);
+    ReposAdapter reposAdapter = new ReposAdapter(LayoutInflater.from(getActivity()));
+    reposAdapter.setRepos(repos);
+    _reposRecyclerView.setAdapter(reposAdapter);
   }
 }
