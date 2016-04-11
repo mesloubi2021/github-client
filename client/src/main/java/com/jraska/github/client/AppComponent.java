@@ -4,6 +4,7 @@ import com.jraska.github.client.dagger.PerApp;
 import com.jraska.github.client.network.NetworkModule;
 import com.jraska.github.client.ui.ActivityComponent;
 import com.jraska.github.client.ui.ActivityModule;
+import com.jraska.github.client.ui.UsersFragment;
 import com.jraska.github.client.users.UsersModule;
 import dagger.Component;
 
@@ -16,4 +17,6 @@ import dagger.Component;
 })
 public interface AppComponent {
   ActivityComponent activityComponent(ActivityModule activityModule);
+
+  void inject(UsersFragment usersFragment);
 }

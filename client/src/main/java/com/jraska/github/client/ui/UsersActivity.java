@@ -12,14 +12,14 @@ import com.jraska.github.client.users.UsersRepository;
 import javax.inject.Inject;
 import java.util.List;
 
-public class UsersActivity extends BaseActivity implements UsersAdapter.UserClickListener {
+public class UsersActivity extends BaseActivity implements UsersAdapter.UserListener {
 
   static final ActivityNextMethod<List<User>, UsersActivity> SET_USERS_METHOD = UsersActivity::onUsersLoaded;
   static final ActivityErrorMethod<UsersActivity> ON_USERS_ERROR_METHOD = UsersActivity::onUsersError;
 
   @Inject UsersRepository _usersRepository;
   @Inject ObservableLoader _observableLoader;
-  @Inject UsersAdapter _usersAdapter;
+  @Inject GitHubIconClickHandler _iconClickHandler;
 
   private UsersFragment _usersFragment;
 
@@ -30,16 +30,13 @@ public class UsersActivity extends BaseActivity implements UsersAdapter.UserClic
     getComponent().inject(this);
 
     _usersFragment = (UsersFragment) findFragmentById(R.id.fragment_users);
-
-    _usersFragment.setUsersAdapter(_usersAdapter);
-    _usersAdapter.setUserClickListener(this);
+    _usersFragment.setUsersListener(this);
 
     _observableLoader.load(_usersRepository.getUsers(0), SET_USERS_METHOD, ON_USERS_ERROR_METHOD);
   }
 
   void onUsersLoaded(List<User> users) {
-    _usersAdapter.addUsers(users);
-    _usersAdapter.notifyDataSetChanged();
+    _usersFragment.setUsers(users);
   }
 
   void onUsersError(Throwable error) {
@@ -49,5 +46,9 @@ public class UsersActivity extends BaseActivity implements UsersAdapter.UserClic
   @Override
   public void onUserClicked(User user) {
     UserDetailActivity.start(this, user);
+  }
+
+  @Override public void onUserGitHubIconClicked(User user) {
+    _iconClickHandler.userGitHubClicked(user);
   }
 }

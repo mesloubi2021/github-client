@@ -22,19 +22,17 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserHolder> 
   private final List<User> _users = new ArrayList<>();
   private final LayoutInflater _inflater;
   private final Picasso _picasso;
-  private GitHubIconClickHandler _handler;
 
-  private UserClickListener _userClickListener;
+  private UserListener _userListener;
 
   @Inject
-  public UsersAdapter(LayoutInflater inflater, Picasso picasso, GitHubIconClickHandler handler) {
+  public UsersAdapter(LayoutInflater inflater, Picasso picasso) {
     _inflater = inflater;
     _picasso = picasso;
-    _handler = handler;
   }
 
-  public void setUserClickListener(UserClickListener userClickListener) {
-    _userClickListener = userClickListener;
+  public void setUserListener(UserListener userClickListener) {
+    _userListener = userClickListener;
   }
 
   @Override public UserHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -59,23 +57,29 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserHolder> 
     return _users.size();
   }
 
-  public void addUsers(Collection<User> users) {
+  public void setUsers(Collection<User> users) {
+    _users.clear();
     _users.addAll(users);
   }
 
   void onItemClicked(int position) {
-    if (_userClickListener != null) {
+    if (_userListener != null) {
       User user = _users.get(position);
-      _userClickListener.onUserClicked(user);
+      _userListener.onUserClicked(user);
     }
   }
 
   void onGitHubIconClicked(int adapterPosition) {
-    _handler.userGitHubClicked(_users.get(adapterPosition));
+    if (_userListener != null) {
+      User user = _users.get(adapterPosition);
+      _userListener.onUserGitHubIconClicked(user);
+    }
   }
 
-  interface UserClickListener {
+  interface UserListener {
     void onUserClicked(User user);
+
+    void onUserGitHubIconClicked(User user);
   }
 
   public static class UserHolder extends RecyclerView.ViewHolder {
