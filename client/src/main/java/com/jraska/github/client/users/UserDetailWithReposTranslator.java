@@ -14,7 +14,7 @@ class UserDetailWithReposTranslator
     implements Observable.Transformer<Pair<GitHubUserDetail, List<GitHubRepo>>, UserDetail> {
   static final DateFormat GIT_HUB_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", ENGLISH);
   static final Comparator<GitHubRepo> BY_STARS_REPO_COMPARATOR = (lhs, rhs) -> rhs.stargazersCount.compareTo(lhs.stargazersCount);
-  static final int MAX_REPOS_TO_DISPLAY = 10;
+  static final int MAX_REPOS_TO_DISPLAY = 5;
 
   static final UserDetailWithReposTranslator INSTANCE = new UserDetailWithReposTranslator();
 
@@ -35,10 +35,11 @@ class UserDetailWithReposTranslator
     List<Repo> contributedRepos = new ArrayList<>();
 
     for (GitHubRepo gitHubRepo : gitHubRepos) {
-      Repo repo = translateRepo(gitHubRepo);
-      if (gitHubUserDetail.login.equals(gitHubRepo.owner.login)) {
+      if (usersRepos.size() < MAX_REPOS_TO_DISPLAY && gitHubUserDetail.login.equals(gitHubRepo.owner.login)) {
+        Repo repo = translateRepo(gitHubRepo);
         usersRepos.add(repo);
-      } else {
+      } else if (contributedRepos.size() < MAX_REPOS_TO_DISPLAY) {
+        Repo repo = translateRepo(gitHubRepo);
         contributedRepos.add(repo);
       }
     }
