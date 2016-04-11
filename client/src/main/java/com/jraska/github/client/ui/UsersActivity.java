@@ -1,10 +1,7 @@
 package com.jraska.github.client.ui;
 
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
-import butterknife.Bind;
 import com.jraska.github.client.R;
 import com.jraska.github.client.rx.ActivityErrorMethod;
 import com.jraska.github.client.rx.ActivityNextMethod;
@@ -20,11 +17,11 @@ public class UsersActivity extends BaseActivity implements UsersAdapter.UserClic
   static final ActivityNextMethod<List<User>, UsersActivity> SET_USERS_METHOD = UsersActivity::onUsersLoaded;
   static final ActivityErrorMethod<UsersActivity> ON_USERS_ERROR_METHOD = UsersActivity::onUsersError;
 
-  @Bind(R.id.users_recycler) RecyclerView _usersRecyclerView;
-
   @Inject UsersRepository _usersRepository;
   @Inject ObservableLoader _observableLoader;
   @Inject UsersAdapter _usersAdapter;
+
+  private UsersFragment _usersFragment;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +29,9 @@ public class UsersActivity extends BaseActivity implements UsersAdapter.UserClic
     setContentView(R.layout.activity_users_list);
     getComponent().inject(this);
 
-    _usersRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-    _usersRecyclerView.setAdapter(_usersAdapter);
+    _usersFragment = (UsersFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_users);
+
+    _usersFragment.setUsersAdapter(_usersAdapter);
     _usersAdapter.setUserClickListener(this);
 
     _observableLoader.load(_usersRepository.getUsers(0), SET_USERS_METHOD, ON_USERS_ERROR_METHOD);
