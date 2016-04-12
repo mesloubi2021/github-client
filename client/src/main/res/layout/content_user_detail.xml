@@ -11,30 +11,35 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_marginLeft="@dimen/text_margin"
-        android:layout_marginRight="@dimen/text_margin">
+        android:orientation="vertical">
 
         <fragment
             android:id="@+id/fragment_user_stats"
             android:name="com.jraska.github.client.ui.UserStatsFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:layout="@layout/fragment_user_stats"/>
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            tools:layout="@layout/fragment_user_stats" />
 
         <fragment
             android:id="@+id/fragment_user_popular_repos"
             android:name="com.jraska.github.client.ui.ReposFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:layout="@layout/fragment_repos"/>
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            tools:layout="@layout/fragment_repos" />
 
         <fragment
             android:id="@+id/fragment_user_contributed_repos"
             android:name="com.jraska.github.client.ui.ReposFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:layout="@layout/fragment_repos"/>
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            tools:layout="@layout/fragment_repos" />
 
     </LinearLayout>
 
