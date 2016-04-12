@@ -9,15 +9,21 @@ import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import timber.log.Timber;
 
+import java.io.File;
+
 @Module
 public class NetworkModule {
-  @Provides @PerApp OkHttpClient provideOkHttpClient() {
-    HttpLoggingInterceptor.Logger logger = message -> Timber.tag("OkHttp").d(message);
+  @Provides @PerApp OkHttpClient provideOkHttpClient(Context context) {
+    HttpLoggingInterceptor.Logger logger = message -> Timber.tag("OkHttp").v(message);
     HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(logger);
     loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS);
 
+    File cacheDir = context.getCacheDir();
+    Cache cache = new Cache(cacheDir, 1024 * 1024 * 4);
+
     OkHttpClient client = new OkHttpClient.Builder()
         .addInterceptor(loggingInterceptor)
+        .cache(cache)
         .build();
 
     return client;
