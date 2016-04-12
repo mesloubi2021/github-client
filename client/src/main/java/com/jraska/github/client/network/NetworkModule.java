@@ -16,7 +16,7 @@ public class NetworkModule {
   @Provides @PerApp OkHttpClient provideOkHttpClient(Context context) {
     HttpLoggingInterceptor.Logger logger = message -> Timber.tag("OkHttp").v(message);
     HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(logger);
-    loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS);
+    loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
 
     File cacheDir = context.getCacheDir();
     Cache cache = new Cache(cacheDir, 1024 * 1024 * 4);
