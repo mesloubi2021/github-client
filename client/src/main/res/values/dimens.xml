@@ -20,4 +20,6 @@
 
     <dimen name="elevation_resting">2dp</dimen>
     <dimen name="corner_radius">3dp</dimen>
+
+    <dimen name="swipe_progress_circle_diameter">40dp</dimen>
 </resources>

@@ -32,15 +32,27 @@ public class UsersActivity extends BaseActivity implements UsersAdapter.UserList
     _usersFragment = (UsersFragment) findFragmentById(R.id.fragment_users);
     _usersFragment.setUsersListener(this);
 
-    _observableLoader.load(_usersRepository.getUsers(0), SET_USERS_METHOD, ON_USERS_ERROR_METHOD);
+    startLoading();
   }
 
   void onUsersLoaded(List<User> users) {
     _usersFragment.setUsers(users);
+    onLoadingFinished();
   }
 
   void onUsersError(Throwable error) {
     Toast.makeText(this, error.toString(), Toast.LENGTH_LONG).show();
+
+    onLoadingFinished();
+  }
+
+  void startLoading() {
+    _usersFragment.showProgressIndicator();
+    _observableLoader.load(_usersRepository.getUsers(0), SET_USERS_METHOD, ON_USERS_ERROR_METHOD);
+  }
+
+  void onLoadingFinished() {
+    _usersFragment.hideProgressIndicator();
   }
 
   @Override
@@ -50,5 +62,10 @@ public class UsersActivity extends BaseActivity implements UsersAdapter.UserList
 
   @Override public void onUserGitHubIconClicked(User user) {
     _iconClickHandler.userGitHubClicked(user);
+  }
+
+  void refresh() {
+    // TODO: 16/04/16 Clear network cache
+    startLoading();
   }
 }

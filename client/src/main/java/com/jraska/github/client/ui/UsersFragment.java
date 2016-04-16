@@ -3,6 +3,7 @@ package com.jraska.github.client.ui;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import javax.inject.Inject;
 import java.util.List;
 
 public class UsersFragment extends Fragment {
+  @Bind(R.id.users_refresh_swipe_layout) SwipeRefreshLayout _swipeRefreshLayout;
   @Bind(R.id.users_recycler) RecyclerView _usersRecyclerView;
 
   @Inject UsersAdapter _usersAdapter;
@@ -37,6 +39,8 @@ public class UsersFragment extends Fragment {
     _usersRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     _usersRecyclerView.setAdapter(_usersAdapter);
 
+    _swipeRefreshLayout.setOnRefreshListener(() -> ((UsersActivity) getActivity()).refresh());
+
     return view;
   }
 
@@ -51,5 +55,24 @@ public class UsersFragment extends Fragment {
 
   void setUsersListener(UsersAdapter.UserListener listener) {
     _usersAdapter.setUserListener(listener);
+  }
+
+  void showProgressIndicator() {
+    ensureProgressIndicatorVisible();
+
+    _swipeRefreshLayout.setRefreshing(true);
+  }
+
+  void hideProgressIndicator() {
+    _swipeRefreshLayout.setRefreshing(false);
+  }
+
+  private void ensureProgressIndicatorVisible() {
+    // Workaround for start progress called before onMeasure
+    // Issue: https://code.google.com/p/android/issues/detail?id=77712
+    if (_swipeRefreshLayout.getMeasuredHeight() == 0) {
+      int circleSize = getResources().getDimensionPixelSize(R.dimen.swipe_progress_circle_diameter);
+      _swipeRefreshLayout.setProgressViewOffset(false, 0, circleSize);
+    }
   }
 }
