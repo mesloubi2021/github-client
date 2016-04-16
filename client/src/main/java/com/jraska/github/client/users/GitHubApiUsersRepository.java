@@ -3,6 +3,7 @@ package com.jraska.github.client.users;
 import android.support.annotation.NonNull;
 import android.util.Pair;
 import rx.Observable;
+import rx.schedulers.Schedulers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,8 @@ final class GitHubApiUsersRepository implements UsersRepository {
 
   @Override public Observable<UserDetail> getUserDetail(String login) {
     return _gitHubUserDetailApi.getUserDetail(login)
+        // TODO: 16/04/16 Move loading from multiple sources to presenter
+        .subscribeOn(Schedulers.io()) //this has to be here nwo to run requests in parallel
         .zipWith(_gitHubUserDetailApi.getRepos(login), Pair::new)
         .compose(UserDetailWithReposTranslator.INSTANCE);
   }
