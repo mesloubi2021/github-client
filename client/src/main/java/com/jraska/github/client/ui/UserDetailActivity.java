@@ -46,7 +46,9 @@ public class UserDetailActivity extends BaseActivity {
 
     _userStatsFragment = (UserStatsFragment) findFragmentById(R.id.fragment_user_stats);
     _popularReposFragment = (ReposFragment) findFragmentById(R.id.fragment_user_popular_repos);
+    _popularReposFragment.setTitle(getString(R.string.repos_popular));
     _contributedReposFragment = (ReposFragment) findFragmentById(R.id.fragment_user_contributed_repos);
+    _contributedReposFragment.setTitle(getString(R.string.repos_contributed));
 
     _user = getIntent().getParcelableExtra(EXTRA_USER_KEY);
 

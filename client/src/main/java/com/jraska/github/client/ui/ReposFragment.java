@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.jraska.github.client.R;
@@ -17,6 +18,7 @@ import java.util.List;
 public class ReposFragment extends Fragment {
   @Bind(R.id.repos_repeater) RepeaterLayout _reposRepeater;
   @Bind(R.id.repos_container) ViewGroup _reposContainer;
+  @Bind(R.id.repos_title) TextView _reposTitle;
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -26,6 +28,10 @@ public class ReposFragment extends Fragment {
     setContainerVisibility(false);
 
     return view;
+  }
+
+  void setTitle(CharSequence title) {
+    _reposTitle.setText(title);
   }
 
   void setRepos(List<Repo> repos) {
