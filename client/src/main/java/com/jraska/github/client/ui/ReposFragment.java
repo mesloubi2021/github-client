@@ -3,8 +3,6 @@ package com.jraska.github.client.ui;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +10,12 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.jraska.github.client.R;
 import com.jraska.github.client.users.Repo;
+import com.jraska.github.client.widget.RepeaterLayout;
 
 import java.util.List;
 
 public class ReposFragment extends Fragment {
-  @Bind(R.id.repos_recycler) RecyclerView _reposRecyclerView;
+  @Bind(R.id.repos_repeater) RepeaterLayout _reposRepeater;
   @Bind(R.id.repos_container) ViewGroup _reposContainer;
 
   @Nullable @Override
@@ -25,13 +24,12 @@ public class ReposFragment extends Fragment {
     ButterKnife.bind(this, view);
 
     setContainerVisibility(false);
-    _reposRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
     return view;
   }
 
   void setRepos(List<Repo> repos) {
-    if (_reposRecyclerView == null) {
+    if (_reposRepeater == null) {
       throw new IllegalStateException("View was not created yet");
     }
 
@@ -39,7 +37,7 @@ public class ReposFragment extends Fragment {
 
     ReposAdapter reposAdapter = new ReposAdapter(LayoutInflater.from(getActivity()));
     reposAdapter.setRepos(repos);
-    _reposRecyclerView.setAdapter(reposAdapter);
+    _reposRepeater.setAdapter(reposAdapter);
   }
 
   private void setContainerVisibility(boolean visible) {
