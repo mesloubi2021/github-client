@@ -3,19 +3,19 @@ package com.jraska.github.client.ui;
 import android.os.Bundle;
 import android.widget.Toast;
 import com.jraska.github.client.R;
-import com.jraska.github.client.rx.ActivityErrorMethod;
-import com.jraska.github.client.rx.ActivityNextMethod;
+import com.jraska.github.client.rx.IOPoolTransformer;
 import com.jraska.github.client.rx.ObservableLoader;
 import com.jraska.github.client.users.User;
 import com.jraska.github.client.users.UsersRepository;
+import rx.functions.Action2;
 
 import javax.inject.Inject;
 import java.util.List;
 
 public class UsersActivity extends BaseActivity implements UsersAdapter.UserListener {
 
-  static final ActivityNextMethod<List<User>, UsersActivity> SET_USERS_METHOD = UsersActivity::onUsersLoaded;
-  static final ActivityErrorMethod<UsersActivity> ON_USERS_ERROR_METHOD = UsersActivity::onUsersError;
+  static final Action2<UsersActivity, List<User>> SET_USERS_METHOD = UsersActivity::onUsersLoaded;
+  static final Action2<UsersActivity, Throwable> ON_USERS_ERROR_METHOD = UsersActivity::onUsersError;
 
   @Inject UsersRepository _usersRepository;
   @Inject ObservableLoader _observableLoader;
@@ -48,7 +48,7 @@ public class UsersActivity extends BaseActivity implements UsersAdapter.UserList
 
   void startLoading() {
     _usersFragment.showProgressIndicator();
-    _observableLoader.load(_usersRepository.getUsers(0), SET_USERS_METHOD, ON_USERS_ERROR_METHOD);
+    _observableLoader.load(_usersRepository.getUsers(0).compose(IOPoolTransformer.get()), SET_USERS_METHOD, ON_USERS_ERROR_METHOD);
   }
 
   void onLoadingFinished() {

@@ -1,23 +1,25 @@
 package com.jraska.github.client.rx;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import rx.Observable;
 import rx.Subscriber;
+import rx.functions.Action2;
 import timber.log.Timber;
 
-public class ObservableLoadFragment<TResult, TActivity extends Activity> extends Fragment {
+public class ObservableLoadFragment<A extends FragmentActivity, R> extends Fragment {
   public static final String TAG = ObservableLoadFragment.class.getSimpleName();
 
-  private final Observable<TResult> _observable;
-  private final ActivityNextMethod<TResult, TActivity> _resultMethod;
-  private final ActivityErrorMethod<TActivity> _errorMethod;
+  private final Observable<R> _observable;
+  private final Action2<A, R> _resultMethod;
+  private final Action2<A, Throwable> _errorMethod;
   private boolean _validInstance;
 
-  private Throwable errorToDeliver;
-  private TResult resultToDeliver;
+  private Throwable _errorToDeliver;
+  private R _resultToDeliver;
+  private Subscriber<R> _subscriber;
 
   public ObservableLoadFragment() {
     this(null, null, null);
@@ -25,9 +27,9 @@ public class ObservableLoadFragment<TResult, TActivity extends Activity> extends
     _validInstance = false;
   }
 
-  private ObservableLoadFragment(Observable<TResult> observable,
-                                 ActivityNextMethod<TResult, TActivity> resultMethod,
-                                 ActivityErrorMethod<TActivity> errorMethod) {
+  private ObservableLoadFragment(Observable<R> observable,
+                                 Action2<A, R> resultMethod,
+                                 Action2<A, Throwable> errorMethod) {
     _validInstance = true;
 
     setRetainInstance(true);
@@ -63,22 +65,23 @@ public class ObservableLoadFragment<TResult, TActivity extends Activity> extends
 
   private void load() {
     Timber.d("Subscribing");
-    _observable.compose(IOPoolTransformer.get())
-        .subscribe(new LoadingSubscriber());
+    _subscriber = new LoadingSubscriber();
+
+    _observable.subscribe(_subscriber);
   }
 
-  private void onResult(TResult result) {
+  private void onResult(R result) {
     if (getActivity() != null) {
       deliverResult(result);
     } else {
-      resultToDeliver = result;
+      _resultToDeliver = result;
     }
   }
 
   @SuppressWarnings("unchecked")
-  private void deliverResult(TResult result) {
+  private void deliverResult(R result) {
     Timber.d("Delivering to %s", getActivity());
-    _resultMethod.call((TActivity) getActivity(), result);
+    _resultMethod.call((A) getActivity(), result);
     detachSelf();
   }
 
@@ -86,13 +89,13 @@ public class ObservableLoadFragment<TResult, TActivity extends Activity> extends
     if (getActivity() != null) {
       deliverError(error);
     } else {
-      errorToDeliver = error;
+      _errorToDeliver = error;
     }
   }
 
   @SuppressWarnings("unchecked")
   private void deliverError(Throwable error) {
-    _errorMethod.call((TActivity) getActivity(), error);
+    _errorMethod.call((A) getActivity(), error);
     detachSelf();
   }
 
@@ -106,22 +109,22 @@ public class ObservableLoadFragment<TResult, TActivity extends Activity> extends
   }
 
   private void deliverResultGotOnDetached() {
-    if (resultToDeliver != null) {
-      deliverResult(resultToDeliver);
+    if (_resultToDeliver != null) {
+      deliverResult(_resultToDeliver);
     }
 
-    if (errorToDeliver != null) {
-      deliverError(errorToDeliver);
+    if (_errorToDeliver != null) {
+      deliverError(_errorToDeliver);
     }
   }
 
-  static <T, A extends Activity> ObservableLoadFragment<T, A> newInstance(
-      Observable<T> observable, ActivityNextMethod<T, A> resultCall, ActivityErrorMethod<A> errorMethod) {
-    ObservableLoadFragment<T, A> fragmentProxy = new ObservableLoadFragment<>(observable, resultCall, errorMethod);
+  static <A extends FragmentActivity, R> ObservableLoadFragment<A, R> newInstance(
+      Observable<R> observable, Action2<A, R> resultCall, Action2<A, Throwable> errorMethod) {
+    ObservableLoadFragment<A, R> fragmentProxy = new ObservableLoadFragment<>(observable, resultCall, errorMethod);
     return fragmentProxy;
   }
 
-  class LoadingSubscriber extends Subscriber<TResult> {
+  class LoadingSubscriber extends Subscriber<R> {
     @Override public void onCompleted() {
     }
 
@@ -129,7 +132,7 @@ public class ObservableLoadFragment<TResult, TActivity extends Activity> extends
       onErrorInLoading(e);
     }
 
-    @Override public void onNext(TResult result) {
+    @Override public void onNext(R result) {
       onResult(result);
     }
   }

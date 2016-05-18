@@ -4,7 +4,7 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-class IOPoolTransformer<T> implements Observable.Transformer<T, T> {
+public class IOPoolTransformer<T> implements Observable.Transformer<T, T> {
   private static final IOPoolTransformer INSTANCE = new IOPoolTransformer();
 
   private IOPoolTransformer() {
@@ -16,7 +16,7 @@ class IOPoolTransformer<T> implements Observable.Transformer<T, T> {
   }
 
   @SuppressWarnings("unchecked")
-  static <T> Observable.Transformer<T, T> get() {
+  public static <T> Observable.Transformer<T, T> get() {
     return INSTANCE;
   }
 }

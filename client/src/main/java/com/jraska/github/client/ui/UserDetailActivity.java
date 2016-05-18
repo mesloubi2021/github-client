@@ -9,8 +9,7 @@ import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.OnClick;
 import com.jraska.github.client.R;
-import com.jraska.github.client.rx.ActivityErrorMethod;
-import com.jraska.github.client.rx.ActivityNextMethod;
+import com.jraska.github.client.rx.IOPoolTransformer;
 import com.jraska.github.client.rx.ObservableLoader;
 import com.jraska.github.client.users.User;
 import com.jraska.github.client.users.UserDetail;
@@ -20,9 +19,6 @@ import com.squareup.picasso.Picasso;
 import javax.inject.Inject;
 
 public class UserDetailActivity extends BaseActivity {
-
-  static final ActivityNextMethod<UserDetail, UserDetailActivity> SET_USER_METHOD = UserDetailActivity::setUserDetail;
-  static final ActivityErrorMethod<UserDetailActivity> USER_LOAD_ERROR_METHOD = UserDetailActivity::onUserLoadError;
   static final String EXTRA_USER_KEY = "user";
 
   @Bind(R.id.user_detail_avatar) ImageView _avatarView;
@@ -55,7 +51,7 @@ public class UserDetailActivity extends BaseActivity {
     setTitle(_user._login);
     _picasso.load(_user._avatarUrl).into(_avatarView);
 
-    _observableLoader.load(_usersRepository.getUserDetail(_user._login), SET_USER_METHOD, USER_LOAD_ERROR_METHOD);
+    _observableLoader.load(_usersRepository.getUserDetail(_user._login).compose(IOPoolTransformer.get()), UserDetailActivity::setUserDetail, UserDetailActivity::onUserLoadError);
   }
 
   @OnClick(R.id.user_detail_github_fab) void gitHubFabClicked() {
