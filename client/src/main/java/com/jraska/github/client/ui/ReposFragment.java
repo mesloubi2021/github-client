@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.jraska.github.client.R;
 import com.jraska.github.client.users.Repo;
@@ -16,9 +16,9 @@ import com.jraska.github.client.widget.RepeaterLayout;
 import java.util.List;
 
 public class ReposFragment extends Fragment {
-  @Bind(R.id.repos_repeater) RepeaterLayout _reposRepeater;
-  @Bind(R.id.repos_container) ViewGroup _reposContainer;
-  @Bind(R.id.repos_title) TextView _reposTitle;
+  @BindView(R.id.repos_repeater) RepeaterLayout _reposRepeater;
+  @BindView(R.id.repos_container) ViewGroup _reposContainer;
+  @BindView(R.id.repos_title) TextView _reposTitle;
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

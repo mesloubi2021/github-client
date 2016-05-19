@@ -9,7 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import butterknife.Bind;
+import butterknife.BindView;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.jraska.github.client.GitHubClientApp;
 import com.jraska.github.client.R;
@@ -19,8 +20,8 @@ import javax.inject.Inject;
 import java.util.List;
 
 public class UsersFragment extends Fragment {
-  @Bind(R.id.users_refresh_swipe_layout) SwipeRefreshLayout _swipeRefreshLayout;
-  @Bind(R.id.users_recycler) RecyclerView _usersRecyclerView;
+  @BindView(R.id.users_refresh_swipe_layout) SwipeRefreshLayout _swipeRefreshLayout;
+  @BindView(R.id.users_recycler) RecyclerView _usersRecyclerView;
 
   @Inject UsersAdapter _usersAdapter;
 

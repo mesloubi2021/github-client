@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.widget.ImageView;
 import android.widget.Toast;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.OnClick;
 import com.jraska.github.client.R;
 import com.jraska.github.client.rx.IOPoolTransformer;
@@ -21,7 +21,7 @@ import javax.inject.Inject;
 public class UserDetailActivity extends BaseActivity {
   static final String EXTRA_USER_KEY = "user";
 
-  @Bind(R.id.user_detail_avatar) ImageView _avatarView;
+  @BindView(R.id.user_detail_avatar) ImageView _avatarView;
 
   @Inject Picasso _picasso;
   @Inject GitHubIconClickHandler _gitHubIconClickHandler;

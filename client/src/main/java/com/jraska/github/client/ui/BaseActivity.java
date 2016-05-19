@@ -5,14 +5,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.jraska.github.client.GitHubClientApp;
 import com.jraska.github.client.R;
 
 public class BaseActivity extends AppCompatActivity {
 
-  @Bind(R.id.toolbar) protected Toolbar _toolbar;
+  @BindView(R.id.toolbar) protected Toolbar _toolbar;
 
   @Override
   public void setContentView(int layoutResID) {

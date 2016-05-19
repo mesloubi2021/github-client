@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.jraska.github.client.R;
 import com.jraska.github.client.users.Repo;
@@ -51,11 +51,11 @@ public class ReposAdapter extends RecyclerView.Adapter<ReposAdapter.Holder> {
   }
 
   static class Holder extends RecyclerView.ViewHolder {
-    @Bind(R.id.repo_item_title) TextView _titleTextView;
-    @Bind(R.id.repo_item_description) TextView _descriptionTextView;
-    @Bind(R.id.repo_item_watchers) TextView _watchersTextView;
-    @Bind(R.id.repo_item_stars) TextView _starsTextView;
-    @Bind(R.id.repo_item_forks) TextView _forksTextView;
+    @BindView(R.id.repo_item_title) TextView _titleTextView;
+    @BindView(R.id.repo_item_description) TextView _descriptionTextView;
+    @BindView(R.id.repo_item_watchers) TextView _watchersTextView;
+    @BindView(R.id.repo_item_stars) TextView _starsTextView;
+    @BindView(R.id.repo_item_forks) TextView _forksTextView;
 
     public Holder(View itemView) {
       super(itemView);

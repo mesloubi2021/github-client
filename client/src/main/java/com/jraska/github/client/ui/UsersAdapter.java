@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.jraska.github.client.R;
@@ -83,9 +83,9 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserHolder> 
   }
 
   public static class UserHolder extends RecyclerView.ViewHolder {
-    @Bind(R.id.user_login) TextView _loginTextView;
-    @Bind(R.id.user_avatar) ImageView _avatarView;
-    @Bind(R.id.user_admin_image) View _adminView;
+    @BindView(R.id.user_login) TextView _loginTextView;
+    @BindView(R.id.user_avatar) ImageView _avatarView;
+    @BindView(R.id.user_admin_image) View _adminView;
 
     private final UsersAdapter _adapter;
 

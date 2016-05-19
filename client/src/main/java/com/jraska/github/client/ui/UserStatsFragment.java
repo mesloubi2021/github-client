@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.jraska.github.client.R;
 import com.jraska.github.client.users.UserStats;
@@ -18,10 +18,10 @@ import java.util.Date;
 public class UserStatsFragment extends Fragment {
   static final DateFormat JOINED_FORMAT = DateFormat.getDateInstance(DateFormat.MEDIUM);
 
-  @Bind(R.id.user_detail_repos_count) TextView _reposCountTextView;
-  @Bind(R.id.user_detail_following_count) TextView _followingTextView;
-  @Bind(R.id.user_detail_followers_count) TextView _followersTextView;
-  @Bind(R.id.user_detail_joined) TextView _joinedTextView;
+  @BindView(R.id.user_detail_repos_count) TextView _reposCountTextView;
+  @BindView(R.id.user_detail_following_count) TextView _followingTextView;
+  @BindView(R.id.user_detail_followers_count) TextView _followersTextView;
+  @BindView(R.id.user_detail_joined) TextView _joinedTextView;
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
