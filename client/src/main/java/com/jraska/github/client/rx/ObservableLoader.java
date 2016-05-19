@@ -23,6 +23,7 @@ public class ObservableLoader {
     ObservableLoadFragment existingFragment = (ObservableLoadFragment) _fragmentManager.findFragmentByTag(ObservableLoadFragment.TAG);
     if (existingFragment != null && existingFragment.isValid()) {
       Timber.d("Activity %s is already loading its data", existingFragment.getActivity());
+      existingFragment.requestDeliver();
       return;
     }
 

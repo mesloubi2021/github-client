@@ -89,7 +89,7 @@ public class ObservableLoadFragment<A extends FragmentActivity, R> extends Fragm
 
   @SuppressWarnings("unchecked")
   private void deliverResult() {
-    if (!_deliverRequested) {
+    if (!_deliverRequested || _result == null) {
       return;
     }
 
