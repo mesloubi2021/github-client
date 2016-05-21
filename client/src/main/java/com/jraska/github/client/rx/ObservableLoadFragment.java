@@ -64,6 +64,12 @@ public class ObservableLoadFragment<A extends FragmentActivity, R> extends Fragm
     deliverResult();
   }
 
+  @Override public void onDestroy() {
+    _subscriber.unsubscribe();
+
+    super.onDestroy();
+  }
+
   void requestDeliver() {
     _deliverRequested = true;
     if (isResumed()) {
