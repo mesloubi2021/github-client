@@ -4,177 +4,180 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+
 import rx.Observable;
 import rx.Subscriber;
-import rx.functions.Action2;
 import timber.log.Timber;
 
 public class ObservableLoadFragment<A extends FragmentActivity, R> extends Fragment {
-  public static final String TAG = ObservableLoadFragment.class.getSimpleName();
+    public static final String TAG = ObservableLoadFragment.class.getSimpleName();
 
-  private boolean _validInstance;
+    private boolean _validInstance;
 
-  private final Observable<R> _observable;
-  private final Action2<A, R> _resultCall;
-  private final Action2<A, Throwable> _errorCall;
+    private final Observable<R> _observable;
+    private final ResultDelegateProvider<A, R> _resultDelegateProvider;
 
-  private Result<A> _result;
-  private Subscriber<R> _subscriber;
-  private boolean _deliverRequested;
+    private Result<A> _result;
+    private Subscriber<R> _subscriber;
+    private boolean _deliverRequested;
 
-  public ObservableLoadFragment() {
-    this(null, null, null);
+    public ObservableLoadFragment() {
+        this(null, null);
 
-    _validInstance = false;
-  }
-
-  private ObservableLoadFragment(Observable<R> observable,
-                                 Action2<A, R> resultCall,
-                                 Action2<A, Throwable> errorCall) {
-    _validInstance = true;
-
-    setRetainInstance(true);
-
-    _observable = observable;
-    _resultCall = resultCall;
-    _errorCall = errorCall;
-  }
-
-  public boolean isValid() {
-    return _validInstance;
-  }
-
-  @Override
-  public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-
-    if (_observable == null) {
-      Timber.d("Detaching useless fragment %s created by system", this);
-      detachSelf();
-      return;
+        _validInstance = false;
     }
 
-    load();
-  }
+    private ObservableLoadFragment(Observable<R> observable,
+                                   ResultDelegateProvider<A, R> resultDelegateProvider) {
+        _validInstance = true;
 
-  @Override
-  public void onResume() {
-    super.onResume();
+        setRetainInstance(true);
 
-    deliverResult();
-  }
-
-  @Override public void onDestroy() {
-    _subscriber.unsubscribe();
-
-    super.onDestroy();
-  }
-
-  void requestDeliver() {
-    _deliverRequested = true;
-    if (isResumed()) {
-      deliverResult();
-    }
-  }
-
-  private void load() {
-    requestDeliver();
-    Timber.d("Subscribing");
-    _subscriber = new LoadingSubscriber();
-
-    _observable.subscribe(_subscriber);
-  }
-
-  private void onResult(Result<A> result) {
-    _result = result;
-
-    if (isResumed()) {
-      deliverResult();
-    }
-  }
-
-  @SuppressWarnings("unchecked")
-  private void deliverResult() {
-    if (!_deliverRequested || _result == null) {
-      return;
+        _observable = observable;
+        _resultDelegateProvider = resultDelegateProvider;
     }
 
-    _deliverRequested = false;
-    Timber.d("Delivering %s to %s", _result.getClass().getSimpleName(), getActivity().getClass().getSimpleName());
-    _result.deliver((A) getActivity());
-  }
-
-  void detachSelf() {
-    getActivity().getSupportFragmentManager()
-        .beginTransaction()
-        .remove(this)
-        .commit();
-
-    _validInstance = false;
-  }
-
-
-  private interface Result<A extends FragmentActivity> {
-    void deliver(A activity);
-  }
-
-  private static class SuccessResult<A extends FragmentActivity, R> implements Result<A> {
-    private final R _result;
-    private final Action2<A, R> _resultCall;
-
-    private SuccessResult(R result, Action2<A, R> resultCall) {
-      _result = result;
-      _resultCall = resultCall;
+    public boolean isValid() {
+        return _validInstance;
     }
 
-    @Override public void deliver(A activity) {
-      _resultCall.call(activity, _result);
-    }
-  }
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-  private static class ErrorResult<A extends FragmentActivity> implements Result<A> {
-    private final Throwable _error;
-    private final Action2<A, Throwable> _errorCall;
+        if (_observable == null) {
+            Timber.d("Detaching useless fragment %s created by system", this);
+            detachSelf();
+            return;
+        }
 
-    public ErrorResult(Throwable error, Action2<A, Throwable> errorCall) {
-      _error = error;
-      _errorCall = errorCall;
-    }
-
-    @Override public void deliver(A activity) {
-      _errorCall.call(activity, _error);
-    }
-  }
-
-  static <A extends FragmentActivity, R> ObservableLoadFragment<A, R> newInstance(
-      Observable<R> observable, Action2<A, R> resultCall, Action2<A, Throwable> errorCall) {
-    if (observable == null) {
-      throw new IllegalArgumentException("observable cannot be null");
+        load();
     }
 
-    if (resultCall == null) {
-      throw new IllegalArgumentException("resultCall cannot be null");
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        deliverResult();
     }
 
-    if (errorCall == null) {
-      throw new IllegalArgumentException("errorCall cannot be null");
+    @Override
+    public void onDestroy() {
+        _subscriber.unsubscribe();
+
+        super.onDestroy();
     }
 
-    ObservableLoadFragment<A, R> fragment = new ObservableLoadFragment<>(observable, resultCall, errorCall);
-
-    return fragment;
-  }
-
-  class LoadingSubscriber extends Subscriber<R> {
-    @Override public void onCompleted() {
+    @SuppressWarnings("unchecked")
+    ResultDelegate<R> delegate() {
+        return _resultDelegateProvider.delegate((A) getActivity());
     }
 
-    @Override public void onError(Throwable e) {
-      onResult(new ErrorResult<>(e, _errorCall));
+    void requestDeliver() {
+        _deliverRequested = true;
+        delegate().onStart();
+        if (isResumed()) {
+            deliverResult();
+        }
     }
 
-    @Override public void onNext(R result) {
-      onResult(new SuccessResult<>(result, _resultCall));
+    private void load() {
+        requestDeliver();
+        Timber.d("Subscribing");
+        _subscriber = new LoadingSubscriber();
+
+        _observable.subscribe(_subscriber);
     }
-  }
+
+    private void onResult(Result<A> result) {
+        _result = result;
+
+        if (isResumed()) {
+            deliverResult();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void deliverResult() {
+        if (!_deliverRequested || _result == null) {
+            return;
+        }
+
+        _deliverRequested = false;
+        Timber.d("Delivering %s to %s", _result.getClass().getSimpleName(), getActivity().getClass().getSimpleName());
+        _result.deliver((A) getActivity());
+    }
+
+    void detachSelf() {
+        getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .remove(this)
+                .commit();
+
+        _validInstance = false;
+    }
+
+
+    private interface Result<A extends FragmentActivity> {
+        void deliver(A activity);
+    }
+
+    private static class SuccessResult<A extends FragmentActivity, R> implements Result<A> {
+        private final R _result;
+        private final ResultDelegateProvider<A, R> _Result_delegateProvider;
+
+        private SuccessResult(R _result, ResultDelegateProvider<A, R> _Result_delegateProvider) {
+            this._result = _result;
+            this._Result_delegateProvider = _Result_delegateProvider;
+        }
+
+        @Override
+        public void deliver(A activity) {
+            _Result_delegateProvider.delegate(activity).onNext(_result);
+        }
+    }
+
+    private static class ErrorResult<A extends FragmentActivity> implements Result<A> {
+        private final Throwable _error;
+        private final ResultDelegateProvider<A, ?> _Result_delegateProvider;
+
+        public ErrorResult(Throwable _error, ResultDelegateProvider<A, ?> _Result_delegateProvider) {
+            this._error = _error;
+            this._Result_delegateProvider = _Result_delegateProvider;
+        }
+
+        @Override
+        public void deliver(A activity) {
+            _Result_delegateProvider.delegate(activity).onError(_error);
+        }
+    }
+
+    static <A extends FragmentActivity, R> ObservableLoadFragment<A, R> newInstance(
+            Observable<R> observable, ResultDelegateProvider<A, R> resultDelegateProvider) {
+        if (observable == null) {
+            throw new IllegalArgumentException("observable cannot be null");
+        }
+
+        if (resultDelegateProvider == null) {
+            throw new IllegalArgumentException("resultDelegateProvider cannot be null");
+        }
+
+        return new ObservableLoadFragment<>(observable, resultDelegateProvider);
+    }
+
+    class LoadingSubscriber extends Subscriber<R> {
+        @Override
+        public void onCompleted() {
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            onResult(new ErrorResult<>(e, _resultDelegateProvider));
+        }
+
+        @Override
+        public void onNext(R result) {
+            onResult(new SuccessResult<>(result, _resultDelegateProvider));
+        }
+    }
 }

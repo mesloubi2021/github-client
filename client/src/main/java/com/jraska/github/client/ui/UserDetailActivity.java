@@ -6,11 +6,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.widget.ImageView;
 import android.widget.Toast;
-import butterknife.BindView;
-import butterknife.OnClick;
+
 import com.jraska.github.client.R;
+import com.jraska.github.client.rx.ResultDelegate;
+import com.jraska.github.client.rx.ResultDelegateProvider;
 import com.jraska.github.client.rx.IOPoolTransformer;
 import com.jraska.github.client.rx.ObservableLoader;
+import com.jraska.github.client.rx.SimpleDataResultDelegate;
 import com.jraska.github.client.users.User;
 import com.jraska.github.client.users.UserDetail;
 import com.jraska.github.client.users.UsersRepository;
@@ -18,61 +20,76 @@ import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
+import butterknife.OnClick;
+
 public class UserDetailActivity extends BaseActivity {
-  static final String EXTRA_USER_KEY = "user";
+    static final String EXTRA_USER_KEY = "user";
 
-  @BindView(R.id.user_detail_avatar) ImageView _avatarView;
+    static ResultDelegateProvider<UserDetailActivity, UserDetail> USER_DELEGATE = UserDetailActivity::createDetailDelegate;
 
-  @Inject Picasso _picasso;
-  @Inject GitHubIconClickHandler _gitHubIconClickHandler;
-  @Inject UsersRepository _usersRepository;
-  @Inject ObservableLoader _observableLoader;
+    @BindView(R.id.user_detail_avatar)
+    ImageView _avatarView;
 
-  private UserStatsFragment _userStatsFragment;
-  private ReposFragment _popularReposFragment;
-  private ReposFragment _contributedReposFragment;
+    @Inject
+    Picasso _picasso;
+    @Inject
+    GitHubIconClickHandler _gitHubIconClickHandler;
+    @Inject
+    UsersRepository _usersRepository;
+    @Inject
+    ObservableLoader _observableLoader;
 
-  private User _user;
+    private UserStatsFragment _userStatsFragment;
+    private ReposFragment _popularReposFragment;
+    private ReposFragment _contributedReposFragment;
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_user_detail);
-    getComponent().inject(this);
+    private User _user;
 
-    _userStatsFragment = (UserStatsFragment) findFragmentById(R.id.fragment_user_stats);
-    _popularReposFragment = (ReposFragment) findFragmentById(R.id.fragment_user_popular_repos);
-    _popularReposFragment.setTitle(getString(R.string.repos_popular));
-    _contributedReposFragment = (ReposFragment) findFragmentById(R.id.fragment_user_contributed_repos);
-    _contributedReposFragment.setTitle(getString(R.string.repos_contributed));
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_user_detail);
+        getComponent().inject(this);
 
-    _user = getIntent().getParcelableExtra(EXTRA_USER_KEY);
+        _userStatsFragment = (UserStatsFragment) findFragmentById(R.id.fragment_user_stats);
+        _popularReposFragment = (ReposFragment) findFragmentById(R.id.fragment_user_popular_repos);
+        _popularReposFragment.setTitle(getString(R.string.repos_popular));
+        _contributedReposFragment = (ReposFragment) findFragmentById(R.id.fragment_user_contributed_repos);
+        _contributedReposFragment.setTitle(getString(R.string.repos_contributed));
 
-    setTitle(_user._login);
-    _picasso.load(_user._avatarUrl).into(_avatarView);
+        _user = getIntent().getParcelableExtra(EXTRA_USER_KEY);
 
-    _observableLoader.load(_usersRepository.getUserDetail(_user._login).compose(IOPoolTransformer.get()), UserDetailActivity::setUserDetail, UserDetailActivity::onUserLoadError);
-  }
+        setTitle(_user._login);
+        _picasso.load(_user._avatarUrl).into(_avatarView);
 
-  @OnClick(R.id.user_detail_github_fab) void gitHubFabClicked() {
-    _gitHubIconClickHandler.userGitHubClicked(_user);
-  }
+        _observableLoader.load(_usersRepository.getUserDetail(_user._login).compose(IOPoolTransformer.get()), USER_DELEGATE);
+    }
 
-  void setUserDetail(UserDetail userDetail) {
-    _userStatsFragment.setUserStats(userDetail._basicStats);
+    @OnClick(R.id.user_detail_github_fab)
+    void gitHubFabClicked() {
+        _gitHubIconClickHandler.userGitHubClicked(_user);
+    }
 
-    _popularReposFragment.setRepos(userDetail._popularRepos);
-    _contributedReposFragment.setRepos(userDetail._contributedRepos);
-  }
+    void setUserDetail(UserDetail userDetail) {
+        _userStatsFragment.setUserStats(userDetail._basicStats);
 
-  void onUserLoadError(Throwable error) {
-    Toast.makeText(this, error.toString(), Toast.LENGTH_LONG).show();
-  }
+        _popularReposFragment.setRepos(userDetail._popularRepos);
+        _contributedReposFragment.setRepos(userDetail._contributedRepos);
+    }
 
-  public static void start(Activity inActivity, @NonNull User user) {
-    Intent intent = new Intent(inActivity, UserDetailActivity.class);
-    intent.putExtra(EXTRA_USER_KEY, user);
+    void onUserLoadError(Throwable error) {
+        Toast.makeText(this, error.toString(), Toast.LENGTH_LONG).show();
+    }
 
-    inActivity.startActivity(intent);
-  }
+    public static void start(Activity inActivity, @NonNull User user) {
+        Intent intent = new Intent(inActivity, UserDetailActivity.class);
+        intent.putExtra(EXTRA_USER_KEY, user);
+
+        inActivity.startActivity(intent);
+    }
+
+    private ResultDelegate<UserDetail> createDetailDelegate() {
+        return new SimpleDataResultDelegate<>(this::setUserDetail, this::onUserLoadError);
+    }
 }
