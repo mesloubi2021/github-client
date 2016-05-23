@@ -10,10 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import butterknife.BindView;
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.jraska.github.client.GitHubClientApp;
 import com.jraska.github.client.R;
+import com.jraska.github.client.rx.ResultDelegate;
 import com.jraska.github.client.users.User;
 
 import javax.inject.Inject;
@@ -74,6 +74,36 @@ public class UsersFragment extends Fragment {
     if (_swipeRefreshLayout.getMeasuredHeight() == 0) {
       int circleSize = getResources().getDimensionPixelSize(R.dimen.swipe_progress_circle_diameter);
       _swipeRefreshLayout.setProgressViewOffset(false, 0, circleSize);
+    }
+  }
+
+  static class UsersFragmentAwareLoadingDelegate<R> implements ResultDelegate<R> {
+    private final ResultDelegate<R> _resultDelegate;
+    private final UsersFragment _usersFragment;
+
+    public UsersFragmentAwareLoadingDelegate(ResultDelegate<R> resultDelegate, UsersFragment usersFragment) {
+      _resultDelegate = resultDelegate;
+      _usersFragment = usersFragment;
+    }
+
+    @Override public void onStart() {
+      _resultDelegate.onStart();
+      _usersFragment.showProgressIndicator();
+    }
+
+    @Override public void onNext(R result) {
+      _resultDelegate.onNext(result);
+      _usersFragment.hideProgressIndicator();
+    }
+
+    @Override public void onError(Throwable error) {
+      _resultDelegate.onError(error);
+      _usersFragment.hideProgressIndicator();
+    }
+
+    @Override public void onCompleted() {
+      _resultDelegate.onCompleted();
+      _usersFragment.hideProgressIndicator();
     }
   }
 }
