@@ -14,12 +14,9 @@ public class UsersActivity extends BaseActivity implements UsersAdapter.UserList
 
   static ResultDelegateProvider<UsersActivity, List<User>> USERS_DELEGATE = UsersActivity::createUsersDelegate;
 
-  @Inject
-  UsersRepository _usersRepository;
-  @Inject
-  ObservableLoader _observableLoader;
-  @Inject
-  GitHubIconClickHandler _iconClickHandler;
+  @Inject UsersRepository _usersRepository;
+  @Inject ObservableLoader _observableLoader;
+  @Inject GitHubIconClickHandler _iconClickHandler;
 
   private UsersFragment _usersFragment;
 

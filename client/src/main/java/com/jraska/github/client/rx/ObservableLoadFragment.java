@@ -80,7 +80,7 @@ public class ObservableLoadFragment<A extends FragmentActivity, R> extends Fragm
   }
 
   private void load() {
-    requestDeliver();
+    delegate().onStart();
     Timber.d("Subscribing");
     _subscriber = new LoadingSubscriber();
 
@@ -88,6 +88,7 @@ public class ObservableLoadFragment<A extends FragmentActivity, R> extends Fragm
   }
 
   private void onResult(Result<A> result) {
+    _deliverRequested = true;
     _result = result;
 
     if (isResumed()) {
