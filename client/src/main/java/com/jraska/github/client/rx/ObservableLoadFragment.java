@@ -62,7 +62,9 @@ public class ObservableLoadFragment<A extends FragmentActivity, R> extends Fragm
 
   @Override
   public void onDestroy() {
-    _subscriber.unsubscribe();
+    if (_subscriber != null && !_subscriber.isUnsubscribed()) {
+      _subscriber.unsubscribe();
+    }
 
     super.onDestroy();
   }
