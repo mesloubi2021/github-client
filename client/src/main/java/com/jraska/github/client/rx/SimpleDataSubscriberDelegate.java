@@ -2,11 +2,11 @@ package com.jraska.github.client.rx;
 
 import rx.functions.Action1;
 
-public class SimpleDataResultDelegate<R> implements ResultDelegate<R> {
+public class SimpleDataSubscriberDelegate<R> implements SubscriberDelegate<R> {
   private final Action1<R> _nextCall;
   private final Action1<Throwable> _errorCall;
 
-  public SimpleDataResultDelegate(Action1<R> nextCall, Action1<Throwable> errorCall) {
+  public SimpleDataSubscriberDelegate(Action1<R> nextCall, Action1<Throwable> errorCall) {
     _nextCall = nextCall;
     _errorCall = errorCall;
   }

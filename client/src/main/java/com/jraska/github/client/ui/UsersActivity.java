@@ -12,7 +12,7 @@ import java.util.List;
 
 public class UsersActivity extends BaseActivity implements UsersAdapter.UserListener {
 
-  static ResultDelegateProvider<UsersActivity, List<User>> USERS_DELEGATE = UsersActivity::createUsersDelegate;
+  static SubscriberDelegateProvider<UsersActivity, List<User>> USERS_DELEGATE = UsersActivity::createUsersDelegate;
 
   @Inject UsersRepository _usersRepository;
   @Inject ObservableLoader _observableLoader;
@@ -59,8 +59,8 @@ public class UsersActivity extends BaseActivity implements UsersAdapter.UserList
     startLoading();
   }
 
-  private ResultDelegate<List<User>> createUsersDelegate() {
-    SimpleDataResultDelegate<List<User>> simpleDelegate = new SimpleDataResultDelegate<>(this::onUsersLoaded, this::onUsersError);
+  private SubscriberDelegate<List<User>> createUsersDelegate() {
+    SimpleDataSubscriberDelegate<List<User>> simpleDelegate = new SimpleDataSubscriberDelegate<>(this::onUsersLoaded, this::onUsersError);
     return new UsersFragment.UsersFragmentAwareLoadingDelegate<>(simpleDelegate, _usersFragment);
   }
 }

@@ -20,7 +20,7 @@ import javax.inject.Inject;
 public class UserDetailActivity extends BaseActivity {
   static final String EXTRA_USER_KEY = "user";
 
-  static ResultDelegateProvider<UserDetailActivity, UserDetail> USER_DELEGATE = UserDetailActivity::createDetailDelegate;
+  static SubscriberDelegateProvider<UserDetailActivity, UserDetail> USER_DELEGATE = UserDetailActivity::createDetailDelegate;
 
   @BindView(R.id.user_detail_avatar) ImageView _avatarView;
 
@@ -77,7 +77,7 @@ public class UserDetailActivity extends BaseActivity {
     inActivity.startActivity(intent);
   }
 
-  private ResultDelegate<UserDetail> createDetailDelegate() {
-    return new SimpleDataResultDelegate<>(this::setUserDetail, this::onUserLoadError);
+  private SubscriberDelegate<UserDetail> createDetailDelegate() {
+    return new SimpleDataSubscriberDelegate<>(this::setUserDetail, this::onUserLoadError);
   }
 }

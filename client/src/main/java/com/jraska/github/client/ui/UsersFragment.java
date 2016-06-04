@@ -13,7 +13,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.jraska.github.client.GitHubClientApp;
 import com.jraska.github.client.R;
-import com.jraska.github.client.rx.ResultDelegate;
+import com.jraska.github.client.rx.SubscriberDelegate;
 import com.jraska.github.client.users.User;
 
 import javax.inject.Inject;
@@ -77,32 +77,32 @@ public class UsersFragment extends Fragment {
     }
   }
 
-  static class UsersFragmentAwareLoadingDelegate<R> implements ResultDelegate<R> {
-    private final ResultDelegate<R> _resultDelegate;
+  static class UsersFragmentAwareLoadingDelegate<R> implements SubscriberDelegate<R> {
+    private final SubscriberDelegate<R> _subscriberDelegate;
     private final UsersFragment _usersFragment;
 
-    public UsersFragmentAwareLoadingDelegate(ResultDelegate<R> resultDelegate, UsersFragment usersFragment) {
-      _resultDelegate = resultDelegate;
+    public UsersFragmentAwareLoadingDelegate(SubscriberDelegate<R> subscriberDelegate, UsersFragment usersFragment) {
+      _subscriberDelegate = subscriberDelegate;
       _usersFragment = usersFragment;
     }
 
     @Override public void onStart() {
-      _resultDelegate.onStart();
+      _subscriberDelegate.onStart();
       _usersFragment.showProgressIndicator();
     }
 
     @Override public void onNext(R result) {
-      _resultDelegate.onNext(result);
+      _subscriberDelegate.onNext(result);
       _usersFragment.hideProgressIndicator();
     }
 
     @Override public void onError(Throwable error) {
-      _resultDelegate.onError(error);
+      _subscriberDelegate.onError(error);
       _usersFragment.hideProgressIndicator();
     }
 
     @Override public void onCompleted() {
-      _resultDelegate.onCompleted();
+      _subscriberDelegate.onCompleted();
       _usersFragment.hideProgressIndicator();
     }
   }

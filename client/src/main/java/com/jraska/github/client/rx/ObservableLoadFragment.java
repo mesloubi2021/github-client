@@ -14,7 +14,7 @@ public class ObservableLoadFragment<A extends FragmentActivity, R> extends Fragm
   private boolean _validInstance;
 
   private final Observable<R> _observable;
-  private final ResultDelegateProvider<A, R> _resultDelegateProvider;
+  private final SubscriberDelegateProvider<A, R> _subscriberDelegateProvider;
 
   private Result<A> _result;
   private Subscriber<R> _subscriber;
@@ -27,13 +27,13 @@ public class ObservableLoadFragment<A extends FragmentActivity, R> extends Fragm
   }
 
   private ObservableLoadFragment(Observable<R> observable,
-                                 ResultDelegateProvider<A, R> resultDelegateProvider) {
+                                 SubscriberDelegateProvider<A, R> subscriberDelegateProvider) {
     _validInstance = true;
 
     setRetainInstance(true);
 
     _observable = observable;
-    _resultDelegateProvider = resultDelegateProvider;
+    _subscriberDelegateProvider = subscriberDelegateProvider;
   }
 
   public boolean isValid() {
@@ -69,8 +69,8 @@ public class ObservableLoadFragment<A extends FragmentActivity, R> extends Fragm
     super.onDestroy();
   }
 
-  @SuppressWarnings("unchecked") ResultDelegate<R> delegate() {
-    return _resultDelegateProvider.delegate((A) getActivity());
+  @SuppressWarnings("unchecked") SubscriberDelegate<R> delegate() {
+    return _subscriberDelegateProvider.delegate((A) getActivity());
   }
 
   void requestDeliver() {
@@ -150,16 +150,16 @@ public class ObservableLoadFragment<A extends FragmentActivity, R> extends Fragm
   }
 
   static <A extends FragmentActivity, R> ObservableLoadFragment<A, R> newInstance(
-      Observable<R> observable, ResultDelegateProvider<A, R> resultDelegateProvider) {
+      Observable<R> observable, SubscriberDelegateProvider<A, R> subscriberDelegateProvider) {
     if (observable == null) {
       throw new IllegalArgumentException("observable cannot be null");
     }
 
-    if (resultDelegateProvider == null) {
+    if (subscriberDelegateProvider == null) {
       throw new IllegalArgumentException("resultDelegateProvider cannot be null");
     }
 
-    return new ObservableLoadFragment<>(observable, resultDelegateProvider);
+    return new ObservableLoadFragment<>(observable, subscriberDelegateProvider);
   }
 
   class LoadingSubscriber extends Subscriber<R> {

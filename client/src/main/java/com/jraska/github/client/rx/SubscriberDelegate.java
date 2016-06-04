@@ -2,7 +2,7 @@ package com.jraska.github.client.rx;
 
 import rx.Observer;
 
-public interface ResultDelegate<R> extends Observer<R> {
+public interface SubscriberDelegate<R> extends Observer<R> {
   void onStart();
 
   void onNext(R result);

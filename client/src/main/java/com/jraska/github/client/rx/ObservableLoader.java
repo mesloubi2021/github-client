@@ -16,7 +16,7 @@ public class ObservableLoader {
   }
 
   public <R, A extends FragmentActivity> void load(Observable<R> observable,
-                                                   ResultDelegateProvider<A, R> resultDelegateProvider) {
+                                                   SubscriberDelegateProvider<A, R> subscriberDelegateProvider) {
     ObservableLoadFragment existingFragment = (ObservableLoadFragment) _fragmentManager.findFragmentByTag(ObservableLoadFragment.TAG);
     if (existingFragment != null && existingFragment.isValid()) {
       Timber.d("Activity %s is already loading its data", existingFragment.getActivity());
@@ -24,7 +24,7 @@ public class ObservableLoader {
       return;
     }
 
-    ObservableLoadFragment fragmentProxy = ObservableLoadFragment.newInstance(observable, resultDelegateProvider);
+    ObservableLoadFragment fragmentProxy = ObservableLoadFragment.newInstance(observable, subscriberDelegateProvider);
     _fragmentManager.beginTransaction()
         .add(fragmentProxy, ObservableLoadFragment.TAG)
         .commit();
