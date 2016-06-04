@@ -20,7 +20,7 @@ import javax.inject.Inject;
 public class UserDetailActivity extends BaseActivity {
   static final String EXTRA_USER_KEY = "user";
 
-  static SubscriberDelegateProvider<UserDetailActivity, UserDetail> USER_DELEGATE = UserDetailActivity::createDetailDelegate;
+  static final SubscriberDelegateProvider<UserDetailActivity, UserDetail> USER_DELEGATE = UserDetailActivity::createDetailDelegate;
 
   @BindView(R.id.user_detail_avatar) ImageView _avatarView;
 

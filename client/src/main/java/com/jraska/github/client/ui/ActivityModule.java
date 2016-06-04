@@ -9,7 +9,7 @@ import dagger.Provides;
 public class ActivityModule {
   private final BaseActivity _activity;
 
-  public ActivityModule(BaseActivity activity) {
+  ActivityModule(BaseActivity activity) {
     _activity = activity;
   }
 

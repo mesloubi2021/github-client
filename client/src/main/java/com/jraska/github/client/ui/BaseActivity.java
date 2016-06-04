@@ -10,9 +10,9 @@ import butterknife.ButterKnife;
 import com.jraska.github.client.GitHubClientApp;
 import com.jraska.github.client.R;
 
-public class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 
-  @BindView(R.id.toolbar) protected Toolbar _toolbar;
+  @BindView(R.id.toolbar) Toolbar _toolbar;
 
   @Override
   public void setContentView(int layoutResID) {

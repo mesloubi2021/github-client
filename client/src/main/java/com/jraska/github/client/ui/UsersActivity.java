@@ -12,7 +12,7 @@ import java.util.List;
 
 public class UsersActivity extends BaseActivity implements UsersAdapter.UserListener {
 
-  static SubscriberDelegateProvider<UsersActivity, List<User>> USERS_DELEGATE = UsersActivity::createUsersDelegate;
+  static final SubscriberDelegateProvider<UsersActivity, List<User>> USERS_DELEGATE = UsersActivity::createUsersDelegate;
 
   @Inject UsersRepository _usersRepository;
   @Inject ObservableLoader _observableLoader;
