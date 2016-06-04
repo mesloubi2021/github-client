@@ -13,7 +13,7 @@
         android:layout_toStartOf="@+id/repo_item_stats_container"
         android:textSize="@dimen/textTitle"
         android:textColor="@color/textMain"
-        android:singleLine="true"
+        android:maxLines="1"
         tools:text="Falcon" />
 
     <TextView
@@ -24,8 +24,8 @@
         android:layout_below="@+id/repo_item_title"
         android:textSize="@dimen/textSubtitle"
         android:textColor="@color/textSecondary"
-        android:singleLine="true"
-        tools:text="Take Android screenshots with Falsons bright eye" />
+        android:maxLines="1"
+        tools:text="Take Android screenshots with Falcons bright eye" />
 
     <LinearLayout
         android:id="@+id/repo_item_stats_container"

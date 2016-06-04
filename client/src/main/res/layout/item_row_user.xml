@@ -26,7 +26,7 @@
         android:layout_toRightOf="@id/user_avatar"
         android:layout_toLeftOf="@+id/user_item_gitHub_icon"
         android:layout_toStartOf="@+id/user_item_gitHub_icon"
-        android:singleLine="true"
+        android:maxLines="1"
         android:ellipsize="end"
         android:textSize="@dimen/textTitle"
         android:textColor="@color/textMain"
