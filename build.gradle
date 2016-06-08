@@ -9,6 +9,7 @@ buildscript {
     classpath 'me.tatarka:gradle-retrolambda:3.2.5'
     classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
     classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+    classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.5.2'
   }
 }
 
@@ -20,4 +21,14 @@ allprojects {
 
 task clean(type: Delete) {
   delete rootProject.buildDir
+}
+
+ext {
+  version = '0.1.0'
+  versionCode = 1
+  minSdkVersion = 17
+  compileSdkVersion = 23
+  targetSdkVersion = compileSdkVersion
+  buildToolsVersion = '23.0.3'
+  sourceCompatibility = JavaVersion.VERSION_1_8
 }

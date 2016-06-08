@@ -1,7 +1,7 @@
 package com.jraska.github.client.users;
 
-import com.jraska.github.client.BuildConfig;
 import com.jraska.github.client.dagger.PerApp;
+import com.jraska.github.client.domain.BuildConfig;
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.OkHttpClient;

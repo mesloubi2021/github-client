@@ -3,20 +3,20 @@ apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.neenbedankt.android-apt'
 
 android {
-  compileSdkVersion 23
-  buildToolsVersion "23.0.3"
+  compileSdkVersion rootProject.ext.compileSdkVersion
+  buildToolsVersion rootProject.ext.buildToolsVersion
 
   defaultConfig {
     applicationId "com.jraska.github.client"
-    minSdkVersion 17
-    targetSdkVersion 23
-    versionCode 1
-    versionName "0.1.0"
+    minSdkVersion rootProject.ext.minSdkVersion
+    targetSdkVersion rootProject.ext.targetSdkVersion
+    versionName version
+    versionCode rootProject.ext.versionCode
   }
 
   compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
+    sourceCompatibility rootProject.ext.sourceCompatibility
+    targetCompatibility rootProject.ext.sourceCompatibility
   }
 
   lintOptions {
@@ -28,6 +28,8 @@ android {
 dependencies {
   retrolambdaConfig 'net.orfjackal.retrolambda:retrolambda:2.3.0'
 
+  compile project(':client-domain')
+
   compile 'com.android.support:appcompat-v7:23.4.0'
   compile 'com.android.support:design:23.4.0'
   compile 'com.android.support:cardview-v7:23.4.0'
@@ -36,23 +38,9 @@ dependencies {
   compile 'com.jakewharton:butterknife:8.0.1'
   apt 'com.jakewharton:butterknife-compiler:8.0.1'
 
-  compile 'com.google.dagger:dagger:2.4'
   apt 'com.google.dagger:dagger-compiler:2.4'
 
   compile 'io.reactivex:rxandroid:1.2.0'
-  compile 'io.reactivex:rxjava:1.1.5'
-
-  compile 'com.squareup.retrofit2:retrofit:2.0.2'
-  compile 'com.squareup.retrofit2:converter-gson:2.0.2'
-  compile 'com.squareup.retrofit2:adapter-rxjava:2.0.2'
-  compile 'com.google.code.gson:gson:2.6.2'
-  compile 'com.squareup.okhttp3:okhttp:3.3.1'
-  compile 'com.squareup.okhttp3:logging-interceptor:3.3.1'
-  compile 'com.squareup.okio:okio:1.8.0'
-
-  compile 'com.jakewharton.timber:timber:4.1.2'
-
-  provided "org.projectlombok:lombok:1.16.8"
 
   testCompile 'junit:junit:4.12'
   testCompile 'org.robolectric:robolectric:3.0'
