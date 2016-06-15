@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class GitHubUserTest {
   @Test
-  public void givenJson_whenDeserialized_thenHasCorrectValues() throws Exception {
+  public void isDeserializableFromJson() throws Exception {
     Type listType = new TypeToken<ArrayList<GitHubUser>>() {
     }.getType();
 
