@@ -1,0 +1,13 @@
+<lint>
+    <issue id="InvalidPackage">
+        <ignore regexp=".*butterknife.*" />
+        <ignore regexp="okio.Okio" />
+        <ignore regexp="retrofit2.Platform.Java8" />
+    </issue>
+    <issue id="ResourceType">
+        <ignore path="*$$ViewBinder*"/>
+    </issue>
+    <issue id="ValidFragment">
+        <ignore path="*/rx/ObservableLoadFragment*" />
+    </issue>
+</lint>
