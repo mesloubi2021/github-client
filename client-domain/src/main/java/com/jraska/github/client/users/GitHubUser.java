@@ -1,5 +1,3 @@
-
-
 package com.jraska.github.client.users;
 
 import com.google.gson.annotations.Expose;

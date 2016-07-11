@@ -12,5 +12,4 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_users_list"
     tools:context=".ui.UsersActivity"
-    tools:layout="@layout/fragment_users">
-</fragment>
+    tools:layout="@layout/fragment_users"></fragment>

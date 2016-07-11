@@ -37,7 +37,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     setSupportActionBar(_toolbar);
   }
 
-  protected Fragment findFragmentById(int id){
+  protected Fragment findFragmentById(int id) {
     return getSupportFragmentManager().findFragmentById(id);
   }
 
