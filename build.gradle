@@ -28,6 +28,6 @@ ext {
   minSdkVersion = 17
   compileSdkVersion = 24
   targetSdkVersion = compileSdkVersion
-  buildToolsVersion = '24.0.0'
+  buildToolsVersion = '24.0.1'
   sourceCompatibility = JavaVersion.VERSION_1_8
 }
