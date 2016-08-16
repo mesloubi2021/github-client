@@ -1,7 +1,6 @@
 package com.jraska.github.client.network;
 
 import android.content.Context;
-import com.jraska.github.client.dagger.PerApp;
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.Cache;
@@ -9,11 +8,12 @@ import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import timber.log.Timber;
 
+import javax.inject.Singleton;
 import java.io.File;
 
 @Module
 public class NetworkModule {
-  @Provides @PerApp OkHttpClient provideOkHttpClient(Context context) {
+  @Provides @Singleton OkHttpClient provideOkHttpClient(Context context) {
     HttpLoggingInterceptor.Logger logger = message -> Timber.tag("OkHttp").v(message);
     HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(logger);
     loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
