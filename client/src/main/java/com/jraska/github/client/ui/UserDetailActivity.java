@@ -47,7 +47,7 @@ public class UserDetailActivity extends BaseActivity {
     _contributedReposFragment = (ReposFragment) findFragmentById(R.id.fragment_user_contributed_repos);
     _contributedReposFragment.setTitle(getString(R.string.repos_contributed));
 
-    _user = getIntent().getParcelableExtra(EXTRA_USER_KEY);
+    _user = (User) getIntent().getSerializableExtra(EXTRA_USER_KEY);
 
     setTitle(_user._login);
     _picasso.load(_user._avatarUrl).into(_avatarView);
