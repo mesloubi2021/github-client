@@ -24,6 +24,7 @@ dependencies {
   retrolambdaConfig 'net.orfjackal.retrolambda:retrolambda:2.3.0'
 
   compile project(':client-domain')
+  compile project(':client-data')
 
   compile 'com.android.support:appcompat-v7:24.1.1'
   compile 'com.android.support:design:24.1.1'
