@@ -16,6 +16,6 @@ public class UsersActivityTest {
   public void whenCreated_thenUsersRepositoryInjected() throws Exception {
     UsersActivity usersActivity = Robolectric.setupActivity(UsersActivity.class);
 
-    assertThat(usersActivity._usersRepository).isNotNull();
+    assertThat(usersActivity.usersRepository).isNotNull();
   }
 }

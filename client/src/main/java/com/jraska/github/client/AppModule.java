@@ -2,13 +2,16 @@ package com.jraska.github.client;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import com.jakewharton.picasso.OkHttp3Downloader;
 import com.jraska.github.client.common.AppBuildConfig;
 import com.jraska.github.client.logging.Logger;
 import com.jraska.github.client.network.Network;
+import com.squareup.picasso.Downloader;
 import com.squareup.picasso.Picasso;
 import dagger.Module;
 import dagger.Provides;
 import dagger.Reusable;
+import okhttp3.OkHttpClient;
 import timber.log.Timber;
 
 import javax.inject.Singleton;
@@ -26,8 +29,15 @@ public class AppModule {
     return app;
   }
 
-  @Singleton @Provides Picasso picasso(Context context) {
-    return Picasso.with(context);
+  @Singleton @Provides Picasso picasso(Context context, Downloader downloader) {
+    return new Picasso.Builder(context)
+        .downloader(downloader)
+        .build();
+  }
+
+
+  @Provides @Singleton Downloader downloader(OkHttpClient.Builder builder) {
+    return new OkHttp3Downloader(builder.build());
   }
 
   @Provides @Network File provideNetworkCacheDir(Context context) {
