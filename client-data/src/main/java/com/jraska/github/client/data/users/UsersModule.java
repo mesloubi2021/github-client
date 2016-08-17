@@ -1,5 +1,6 @@
-package com.jraska.github.client.users;
+package com.jraska.github.client.data.users;
 
+import com.jraska.github.client.users.UsersRepository;
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.OkHttpClient;
@@ -27,7 +28,7 @@ public final class UsersModule {
   @Provides @Singleton Retrofit provideRetrofit(OkHttpClient okHttpClient) {
     Retrofit retrofit = new Retrofit.Builder()
         .baseUrl("https://api.github.com")
-        .validateEagerly(true)
+        .validateEagerly(true) // TODO: 17/08/16 AppConfig
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create())
         .addCallAdapterFactory(RxJavaCallAdapterFactory.create())

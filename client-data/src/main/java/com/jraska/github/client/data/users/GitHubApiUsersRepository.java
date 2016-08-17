@@ -1,7 +1,10 @@
-package com.jraska.github.client.users;
+package com.jraska.github.client.data.users;
 
 import android.support.annotation.NonNull;
 import com.jraska.github.client.common.Pair;
+import com.jraska.github.client.users.User;
+import com.jraska.github.client.users.UserDetail;
+import com.jraska.github.client.users.UsersRepository;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 

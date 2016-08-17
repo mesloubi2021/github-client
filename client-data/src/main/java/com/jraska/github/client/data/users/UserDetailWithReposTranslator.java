@@ -1,6 +1,9 @@
-package com.jraska.github.client.users;
+package com.jraska.github.client.data.users;
 
 import com.jraska.github.client.common.Pair;
+import com.jraska.github.client.users.Repo;
+import com.jraska.github.client.users.UserDetail;
+import com.jraska.github.client.users.UserStats;
 import rx.Observable;
 
 import java.text.DateFormat;
@@ -10,7 +13,7 @@ import java.util.*;
 
 import static java.util.Locale.ENGLISH;
 
-class UserDetailWithReposTranslator
+final class UserDetailWithReposTranslator
     implements Observable.Transformer<Pair<GitHubUserDetail, List<GitHubRepo>>, UserDetail> {
   static final DateFormat GIT_HUB_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", ENGLISH);
   static final Comparator<GitHubRepo> BY_STARS_REPO_COMPARATOR = (lhs, rhs) -> rhs.stargazersCount.compareTo(lhs.stargazersCount);

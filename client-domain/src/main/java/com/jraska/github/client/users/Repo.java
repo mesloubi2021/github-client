@@ -10,7 +10,7 @@ public class Repo {
   public final int _forks;
   public final int _size;
 
-  Repo(@NonNull String name, @NonNull String description, int watchers, int stars, int forks, int size) {
+  public Repo(@NonNull String name, @NonNull String description, int watchers, int stars, int forks, int size) {
     _name = name;
     _description = description;
     _watchers = watchers;

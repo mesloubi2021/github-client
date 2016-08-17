@@ -1,6 +1,8 @@
 package com.jraska.github.client.users;
 
 import android.support.annotation.NonNull;
+import com.jraska.github.client.users.Repo;
+import com.jraska.github.client.users.UserStats;
 
 import java.util.Collections;
 import java.util.List;
