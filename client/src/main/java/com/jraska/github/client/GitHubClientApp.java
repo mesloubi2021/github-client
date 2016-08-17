@@ -6,7 +6,7 @@ import timber.log.Timber;
 public class GitHubClientApp extends Application {
   private AppComponent appComponent;
 
-  public AppComponent getComponent() {
+  public AppComponent component() {
     return appComponent;
   }
 

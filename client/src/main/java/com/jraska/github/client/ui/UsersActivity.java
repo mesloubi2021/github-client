@@ -24,7 +24,7 @@ public class UsersActivity extends BaseActivity implements UsersAdapter.UserList
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_users_list);
-    getComponent().inject(this);
+    component().inject(this);
 
     usersFragment = (UsersFragment) findFragmentById(R.id.fragment_users);
     usersFragment.setUsersListener(this);

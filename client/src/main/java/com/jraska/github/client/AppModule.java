@@ -25,11 +25,11 @@ public class AppModule {
     this.app = app;
   }
 
-  @Singleton @Provides Context provideContext() {
+  @Provides Context provideContext() {
     return app;
   }
 
-  @Singleton @Provides Picasso picasso(Context context, Downloader downloader) {
+  @Provides @Singleton Picasso picasso(Context context, Downloader downloader) {
     return new Picasso.Builder(context)
         .downloader(downloader)
         .build();
@@ -44,7 +44,7 @@ public class AppModule {
     return context.getCacheDir();
   }
 
-  @Provides @Network Logger provideTimberLogger() {
+  @Provides @Reusable @Network Logger timberLogger() {
     return message -> Timber.tag("Network").v(message);
   }
 

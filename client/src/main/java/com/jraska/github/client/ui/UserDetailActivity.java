@@ -39,7 +39,7 @@ public class UserDetailActivity extends BaseActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_user_detail);
-    getComponent().inject(this);
+    component().inject(this);
 
     userStatsFragment = (UserStatsFragment) findFragmentById(R.id.fragment_user_stats);
     popularReposFragment = (ReposFragment) findFragmentById(R.id.fragment_user_popular_repos);

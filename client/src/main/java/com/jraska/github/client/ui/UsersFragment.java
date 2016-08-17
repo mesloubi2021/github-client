@@ -29,7 +29,7 @@ public class UsersFragment extends Fragment {
     super.onCreate(savedInstanceState);
 
     GitHubClientApp application = (GitHubClientApp) getActivity().getApplication();
-    application.getComponent().inject(this);
+    application.component().inject(this);
   }
 
   @Nullable @Override

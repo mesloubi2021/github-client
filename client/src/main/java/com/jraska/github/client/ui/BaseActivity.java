@@ -41,11 +41,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     return getSupportFragmentManager().findFragmentById(id);
   }
 
-  protected GitHubClientApp getApp() {
+  protected GitHubClientApp app() {
     return (GitHubClientApp) getApplication();
   }
 
-  protected ActivityComponent getComponent() {
-    return getApp().getComponent().activityComponent(new ActivityModule(this));
+  protected ActivityComponent component() {
+    return app().component().activityComponent(new ActivityModule(this));
   }
 }
