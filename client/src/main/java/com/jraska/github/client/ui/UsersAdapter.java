@@ -19,60 +19,60 @@ import java.util.Collection;
 import java.util.List;
 
 public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserHolder> {
-  private final List<User> _users = new ArrayList<>();
-  private final LayoutInflater _inflater;
-  private final Picasso _picasso;
+  private final List<User> usersList = new ArrayList<>();
+  private final LayoutInflater inflater;
+  private final Picasso picasso;
 
-  private UserListener _userListener;
+  private UserListener userListener;
 
   @Inject
   public UsersAdapter(LayoutInflater inflater, Picasso picasso) {
-    _inflater = inflater;
-    _picasso = picasso;
+    this.inflater = inflater;
+    this.picasso = picasso;
   }
 
   public void setUserListener(UserListener userClickListener) {
-    _userListener = userClickListener;
+    userListener = userClickListener;
   }
 
   @Override public UserHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    View inflated = _inflater.inflate(R.layout.item_row_user, parent, false);
+    View inflated = inflater.inflate(R.layout.item_row_user, parent, false);
     return new UserHolder(this, inflated);
   }
 
   @Override public void onBindViewHolder(UserHolder holder, int position) {
-    User user = _users.get(position);
-    holder._loginTextView.setText(user._login);
-    holder._avatarView.setImageDrawable(null);
-    _picasso.load(user._avatarUrl).into(holder._avatarView);
+    User user = usersList.get(position);
+    holder.loginTextView.setText(user.login);
+    holder.avatarView.setImageDrawable(null);
+    picasso.load(user.avatarUrl).into(holder.avatarView);
 
-    if (user._isAdmin) {
-      holder._adminView.setVisibility(View.VISIBLE);
+    if (user.isAdmin) {
+      holder.adminView.setVisibility(View.VISIBLE);
     } else {
-      holder._adminView.setVisibility(View.GONE);
+      holder.adminView.setVisibility(View.GONE);
     }
   }
 
   @Override public int getItemCount() {
-    return _users.size();
+    return usersList.size();
   }
 
-  public void setUsers(Collection<User> users) {
-    _users.clear();
-    _users.addAll(users);
+  public void setUsersList(Collection<User> users) {
+    usersList.clear();
+    usersList.addAll(users);
   }
 
   void onItemClicked(int position) {
-    if (_userListener != null) {
-      User user = _users.get(position);
-      _userListener.onUserClicked(user);
+    if (userListener != null) {
+      User user = usersList.get(position);
+      userListener.onUserClicked(user);
     }
   }
 
   void onGitHubIconClicked(int adapterPosition) {
-    if (_userListener != null) {
-      User user = _users.get(adapterPosition);
-      _userListener.onUserGitHubIconClicked(user);
+    if (userListener != null) {
+      User user = usersList.get(adapterPosition);
+      userListener.onUserGitHubIconClicked(user);
     }
   }
 
@@ -83,24 +83,24 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserHolder> 
   }
 
   public static class UserHolder extends RecyclerView.ViewHolder {
-    @BindView(R.id.user_login) TextView _loginTextView;
-    @BindView(R.id.user_avatar) ImageView _avatarView;
-    @BindView(R.id.user_admin_image) View _adminView;
+    @BindView(R.id.user_login) TextView loginTextView;
+    @BindView(R.id.user_avatar) ImageView avatarView;
+    @BindView(R.id.user_admin_image) View adminView;
 
-    private final UsersAdapter _adapter;
+    private final UsersAdapter adapter;
 
     public UserHolder(UsersAdapter adapter, View itemView) {
       super(itemView);
       ButterKnife.bind(this, itemView);
-      _adapter = adapter;
+      this.adapter = adapter;
     }
 
     @OnClick(R.id.user_container) void onItemClick() {
-      _adapter.onItemClicked(getAdapterPosition());
+      adapter.onItemClicked(getAdapterPosition());
     }
 
     @OnClick(R.id.user_item_gitHub_icon) void onGitHubIconClicked() {
-      _adapter.onGitHubIconClicked(getAdapterPosition());
+      adapter.onGitHubIconClicked(getAdapterPosition());
     }
   }
 }

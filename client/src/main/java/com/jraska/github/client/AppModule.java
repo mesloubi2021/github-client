@@ -16,14 +16,14 @@ import java.io.File;
 
 @Module
 public class AppModule {
-  private final GitHubClientApp _app;
+  private final GitHubClientApp app;
 
   public AppModule(@NonNull GitHubClientApp app) {
-    _app = app;
+    this.app = app;
   }
 
   @Singleton @Provides Context provideContext() {
-    return _app;
+    return app;
   }
 
   @Singleton @Provides Picasso picasso(Context context) {

@@ -20,10 +20,10 @@ import javax.inject.Inject;
 import java.util.List;
 
 public class UsersFragment extends Fragment {
-  @BindView(R.id.users_refresh_swipe_layout) SwipeRefreshLayout _swipeRefreshLayout;
-  @BindView(R.id.users_recycler) RecyclerView _usersRecyclerView;
+  @BindView(R.id.users_refresh_swipe_layout) SwipeRefreshLayout swipeRefreshLayout;
+  @BindView(R.id.users_recycler) RecyclerView usersRecyclerView;
 
-  @Inject UsersAdapter _usersAdapter;
+  @Inject UsersAdapter usersAdapter;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -37,73 +37,73 @@ public class UsersFragment extends Fragment {
     View view = inflater.inflate(R.layout.fragment_users, container, false);
     ButterKnife.bind(this, view);
 
-    _usersRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-    _usersRecyclerView.setAdapter(_usersAdapter);
+    usersRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+    usersRecyclerView.setAdapter(usersAdapter);
 
-    _swipeRefreshLayout.setOnRefreshListener(() -> ((UsersActivity) getActivity()).refresh());
+    swipeRefreshLayout.setOnRefreshListener(() -> ((UsersActivity) getActivity()).refresh());
 
     return view;
   }
 
   void setUsers(List<User> users) {
-    if (_usersRecyclerView == null) {
+    if (usersRecyclerView == null) {
       throw new IllegalStateException("View was not created yet");
     }
 
-    _usersAdapter.setUsers(users);
-    _usersAdapter.notifyDataSetChanged();
+    usersAdapter.setUsersList(users);
+    usersAdapter.notifyDataSetChanged();
   }
 
   void setUsersListener(UsersAdapter.UserListener listener) {
-    _usersAdapter.setUserListener(listener);
+    usersAdapter.setUserListener(listener);
   }
 
   void showProgressIndicator() {
     ensureProgressIndicatorVisible();
 
-    _swipeRefreshLayout.setRefreshing(true);
+    swipeRefreshLayout.setRefreshing(true);
   }
 
   void hideProgressIndicator() {
-    _swipeRefreshLayout.setRefreshing(false);
+    swipeRefreshLayout.setRefreshing(false);
   }
 
   private void ensureProgressIndicatorVisible() {
     // Workaround for start progress called before onMeasure
     // Issue: https://code.google.com/p/android/issues/detail?id=77712
-    if (_swipeRefreshLayout.getMeasuredHeight() == 0) {
+    if (swipeRefreshLayout.getMeasuredHeight() == 0) {
       int circleSize = getResources().getDimensionPixelSize(R.dimen.swipe_progress_circle_diameter);
-      _swipeRefreshLayout.setProgressViewOffset(false, 0, circleSize);
+      swipeRefreshLayout.setProgressViewOffset(false, 0, circleSize);
     }
   }
 
   static class UsersFragmentAwareLoadingDelegate<R> implements SubscriberDelegate<R> {
-    private final SubscriberDelegate<R> _subscriberDelegate;
-    private final UsersFragment _usersFragment;
+    private final SubscriberDelegate<R> subscriberDelegate;
+    private final UsersFragment usersFragment;
 
     public UsersFragmentAwareLoadingDelegate(SubscriberDelegate<R> subscriberDelegate, UsersFragment usersFragment) {
-      _subscriberDelegate = subscriberDelegate;
-      _usersFragment = usersFragment;
+      this.subscriberDelegate = subscriberDelegate;
+      this.usersFragment = usersFragment;
     }
 
     @Override public void onStart() {
-      _subscriberDelegate.onStart();
-      _usersFragment.showProgressIndicator();
+      subscriberDelegate.onStart();
+      usersFragment.showProgressIndicator();
     }
 
     @Override public void onNext(R result) {
-      _subscriberDelegate.onNext(result);
-      _usersFragment.hideProgressIndicator();
+      subscriberDelegate.onNext(result);
+      usersFragment.hideProgressIndicator();
     }
 
     @Override public void onError(Throwable error) {
-      _subscriberDelegate.onError(error);
-      _usersFragment.hideProgressIndicator();
+      subscriberDelegate.onError(error);
+      usersFragment.hideProgressIndicator();
     }
 
     @Override public void onCompleted() {
-      _subscriberDelegate.onCompleted();
-      _usersFragment.hideProgressIndicator();
+      subscriberDelegate.onCompleted();
+      usersFragment.hideProgressIndicator();
     }
   }
 }

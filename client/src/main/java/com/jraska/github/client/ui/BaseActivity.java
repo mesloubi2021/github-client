@@ -12,7 +12,7 @@ import com.jraska.github.client.R;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
-  @BindView(R.id.toolbar) Toolbar _toolbar;
+  @BindView(R.id.toolbar) Toolbar toolbar;
 
   @Override
   public void setContentView(int layoutResID) {
@@ -34,7 +34,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
   protected void onSetContentView() {
     ButterKnife.bind(this);
-    setSupportActionBar(_toolbar);
+    setSupportActionBar(toolbar);
   }
 
   protected Fragment findFragmentById(int id) {

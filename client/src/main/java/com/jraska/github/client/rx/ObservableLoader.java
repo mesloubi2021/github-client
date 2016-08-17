@@ -8,16 +8,16 @@ import timber.log.Timber;
 import javax.inject.Inject;
 
 public class ObservableLoader {
-  private final FragmentManager _fragmentManager;
+  private final FragmentManager fragmentManager;
 
   @Inject
   public ObservableLoader(FragmentManager fragmentManager) {
-    _fragmentManager = fragmentManager;
+    this.fragmentManager = fragmentManager;
   }
 
   public <R, A extends FragmentActivity> void load(Observable<R> observable,
                                                    SubscriberDelegateProvider<A, R> subscriberDelegateProvider) {
-    ObservableLoadFragment existingFragment = (ObservableLoadFragment) _fragmentManager.findFragmentByTag(ObservableLoadFragment.TAG);
+    ObservableLoadFragment existingFragment = (ObservableLoadFragment) fragmentManager.findFragmentByTag(ObservableLoadFragment.TAG);
     if (existingFragment != null && existingFragment.isValid()) {
       Timber.d("Activity %s is already loading its data", existingFragment.getActivity());
       existingFragment.requestDeliver();
@@ -25,7 +25,7 @@ public class ObservableLoader {
     }
 
     ObservableLoadFragment fragmentProxy = ObservableLoadFragment.newInstance(observable, subscriberDelegateProvider);
-    _fragmentManager.beginTransaction()
+    fragmentManager.beginTransaction()
         .add(fragmentProxy, ObservableLoadFragment.TAG)
         .commit();
   }

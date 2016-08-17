@@ -16,9 +16,9 @@ import com.jraska.github.client.widget.RepeaterLayout;
 import java.util.List;
 
 public class ReposFragment extends Fragment {
-  @BindView(R.id.repos_repeater) RepeaterLayout _reposRepeater;
-  @BindView(R.id.repos_container) ViewGroup _reposContainer;
-  @BindView(R.id.repos_title) TextView _reposTitle;
+  @BindView(R.id.repos_repeater) RepeaterLayout reposRepeater;
+  @BindView(R.id.repos_container) ViewGroup reposContainer;
+  @BindView(R.id.repos_title) TextView reposTitle;
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -31,11 +31,11 @@ public class ReposFragment extends Fragment {
   }
 
   void setTitle(CharSequence title) {
-    _reposTitle.setText(title);
+    reposTitle.setText(title);
   }
 
   void setRepos(List<Repo> repos) {
-    if (_reposRepeater == null) {
+    if (reposRepeater == null) {
       throw new IllegalStateException("View was not created yet");
     }
 
@@ -43,14 +43,14 @@ public class ReposFragment extends Fragment {
 
     ReposAdapter reposAdapter = new ReposAdapter(LayoutInflater.from(getActivity()));
     reposAdapter.setRepos(repos);
-    _reposRepeater.setAdapter(reposAdapter);
+    reposRepeater.setAdapter(reposAdapter);
   }
 
   private void setContainerVisibility(boolean visible) {
     if (visible) {
-      _reposContainer.setVisibility(View.VISIBLE);
+      reposContainer.setVisibility(View.VISIBLE);
     } else {
-      _reposContainer.setVisibility(View.GONE);
+      reposContainer.setVisibility(View.GONE);
     }
   }
 }

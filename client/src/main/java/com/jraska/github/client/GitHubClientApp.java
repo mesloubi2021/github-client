@@ -4,17 +4,17 @@ import android.app.Application;
 import timber.log.Timber;
 
 public class GitHubClientApp extends Application {
-  private AppComponent _appComponent;
+  private AppComponent appComponent;
 
   public AppComponent getComponent() {
-    return _appComponent;
+    return appComponent;
   }
 
   @Override
   public void onCreate() {
     super.onCreate();
 
-    _appComponent = DaggerAppComponent.builder()
+    appComponent = DaggerAppComponent.builder()
         .appModule(new AppModule(this))
         .build();
 

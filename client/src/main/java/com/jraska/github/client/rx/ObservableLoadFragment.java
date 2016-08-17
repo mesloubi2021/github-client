@@ -11,40 +11,40 @@ import timber.log.Timber;
 public class ObservableLoadFragment<A extends FragmentActivity, R> extends Fragment {
   public static final String TAG = ObservableLoadFragment.class.getSimpleName();
 
-  private boolean _validInstance;
+  private boolean validInstance;
 
-  private final Observable<R> _observable;
-  private final SubscriberDelegateProvider<A, R> _subscriberDelegateProvider;
+  private final Observable<R> observable;
+  private final SubscriberDelegateProvider<A, R> subscriberDelegateProvider;
 
-  private Result<A> _result;
-  private Subscriber<R> _subscriber;
-  private boolean _deliverRequested;
+  private Result<A> result;
+  private Subscriber<R> subscriber;
+  private boolean deliverRequested;
 
   public ObservableLoadFragment() {
     this(null, null);
 
-    _validInstance = false;
+    validInstance = false;
   }
 
   private ObservableLoadFragment(Observable<R> observable,
                                  SubscriberDelegateProvider<A, R> subscriberDelegateProvider) {
-    _validInstance = true;
+    validInstance = true;
 
     setRetainInstance(true);
 
-    _observable = observable;
-    _subscriberDelegateProvider = subscriberDelegateProvider;
+    this.observable = observable;
+    this.subscriberDelegateProvider = subscriberDelegateProvider;
   }
 
   public boolean isValid() {
-    return _validInstance;
+    return validInstance;
   }
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    if (_observable == null) {
+    if (observable == null) {
       Timber.d("Detaching useless fragment %s created by system", this);
       detachSelf();
       return;
@@ -62,19 +62,19 @@ public class ObservableLoadFragment<A extends FragmentActivity, R> extends Fragm
 
   @Override
   public void onDestroy() {
-    if (_subscriber != null && !_subscriber.isUnsubscribed()) {
-      _subscriber.unsubscribe();
+    if (subscriber != null && !subscriber.isUnsubscribed()) {
+      subscriber.unsubscribe();
     }
 
     super.onDestroy();
   }
 
   @SuppressWarnings("unchecked") SubscriberDelegate<R> delegate() {
-    return _subscriberDelegateProvider.delegate((A) getActivity());
+    return subscriberDelegateProvider.delegate((A) getActivity());
   }
 
   void requestDeliver() {
-    _deliverRequested = true;
+    deliverRequested = true;
     delegate().onStart();
     if (isResumed()) {
       deliverResult();
@@ -84,14 +84,14 @@ public class ObservableLoadFragment<A extends FragmentActivity, R> extends Fragm
   private void load() {
     delegate().onStart();
     Timber.d("Subscribing");
-    _subscriber = new LoadingSubscriber();
+    subscriber = new LoadingSubscriber();
 
-    _observable.subscribe(_subscriber);
+    observable.subscribe(subscriber);
   }
 
-  private void onResult(Result<A> result) {
-    _deliverRequested = true;
-    _result = result;
+  private void onResult(Result<A> newResult) {
+    deliverRequested = true;
+    result = newResult;
 
     if (isResumed()) {
       deliverResult();
@@ -100,13 +100,13 @@ public class ObservableLoadFragment<A extends FragmentActivity, R> extends Fragm
 
   @SuppressWarnings("unchecked")
   private void deliverResult() {
-    if (!_deliverRequested || _result == null) {
+    if (!deliverRequested || result == null) {
       return;
     }
 
-    _deliverRequested = false;
-    Timber.d("Delivering %s to %s", _result.getClass().getSimpleName(), getActivity().getClass().getSimpleName());
-    _result.deliver((A) getActivity());
+    deliverRequested = false;
+    Timber.d("Delivering %s to %s", result.getClass().getSimpleName(), getActivity().getClass().getSimpleName());
+    result.deliver((A) getActivity());
   }
 
   void detachSelf() {
@@ -115,7 +115,7 @@ public class ObservableLoadFragment<A extends FragmentActivity, R> extends Fragm
         .remove(this)
         .commit();
 
-    _validInstance = false;
+    validInstance = false;
   }
 
 
@@ -124,28 +124,28 @@ public class ObservableLoadFragment<A extends FragmentActivity, R> extends Fragm
   }
 
   private class SuccessResult implements Result<A> {
-    private final R _result;
+    private final R result;
 
     public SuccessResult(R result) {
-      _result = result;
+      this.result = result;
     }
 
     @Override
     public void deliver(A activity) {
-      delegate().onNext(_result);
+      delegate().onNext(result);
     }
   }
 
   private class ErrorResult implements Result<A> {
-    private final Throwable _error;
+    private final Throwable error;
 
-    public ErrorResult(Throwable _error) {
-      this._error = _error;
+    public ErrorResult(Throwable error) {
+      this.error = error;
     }
 
     @Override
     public void deliver(A activity) {
-      delegate().onError(_error);
+      delegate().onError(error);
     }
   }
 

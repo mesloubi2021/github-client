@@ -18,10 +18,10 @@ import java.util.Date;
 public class UserStatsFragment extends Fragment {
   static final DateFormat JOINED_FORMAT = DateFormat.getDateInstance(DateFormat.MEDIUM);
 
-  @BindView(R.id.user_detail_repos_count) TextView _reposCountTextView;
-  @BindView(R.id.user_detail_following_count) TextView _followingTextView;
-  @BindView(R.id.user_detail_followers_count) TextView _followersTextView;
-  @BindView(R.id.user_detail_joined) TextView _joinedTextView;
+  @BindView(R.id.user_detail_repos_count) TextView reposCountTextView;
+  @BindView(R.id.user_detail_following_count) TextView followingTextView;
+  @BindView(R.id.user_detail_followers_count) TextView followersTextView;
+  @BindView(R.id.user_detail_joined) TextView joinedTextView;
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -32,13 +32,13 @@ public class UserStatsFragment extends Fragment {
 
   void setUserStats(UserStats basicStats) {
 
-    _followersTextView.setText(String.valueOf(basicStats._followers));
-    _followingTextView.setText(String.valueOf(basicStats._following));
-    _reposCountTextView.setText(String.valueOf(basicStats._publicRepos));
+    followersTextView.setText(String.valueOf(basicStats.followers));
+    followingTextView.setText(String.valueOf(basicStats.following));
+    reposCountTextView.setText(String.valueOf(basicStats.publicRepos));
 
-    String joinedDateText = formatJoinedDate(basicStats._joined);
+    String joinedDateText = formatJoinedDate(basicStats.joined);
     String joinedText = getString(R.string.user_detail_joined_template, joinedDateText);
-    _joinedTextView.setText(joinedText);
+    joinedTextView.setText(joinedText);
   }
 
   static String formatJoinedDate(Date joinedDate) {

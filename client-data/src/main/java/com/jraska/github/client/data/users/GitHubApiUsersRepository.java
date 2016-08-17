@@ -9,26 +9,28 @@ import rx.Observable;
 import rx.schedulers.Schedulers;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 final class GitHubApiUsersRepository implements UsersRepository {
-  private final GitHubUsersApi _gitHubUsersApi;
-  private final GitHubUserDetailApi _gitHubUserDetailApi;
+  private final GitHubUsersApi gitHubUsersApi;
+  private final GitHubUserDetailApi gitHubUserDetailApi;
 
   public GitHubApiUsersRepository(@NonNull GitHubUsersApi gitHubUsersApi,
                                   @NonNull GitHubUserDetailApi gitHubUserDetailApi) {
-    _gitHubUsersApi = gitHubUsersApi;
-    _gitHubUserDetailApi = gitHubUserDetailApi;
+    this.gitHubUsersApi = gitHubUsersApi;
+    this.gitHubUserDetailApi = gitHubUserDetailApi;
   }
 
   @Override public Observable<List<User>> getUsers(int since) {
-    return _gitHubUsersApi.getUsers(since).map(this::translateUsers);
+    return gitHubUsersApi.getUsers(since).map(this::translateUsers);
   }
 
   @Override public Observable<UserDetail> getUserDetail(String login) {
-    return _gitHubUserDetailApi.getUserDetail(login)
+    return gitHubUserDetailApi.getUserDetail(login)
         .subscribeOn(Schedulers.io()) //this has to be here now to run requests in parallel
-        .zipWith(_gitHubUserDetailApi.getRepos(login), Pair::new)
+        .zipWith(gitHubUserDetailApi.getRepos(login), Pair::new)
         .compose(UserDetailWithReposTranslator.INSTANCE);
   }
 
@@ -38,7 +40,7 @@ final class GitHubApiUsersRepository implements UsersRepository {
       users.add(translateUser(gitHubUser));
     }
 
-    return users;
+    return Collections.unmodifiableList(users);
   }
 
   private User translateUser(GitHubUser gitHubUser) {

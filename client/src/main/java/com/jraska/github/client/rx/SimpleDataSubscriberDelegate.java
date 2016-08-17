@@ -3,12 +3,12 @@ package com.jraska.github.client.rx;
 import rx.functions.Action1;
 
 public class SimpleDataSubscriberDelegate<R> implements SubscriberDelegate<R> {
-  private final Action1<R> _nextCall;
-  private final Action1<Throwable> _errorCall;
+  private final Action1<R> nextCall;
+  private final Action1<Throwable> errorCall;
 
   public SimpleDataSubscriberDelegate(Action1<R> nextCall, Action1<Throwable> errorCall) {
-    _nextCall = nextCall;
-    _errorCall = errorCall;
+    this.nextCall = nextCall;
+    this.errorCall = errorCall;
   }
 
   @Override
@@ -17,12 +17,12 @@ public class SimpleDataSubscriberDelegate<R> implements SubscriberDelegate<R> {
 
   @Override
   public void onNext(R result) {
-    _nextCall.call(result);
+    nextCall.call(result);
   }
 
   @Override
   public void onError(Throwable error) {
-    _errorCall.call(error);
+    errorCall.call(error);
   }
 
   @Override public void onCompleted() {

@@ -22,18 +22,18 @@ public class UserDetailActivity extends BaseActivity {
 
   static final SubscriberDelegateProvider<UserDetailActivity, UserDetail> USER_DELEGATE = UserDetailActivity::createDetailDelegate;
 
-  @BindView(R.id.user_detail_avatar) ImageView _avatarView;
+  @BindView(R.id.user_detail_avatar) ImageView avatarView;
 
-  @Inject Picasso _picasso;
-  @Inject GitHubIconClickHandler _gitHubIconClickHandler;
-  @Inject UsersRepository _usersRepository;
-  @Inject ObservableLoader _observableLoader;
+  @Inject Picasso picasso;
+  @Inject GitHubIconClickHandler gitHubIconClickHandler;
+  @Inject UsersRepository usersRepository;
+  @Inject ObservableLoader observableLoader;
 
-  private UserStatsFragment _userStatsFragment;
-  private ReposFragment _popularReposFragment;
-  private ReposFragment _contributedReposFragment;
+  private UserStatsFragment userStatsFragment;
+  private ReposFragment popularReposFragment;
+  private ReposFragment contributedReposFragment;
 
-  private User _user;
+  private User user;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -41,29 +41,29 @@ public class UserDetailActivity extends BaseActivity {
     setContentView(R.layout.activity_user_detail);
     getComponent().inject(this);
 
-    _userStatsFragment = (UserStatsFragment) findFragmentById(R.id.fragment_user_stats);
-    _popularReposFragment = (ReposFragment) findFragmentById(R.id.fragment_user_popular_repos);
-    _popularReposFragment.setTitle(getString(R.string.repos_popular));
-    _contributedReposFragment = (ReposFragment) findFragmentById(R.id.fragment_user_contributed_repos);
-    _contributedReposFragment.setTitle(getString(R.string.repos_contributed));
+    userStatsFragment = (UserStatsFragment) findFragmentById(R.id.fragment_user_stats);
+    popularReposFragment = (ReposFragment) findFragmentById(R.id.fragment_user_popular_repos);
+    popularReposFragment.setTitle(getString(R.string.repos_popular));
+    contributedReposFragment = (ReposFragment) findFragmentById(R.id.fragment_user_contributed_repos);
+    contributedReposFragment.setTitle(getString(R.string.repos_contributed));
 
-    _user = (User) getIntent().getSerializableExtra(EXTRA_USER_KEY);
+    user = (User) getIntent().getSerializableExtra(EXTRA_USER_KEY);
 
-    setTitle(_user._login);
-    _picasso.load(_user._avatarUrl).into(_avatarView);
+    setTitle(user.login);
+    picasso.load(user.avatarUrl).into(avatarView);
 
-    _observableLoader.load(_usersRepository.getUserDetail(_user._login).compose(IOPoolTransformer.get()), USER_DELEGATE);
+    observableLoader.load(usersRepository.getUserDetail(user.login).compose(IOPoolTransformer.get()), USER_DELEGATE);
   }
 
   @OnClick(R.id.user_detail_github_fab) void gitHubFabClicked() {
-    _gitHubIconClickHandler.userGitHubClicked(_user);
+    gitHubIconClickHandler.userGitHubClicked(user);
   }
 
   void setUserDetail(UserDetail userDetail) {
-    _userStatsFragment.setUserStats(userDetail._basicStats);
+    userStatsFragment.setUserStats(userDetail.basicStats);
 
-    _popularReposFragment.setRepos(userDetail._popularRepos);
-    _contributedReposFragment.setRepos(userDetail._contributedRepos);
+    popularReposFragment.setRepos(userDetail.popularRepos);
+    contributedReposFragment.setRepos(userDetail.contributedRepos);
   }
 
   void onUserLoadError(Throwable error) {

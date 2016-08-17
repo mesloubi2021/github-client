@@ -16,46 +16,46 @@ import java.util.Collection;
 import java.util.List;
 
 public class ReposAdapter extends RecyclerView.Adapter<ReposAdapter.Holder> {
-  private final List<Repo> _repos = new ArrayList<>();
+  private final List<Repo> repositories = new ArrayList<>();
 
-  private final LayoutInflater _inflater;
+  private final LayoutInflater inflater;
 
   @Inject
   public ReposAdapter(LayoutInflater inflater) {
-    _inflater = inflater;
+    this.inflater = inflater;
   }
 
   @Override public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
-    View rowView = _inflater.inflate(R.layout.item_row_user_detail_repo, parent, false);
+    View rowView = inflater.inflate(R.layout.item_row_user_detail_repo, parent, false);
     return new Holder(rowView);
   }
 
   @Override public void onBindViewHolder(Holder holder, int position) {
-    Repo repo = _repos.get(position);
+    Repo repo = repositories.get(position);
 
-    holder._titleTextView.setText(repo._name);
-    holder._descriptionTextView.setText(repo._description);
-    holder._watchersTextView.setText(String.valueOf(repo._watchers));
-    holder._starsTextView.setText(String.valueOf(repo._stars));
-    holder._forksTextView.setText(String.valueOf(repo._forks));
+    holder.titleTextView.setText(repo.name);
+    holder.descriptionTextView.setText(repo.description);
+    holder.watchersTextView.setText(String.valueOf(repo.watchers));
+    holder.starsTextView.setText(String.valueOf(repo.stars));
+    holder.forksTextView.setText(String.valueOf(repo.forks));
   }
 
   @Override public int getItemCount() {
-    return _repos.size();
+    return repositories.size();
   }
 
   void setRepos(Collection<Repo> repos) {
-    _repos.clear();
-    _repos.addAll(repos);
+    repositories.clear();
+    repositories.addAll(repos);
     notifyDataSetChanged();
   }
 
   static class Holder extends RecyclerView.ViewHolder {
-    @BindView(R.id.repo_item_title) TextView _titleTextView;
-    @BindView(R.id.repo_item_description) TextView _descriptionTextView;
-    @BindView(R.id.repo_item_watchers) TextView _watchersTextView;
-    @BindView(R.id.repo_item_stars) TextView _starsTextView;
-    @BindView(R.id.repo_item_forks) TextView _forksTextView;
+    @BindView(R.id.repo_item_title) TextView titleTextView;
+    @BindView(R.id.repo_item_description) TextView descriptionTextView;
+    @BindView(R.id.repo_item_watchers) TextView watchersTextView;
+    @BindView(R.id.repo_item_stars) TextView starsTextView;
+    @BindView(R.id.repo_item_forks) TextView forksTextView;
 
     public Holder(View itemView) {
       super(itemView);

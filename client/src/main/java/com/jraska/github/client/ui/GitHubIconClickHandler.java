@@ -8,16 +8,16 @@ import com.jraska.github.client.users.User;
 import javax.inject.Inject;
 
 public class GitHubIconClickHandler {
-  private final Activity _activity;
+  private final Activity activity;
 
   @Inject
   public GitHubIconClickHandler(Activity activity) {
-    _activity = activity;
+    this.activity = activity;
   }
 
   public void userGitHubClicked(User user) {
     Intent intent = new Intent(Intent.ACTION_VIEW);
-    intent.setData(Uri.parse(user._gitHubUrl));
-    _activity.startActivity(intent);
+    intent.setData(Uri.parse(user.gitHubUrl));
+    activity.startActivity(intent);
   }
 }

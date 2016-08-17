@@ -7,10 +7,10 @@ import dagger.Provides;
 
 @Module
 public class ActivityModule {
-  private final BaseActivity _activity;
+  private final BaseActivity activity;
 
   ActivityModule(BaseActivity activity) {
-    _activity = activity;
+    this.activity = activity;
   }
 
   @Provides Activity provideActivity(BaseActivity baseActivity) {
@@ -22,6 +22,6 @@ public class ActivityModule {
   }
 
   @Provides BaseActivity provideBaseActivity() {
-    return _activity;
+    return activity;
   }
 }

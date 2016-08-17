@@ -14,11 +14,11 @@ public class UsersActivity extends BaseActivity implements UsersAdapter.UserList
 
   static final SubscriberDelegateProvider<UsersActivity, List<User>> USERS_DELEGATE = UsersActivity::createUsersDelegate;
 
-  @Inject UsersRepository _usersRepository;
-  @Inject ObservableLoader _observableLoader;
-  @Inject GitHubIconClickHandler _iconClickHandler;
+  @Inject UsersRepository usersRepository;
+  @Inject ObservableLoader observableLoader;
+  @Inject GitHubIconClickHandler iconClickHandler;
 
-  private UsersFragment _usersFragment;
+  private UsersFragment usersFragment;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -26,14 +26,14 @@ public class UsersActivity extends BaseActivity implements UsersAdapter.UserList
     setContentView(R.layout.activity_users_list);
     getComponent().inject(this);
 
-    _usersFragment = (UsersFragment) findFragmentById(R.id.fragment_users);
-    _usersFragment.setUsersListener(this);
+    usersFragment = (UsersFragment) findFragmentById(R.id.fragment_users);
+    usersFragment.setUsersListener(this);
 
     startLoading();
   }
 
   void onUsersLoaded(List<User> users) {
-    _usersFragment.setUsers(users);
+    usersFragment.setUsers(users);
   }
 
   void onUsersError(Throwable error) {
@@ -41,7 +41,7 @@ public class UsersActivity extends BaseActivity implements UsersAdapter.UserList
   }
 
   void startLoading() {
-    _observableLoader.load(_usersRepository.getUsers(0).compose(IOPoolTransformer.get()), USERS_DELEGATE);
+    observableLoader.load(usersRepository.getUsers(0).compose(IOPoolTransformer.get()), USERS_DELEGATE);
   }
 
   @Override
@@ -51,7 +51,7 @@ public class UsersActivity extends BaseActivity implements UsersAdapter.UserList
 
   @Override
   public void onUserGitHubIconClicked(User user) {
-    _iconClickHandler.userGitHubClicked(user);
+    iconClickHandler.userGitHubClicked(user);
   }
 
   void refresh() {
@@ -61,6 +61,6 @@ public class UsersActivity extends BaseActivity implements UsersAdapter.UserList
 
   private SubscriberDelegate<List<User>> createUsersDelegate() {
     SimpleDataSubscriberDelegate<List<User>> simpleDelegate = new SimpleDataSubscriberDelegate<>(this::onUsersLoaded, this::onUsersError);
-    return new UsersFragment.UsersFragmentAwareLoadingDelegate<>(simpleDelegate, _usersFragment);
+    return new UsersFragment.UsersFragmentAwareLoadingDelegate<>(simpleDelegate, usersFragment);
   }
 }
