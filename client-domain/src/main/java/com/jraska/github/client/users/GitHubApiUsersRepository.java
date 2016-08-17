@@ -1,7 +1,7 @@
 package com.jraska.github.client.users;
 
 import android.support.annotation.NonNull;
-import android.util.Pair;
+import com.jraska.github.client.common.Pair;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
