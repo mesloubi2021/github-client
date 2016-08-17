@@ -1,5 +1,6 @@
 package com.jraska.github.client.data.users;
 
+import com.jraska.github.client.common.AppBuildConfig;
 import com.jraska.github.client.users.UsersRepository;
 import dagger.Module;
 import dagger.Provides;
@@ -12,23 +13,17 @@ import javax.inject.Singleton;
 
 @Module
 public final class UsersModule {
-  @Provides @Singleton UsersRepository provideUsersRepository(GitHubUsersApi gitHubUsersApi,
-                                                              GitHubUserDetailApi detailApi) {
-    return new GitHubApiUsersRepository(gitHubUsersApi, detailApi);
+  @Provides @Singleton UsersRepository provideUsersRepository(Retrofit retrofit) {
+    GitHubUsersApi usersApi = retrofit.create(GitHubUsersApi.class);
+    GitHubUserDetailApi detailApi = retrofit.create(GitHubUserDetailApi.class);
+
+    return new GitHubApiUsersRepository(usersApi, detailApi);
   }
 
-  @Provides @Singleton GitHubUsersApi provideGitHubUsersApi(Retrofit retrofit) {
-    return retrofit.create(GitHubUsersApi.class);
-  }
-
-  @Provides @Singleton GitHubUserDetailApi provideGitHubUserDetailApi(Retrofit retrofit) {
-    return retrofit.create(GitHubUserDetailApi.class);
-  }
-
-  @Provides @Singleton Retrofit provideRetrofit(OkHttpClient okHttpClient) {
+  @Provides @Singleton Retrofit provideRetrofit(OkHttpClient okHttpClient, AppBuildConfig config) {
     Retrofit retrofit = new Retrofit.Builder()
         .baseUrl("https://api.github.com")
-        .validateEagerly(true) // TODO: 17/08/16 AppConfig
+        .validateEagerly(config.debug)
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create())
         .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
