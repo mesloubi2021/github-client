@@ -7,6 +7,7 @@ import timber.log.Timber;
 
 import javax.inject.Inject;
 
+@Deprecated
 public class ObservableLoader {
   private final FragmentManager fragmentManager;
 

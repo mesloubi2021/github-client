@@ -16,6 +16,7 @@ public class IoUiTransformer<T> implements Observable.Transformer<T, T> {
   }
 
   @SuppressWarnings("unchecked")
+  @Deprecated
   public static <T> Observable.Transformer<T, T> get() {
     return INSTANCE;
   }
