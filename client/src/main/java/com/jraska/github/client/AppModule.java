@@ -6,6 +6,8 @@ import com.jakewharton.picasso.OkHttp3Downloader;
 import com.jraska.github.client.common.AppBuildConfig;
 import com.jraska.github.client.logging.Logger;
 import com.jraska.github.client.network.Network;
+import com.jraska.github.client.rx.DataTransformerFactory;
+import com.jraska.github.client.rx.IoUiTransformer;
 import com.squareup.picasso.Downloader;
 import com.squareup.picasso.Picasso;
 import dagger.Module;
@@ -50,5 +52,9 @@ public class AppModule {
 
   @Provides @Reusable AppBuildConfig provideConfig() {
     return new AppBuildConfig(BuildConfig.DEBUG);
+  }
+
+  @Provides DataTransformerFactory factory() {
+    return IoUiTransformer.FACTORY;
   }
 }

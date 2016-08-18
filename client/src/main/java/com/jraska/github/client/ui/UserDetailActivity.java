@@ -25,7 +25,7 @@ public class UserDetailActivity extends BaseActivity {
   @BindView(R.id.user_detail_avatar) ImageView avatarView;
 
   @Inject Picasso picasso;
-  @Inject GitHubIconClickHandler gitHubIconClickHandler;
+  @Inject UserOnWebStarter userOnWebStarter;
   @Inject UsersRepository usersRepository;
   @Inject ObservableLoader observableLoader;
 
@@ -52,11 +52,12 @@ public class UserDetailActivity extends BaseActivity {
     setTitle(user.login);
     picasso.load(user.avatarUrl).into(avatarView);
 
-    observableLoader.load(usersRepository.getUserDetail(user.login).compose(IOPoolTransformer.get()), USER_DELEGATE);
+    observableLoader.load(usersRepository.getUserDetail(user.login)
+        .compose(IoUiTransformer.get()), USER_DELEGATE);
   }
 
   @OnClick(R.id.user_detail_github_fab) void gitHubFabClicked() {
-    gitHubIconClickHandler.userGitHubClicked(user);
+    userOnWebStarter.viewUserOnWeb(user);
   }
 
   void setUserDetail(UserDetail userDetail) {

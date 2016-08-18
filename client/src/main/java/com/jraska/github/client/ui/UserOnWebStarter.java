@@ -7,15 +7,15 @@ import com.jraska.github.client.users.User;
 
 import javax.inject.Inject;
 
-public class GitHubIconClickHandler {
+public class UserOnWebStarter {
   private final Activity activity;
 
   @Inject
-  public GitHubIconClickHandler(Activity activity) {
+  public UserOnWebStarter(Activity activity) {
     this.activity = activity;
   }
 
-  public void userGitHubClicked(User user) {
+  public void viewUserOnWeb(User user) {
     Intent intent = new Intent(Intent.ACTION_VIEW);
     intent.setData(Uri.parse(user.gitHubUrl));
     activity.startActivity(intent);

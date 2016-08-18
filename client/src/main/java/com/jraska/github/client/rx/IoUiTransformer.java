@@ -4,10 +4,10 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class IOPoolTransformer<T> implements Observable.Transformer<T, T> {
-  private static final IOPoolTransformer INSTANCE = new IOPoolTransformer();
+public class IoUiTransformer<T> implements Observable.Transformer<T, T> {
+  private static final IoUiTransformer INSTANCE = new IoUiTransformer();
 
-  private IOPoolTransformer() {
+  private IoUiTransformer() {
   }
 
   @Override public Observable<T> call(Observable<T> observable) {
@@ -19,4 +19,11 @@ public class IOPoolTransformer<T> implements Observable.Transformer<T, T> {
   public static <T> Observable.Transformer<T, T> get() {
     return INSTANCE;
   }
+
+  public static final DataTransformerFactory FACTORY = new DataTransformerFactory() {
+    @SuppressWarnings("unchecked")
+    @Override public Observable.Transformer get() {
+      return INSTANCE;
+    }
+  };
 }
