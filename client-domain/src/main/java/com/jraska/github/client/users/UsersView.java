@@ -11,7 +11,7 @@ public interface UsersView {
 
   void showMessage(String message);
 
-  void startUserDetail(User user); // TODO: 18/08/16 Rmove this from View interface
+  void startUserDetail(User user); // TODO: 18/08/16 Remove this from View interface
 
-  void viewUserOnWeb(User user); // TODO: 18/08/16 Rmove this from View interface
+  void viewUserOnWeb(User user); // TODO: 18/08/16 Remove this from View interface
 }
