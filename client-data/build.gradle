@@ -22,7 +22,7 @@ android {
 dependencies {
   retrolambdaConfig 'net.orfjackal.retrolambda:retrolambda:2.3.0'
 
-  apt 'com.google.dagger:dagger-compiler:2.6'
+  apt 'com.google.dagger:dagger-compiler:2.7'
 
   compile project(':client-domain')
 
@@ -32,7 +32,7 @@ dependencies {
   compile 'com.google.code.gson:gson:2.7'
   compile 'com.squareup.okhttp3:okhttp:3.4.1'
   compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
-  compile 'com.squareup.okio:okio:1.9.0'
+  compile 'com.squareup.okio:okio:1.10.0'
 
   testCompile 'junit:junit:4.12'
   testCompile 'org.assertj:assertj-core:3.5.2'
