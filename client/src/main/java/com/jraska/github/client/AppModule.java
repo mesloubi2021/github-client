@@ -13,6 +13,7 @@ import com.squareup.picasso.Picasso;
 import dagger.Module;
 import dagger.Provides;
 import dagger.Reusable;
+import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import timber.log.Timber;
 
@@ -38,7 +39,11 @@ public class AppModule {
   }
 
 
-  @Provides @Singleton Downloader downloader(OkHttpClient.Builder builder) {
+  @Provides @Singleton Downloader downloader(Context context, OkHttpClient.Builder builder) {
+    File cacheDir = new File(context.getCacheDir(), "images");
+    Cache imageCache = new Cache(cacheDir, 4 * 1024 * 1024);
+    builder.cache(imageCache);
+
     return new OkHttp3Downloader(builder.build());
   }
 
