@@ -26,6 +26,8 @@ dependencies {
 
   compile project(':client-domain')
 
+  compile 'com.android.support:support-annotations:24.2.1'
+
   compile 'com.squareup.retrofit2:retrofit:2.1.0'
   compile 'com.squareup.retrofit2:converter-gson:2.1.0'
   compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
