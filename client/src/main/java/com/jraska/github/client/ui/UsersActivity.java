@@ -3,19 +3,19 @@ package com.jraska.github.client.ui;
 import android.os.Bundle;
 import android.widget.Toast;
 import com.jraska.github.client.R;
-import com.jraska.github.client.users.User;
-import com.jraska.github.client.users.UsersUseCase;
-import com.jraska.github.client.users.UsersView;
-import com.jraska.github.client.users.UsersViewEvents;
+import com.jraska.github.client.rx.DataTransformerFactory;
+import com.jraska.github.client.users.*;
 
 import javax.inject.Inject;
 import java.util.List;
 
 public class UsersActivity extends BaseActivity implements UsersAdapter.UserListener, UsersView {
   @Inject UserOnWebStarter webStarter;
-  @Inject UsersUseCase usersUseCase;
+  @Inject UsersRepository repository;
+  @Inject DataTransformerFactory factory;
 
   private UsersFragment usersFragment;
+  private UsersPresenter presenter;
   private UsersViewEvents events;
 
   @Override
@@ -27,14 +27,10 @@ public class UsersActivity extends BaseActivity implements UsersAdapter.UserList
     usersFragment = (UsersFragment) findFragmentById(R.id.fragment_users);
     usersFragment.setUsersListener(this);
 
-    events = usersUseCase; // TODO: 18/08/16 Whole use case should not be here
-    usersUseCase.onViewAttach(this);
-    usersUseCase.onStart();
-  }
+    presenter = new UsersPresenter(this, repository, factory);
+    events = presenter;
 
-  @Override protected void onDestroy() {
-    usersUseCase.onViewDetach();
-    super.onDestroy();
+    presenter.onCreate();
   }
 
   @Override

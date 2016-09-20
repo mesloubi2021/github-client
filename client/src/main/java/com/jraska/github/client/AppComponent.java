@@ -1,10 +1,10 @@
 package com.jraska.github.client;
 
+import com.jraska.github.client.data.users.UsersModule;
 import com.jraska.github.client.network.NetworkModule;
 import com.jraska.github.client.ui.ActivityComponent;
 import com.jraska.github.client.ui.ActivityModule;
 import com.jraska.github.client.ui.UsersFragment;
-import com.jraska.github.client.data.users.UsersModule;
 import dagger.Component;
 
 import javax.inject.Singleton;
