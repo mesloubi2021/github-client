@@ -27,6 +27,7 @@ public class UserDetailActivity extends BaseActivity {
   @Inject Picasso picasso;
   @Inject UserOnWebStarter userOnWebStarter;
   @Inject UsersRepository usersRepository;
+  @Inject AppSchedulers schedulers;
   @Inject ObservableLoader observableLoader;
 
   private UserStatsFragment userStatsFragment;
@@ -53,7 +54,7 @@ public class UserDetailActivity extends BaseActivity {
     picasso.load(user.avatarUrl).into(avatarView);
 
     observableLoader.load(usersRepository.getUserDetail(user.login)
-        .compose(IoUiTransformer.get()), USER_DELEGATE);
+        .compose(schedulers.ioLoadTransformer()), USER_DELEGATE);
   }
 
   @OnClick(R.id.user_detail_github_fab) void gitHubFabClicked() {

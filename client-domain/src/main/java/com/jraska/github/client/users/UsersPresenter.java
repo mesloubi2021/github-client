@@ -1,29 +1,36 @@
 package com.jraska.github.client.users;
 
 import com.jraska.github.client.common.UseCase;
-import com.jraska.github.client.rx.DataTransformerFactory;
+import com.jraska.github.client.rx.AppSchedulers;
+import rx.Subscription;
 
-import java.util.Collections;
 import java.util.List;
 
 public class UsersPresenter implements UseCase, UsersViewEvents {
   private final UsersView view;
   private final UsersRepository usersRepository;
-  private final DataTransformerFactory transformerFactory;
+  private final AppSchedulers schedulers;
+  private Subscription subscription;
 
   public UsersPresenter(UsersView view, UsersRepository usersRepository,
-                        DataTransformerFactory transformerFactory) {
+                        AppSchedulers schedulers) {
     this.view = view;
     this.usersRepository = usersRepository;
-    this.transformerFactory = transformerFactory;
+    this.schedulers = schedulers;
   }
 
   public void onCreate() {
-    usersRepository.getUsers(0)
-        .compose(transformerFactory.get())
+    subscription = usersRepository.getUsers(0)
+        .compose(schedulers.ioLoadTransformer())
         .doOnSubscribe(view::startDisplayProgress)
         .doOnTerminate(view::stopDisplayProgress)
         .subscribe(this::onLoaded, this::onLoadError);
+  }
+
+  public void onDestroy() {
+    if (subscription != null) {
+      subscription.unsubscribe();
+    }
   }
 
   void onLoaded(List<User> users) {
