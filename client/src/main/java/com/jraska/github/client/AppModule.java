@@ -48,7 +48,7 @@ public class AppModule {
   }
 
   @Provides @Network File provideNetworkCacheDir(Context context) {
-    return context.getCacheDir();
+    return new File(context.getCacheDir(), "network");
   }
 
   @Provides @Reusable @Network Logger timberLogger() {
