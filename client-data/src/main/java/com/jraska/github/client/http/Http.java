@@ -1,4 +1,4 @@
-package com.jraska.github.client.network;
+package com.jraska.github.client.http;
 
 import javax.inject.Qualifier;
 import java.lang.annotation.ElementType;
@@ -9,5 +9,5 @@ import java.lang.annotation.Target;
 @Qualifier
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.PARAMETER})
-public @interface Network {
+public @interface Http {
 }

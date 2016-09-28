@@ -4,8 +4,8 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.jakewharton.picasso.OkHttp3Downloader;
 import com.jraska.github.client.common.AppBuildConfig;
+import com.jraska.github.client.http.Http;
 import com.jraska.github.client.logging.Logger;
-import com.jraska.github.client.network.Network;
 import com.jraska.github.client.rx.AndroidAppSchedulers;
 import com.jraska.github.client.rx.AppSchedulers;
 import com.squareup.picasso.Downloader;
@@ -15,6 +15,7 @@ import dagger.Provides;
 import dagger.Reusable;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import timber.log.Timber;
 
 import javax.inject.Singleton;
@@ -38,8 +39,16 @@ public class AppModule {
         .build();
   }
 
+  @Provides @Singleton
+  Downloader downloader(Context context, @Http Logger logger, AppBuildConfig config) {
+    OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
-  @Provides @Singleton Downloader downloader(Context context, OkHttpClient.Builder builder) {
+    if (config.debug) {
+      HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(logger::v)
+          .setLevel(HttpLoggingInterceptor.Level.BASIC);
+      builder.addInterceptor(loggingInterceptor);
+    }
+
     File cacheDir = new File(context.getCacheDir(), "images");
     Cache imageCache = new Cache(cacheDir, 4 * 1024 * 1024);
     builder.cache(imageCache);
@@ -47,11 +56,11 @@ public class AppModule {
     return new OkHttp3Downloader(builder.build());
   }
 
-  @Provides @Network File provideNetworkCacheDir(Context context) {
+  @Provides @Http File provideNetworkCacheDir(Context context) {
     return new File(context.getCacheDir(), "network");
   }
 
-  @Provides @Reusable @Network Logger timberLogger() {
+  @Provides @Reusable @Http Logger timberLogger() {
     return message -> Timber.tag("Network").v(message);
   }
 
