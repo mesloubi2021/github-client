@@ -9,7 +9,7 @@ import javax.inject.Singleton;
 
 @Module
 public final class UsersModule {
-  @Provides @Singleton UsersRepository provideUsersRepository(Retrofit retrofit) {
+  @Provides UsersRepository provideUsersRepository(Retrofit retrofit) {
     GitHubUsersApi usersApi = retrofit.create(GitHubUsersApi.class);
     GitHubUserDetailApi detailApi = retrofit.create(GitHubUserDetailApi.class);
 

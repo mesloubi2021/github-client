@@ -1,13 +1,10 @@
 package com.jraska.github.client.http;
 
-import javax.inject.Qualifier;
-import java.lang.annotation.ElementType;
+import javax.inject.Scope;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 
-@Qualifier
+@Scope
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.PARAMETER})
 public @interface Http {
 }

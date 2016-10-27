@@ -17,7 +17,8 @@ import java.io.File;
 
 @Module
 public class HttpModule {
-  @Provides @Singleton Retrofit provideRetrofit(OkHttpClient okHttpClient, AppBuildConfig config) {
+  @Provides @Http
+  static Retrofit provideRetrofit(OkHttpClient okHttpClient, AppBuildConfig config) {
     Retrofit retrofit = new Retrofit.Builder()
         .baseUrl("https://api.github.com")
         .validateEagerly(config.debug)
@@ -29,7 +30,7 @@ public class HttpModule {
     return retrofit;
   }
 
-  @Provides @Singleton
+  @Provides @Http
   OkHttpClient provideOkHttpClient(@Http File cacheDir, @Http Logger logger, AppBuildConfig config) {
     OkHttpClient.Builder builder = new OkHttpClient.Builder();
 

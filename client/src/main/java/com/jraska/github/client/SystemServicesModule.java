@@ -9,7 +9,7 @@ import javax.inject.Singleton;
 
 @Module
 public class SystemServicesModule {
-  @Provides @Singleton LayoutInflater provideLayoutInflater(Context context) {
+  @Provides @PerApp LayoutInflater provideLayoutInflater(Context context) {
     return LayoutInflater.from(context);
   }
 }

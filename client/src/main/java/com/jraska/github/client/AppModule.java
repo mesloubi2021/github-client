@@ -33,14 +33,14 @@ public class AppModule {
     return app;
   }
 
-  @Provides @Singleton Picasso picasso(Context context, Downloader downloader) {
+  @Provides Picasso picasso(Context context, Downloader downloader) {
     return new Picasso.Builder(context)
         .downloader(downloader)
         .build();
   }
 
-  @Provides @Singleton
-  Downloader downloader(Context context, @Http Logger logger, AppBuildConfig config) {
+  @Provides
+  Downloader downloader(Context context, Logger logger, AppBuildConfig config) {
     OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
     if (config.debug) {
@@ -56,11 +56,7 @@ public class AppModule {
     return new OkHttp3Downloader(builder.build());
   }
 
-  @Provides @Http File provideNetworkCacheDir(Context context) {
-    return new File(context.getCacheDir(), "network");
-  }
-
-  @Provides @Reusable @Http Logger timberLogger() {
+  @Provides Logger timberLogger() {
     return message -> Timber.tag("Network").v(message);
   }
 
@@ -68,7 +64,7 @@ public class AppModule {
     return new AppBuildConfig(BuildConfig.DEBUG);
   }
 
-  @Provides @Singleton AppSchedulers schedulers() {
+  @Provides @PerApp AppSchedulers schedulers() {
     return AndroidAppSchedulers.get();
   }
 }
