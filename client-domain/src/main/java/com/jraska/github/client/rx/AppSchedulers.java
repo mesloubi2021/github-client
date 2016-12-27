@@ -11,7 +11,7 @@ public final class AppSchedulers {
 
   private final Transformer<?, ?> dataLoadTransformer;
 
-  AppSchedulers(Scheduler mainThread, Scheduler io, Scheduler computation) {
+  public AppSchedulers(Scheduler mainThread, Scheduler io, Scheduler computation) {
     this.mainThread = mainThread;
     this.io = io;
     this.computation = computation;

@@ -4,9 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.jakewharton.picasso.OkHttp3Downloader;
 import com.jraska.github.client.common.AppBuildConfig;
-import com.jraska.github.client.http.Http;
 import com.jraska.github.client.logging.Logger;
-import com.jraska.github.client.rx.AndroidAppSchedulers;
 import com.jraska.github.client.rx.AppSchedulers;
 import com.squareup.picasso.Downloader;
 import com.squareup.picasso.Picasso;
@@ -16,9 +14,10 @@ import dagger.Reusable;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
-import javax.inject.Singleton;
 import java.io.File;
 
 @Module
@@ -65,6 +64,7 @@ public class AppModule {
   }
 
   @Provides @PerApp AppSchedulers schedulers() {
-    return AndroidAppSchedulers.get();
+    return new AppSchedulers(AndroidSchedulers.mainThread(),
+        Schedulers.io(), Schedulers.computation());
   }
 }
