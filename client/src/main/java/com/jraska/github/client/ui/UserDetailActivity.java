@@ -9,18 +9,14 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.OnClick;
 import com.jraska.github.client.R;
-import com.jraska.github.client.rx.*;
-import com.jraska.github.client.users.User;
-import com.jraska.github.client.users.UserDetail;
-import com.jraska.github.client.users.UsersRepository;
+import com.jraska.github.client.rx.AppSchedulers;
+import com.jraska.github.client.users.*;
 import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
 
-public class UserDetailActivity extends BaseActivity {
+public class UserDetailActivity extends BaseActivity implements UserDetailView {
   static final String EXTRA_USER_KEY = "user";
-
-  static final SubscriberDelegateProvider<UserDetailActivity, UserDetail> USER_DELEGATE = UserDetailActivity::createDetailDelegate;
 
   @BindView(R.id.user_detail_avatar) ImageView avatarView;
 
@@ -28,13 +24,14 @@ public class UserDetailActivity extends BaseActivity {
   @Inject UserOnWebStarter userOnWebStarter;
   @Inject UsersRepository usersRepository;
   @Inject AppSchedulers schedulers;
-  @Inject ObservableLoader observableLoader;
 
   private UserStatsFragment userStatsFragment;
   private ReposFragment popularReposFragment;
   private ReposFragment contributedReposFragment;
 
   private User user;
+
+  private UserDetailPresenter userDetailPresenter;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -53,23 +50,35 @@ public class UserDetailActivity extends BaseActivity {
     setTitle(user.login);
     picasso.load(user.avatarUrl).into(avatarView);
 
-    observableLoader.load(usersRepository.getUserDetail(user.login)
-        .compose(schedulers.ioLoadTransformer()), USER_DELEGATE);
+    userDetailPresenter = new UserDetailPresenter(this, usersRepository, schedulers);
+
+    userDetailPresenter.onCreate(user.login);
+  }
+
+  @Override protected void onDestroy() {
+    userDetailPresenter.onDestroy();
+
+    super.onDestroy();
   }
 
   @OnClick(R.id.user_detail_github_fab) void gitHubFabClicked() {
-    userOnWebStarter.viewUserOnWeb(user);
+    userDetailPresenter.onUserGitHubIconClick(user);
   }
 
-  void setUserDetail(UserDetail userDetail) {
+  @Override
+  public void setUser(UserDetail userDetail) {
     userStatsFragment.setUserStats(userDetail.basicStats);
 
     popularReposFragment.setRepos(userDetail.popularRepos);
     contributedReposFragment.setRepos(userDetail.contributedRepos);
   }
 
-  void onUserLoadError(Throwable error) {
-    Toast.makeText(this, error.toString(), Toast.LENGTH_LONG).show();
+  @Override public void showMessage(String message) {
+    Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+  }
+
+  @Override public void viewUserOnWeb(User user) {
+    userOnWebStarter.viewUserOnWeb(user);
   }
 
   public static void start(Activity inActivity, @NonNull User user) {
@@ -77,9 +86,5 @@ public class UserDetailActivity extends BaseActivity {
     intent.putExtra(EXTRA_USER_KEY, user);
 
     inActivity.startActivity(intent);
-  }
-
-  private SubscriberDelegate<UserDetail> createDetailDelegate() {
-    return new SimpleDataSubscriberDelegate<>(this::setUserDetail, this::onUserLoadError);
   }
 }
