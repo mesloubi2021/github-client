@@ -3,6 +3,7 @@ package com.jraska.github.client;
 import android.app.Application;
 import android.os.Bundle;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.jraska.github.client.analytics.CallbacksFactory;
 import com.jraska.github.client.common.AppBuildConfig;
 import com.jraska.github.client.http.DaggerHttpComponent;
 import com.jraska.github.client.http.HttpComponent;
@@ -18,6 +19,7 @@ public class GitHubClientApp extends Application {
 
   @Inject FirebaseAnalytics analytics;
   @Inject ErrorReportTree errorReportTree;
+  @Inject CallbacksFactory callbacksFactory;
 
   public AppComponent component() {
     return appComponent;
@@ -33,6 +35,8 @@ public class GitHubClientApp extends Application {
         .build();
 
     appComponent.inject(this);
+
+    registerActivityLifecycleCallbacks(callbacksFactory.createViewCallbacks());
 
     Timber.plant(errorReportTree);
     if (BuildConfig.DEBUG) {

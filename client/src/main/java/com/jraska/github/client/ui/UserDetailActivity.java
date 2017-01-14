@@ -29,9 +29,11 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView {
   private ReposFragment popularReposFragment;
   private ReposFragment contributedReposFragment;
 
-  private User user;
-
   private UserDetailPresenter userDetailPresenter;
+
+  public User getUser() {
+    return (User) getIntent().getSerializableExtra(EXTRA_USER_KEY);
+  }
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +47,7 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView {
     contributedReposFragment = (ReposFragment) findFragmentById(R.id.fragment_user_contributed_repos);
     contributedReposFragment.setTitle(getString(R.string.repos_contributed));
 
-    user = (User) getIntent().getSerializableExtra(EXTRA_USER_KEY);
+    User user = getUser();
 
     setTitle(user.login);
     picasso.load(user.avatarUrl).into(avatarView);
@@ -62,7 +64,7 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView {
   }
 
   @OnClick(R.id.user_detail_github_fab) void gitHubFabClicked() {
-    userDetailPresenter.onUserGitHubIconClick(user);
+    userDetailPresenter.onUserGitHubIconClick(getUser());
   }
 
   @Override
