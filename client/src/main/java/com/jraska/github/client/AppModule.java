@@ -2,8 +2,11 @@ package com.jraska.github.client;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.view.LayoutInflater;
 import com.jakewharton.picasso.OkHttp3Downloader;
 import com.jraska.github.client.common.AppBuildConfig;
+import com.jraska.github.client.logging.CrashReporter;
+import com.jraska.github.client.logging.FirebaseCrashProxy;
 import com.jraska.github.client.logging.Logger;
 import com.jraska.github.client.rx.AppSchedulers;
 import com.squareup.picasso.Downloader;
@@ -66,5 +69,9 @@ public class AppModule {
   @Provides @PerApp AppSchedulers schedulers() {
     return new AppSchedulers(AndroidSchedulers.mainThread(),
         Schedulers.io(), Schedulers.computation());
+  }
+
+  @Provides @PerApp LayoutInflater provideLayoutInflater(Context context) {
+    return LayoutInflater.from(context);
   }
 }

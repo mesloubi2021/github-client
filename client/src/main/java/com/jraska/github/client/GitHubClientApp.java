@@ -3,11 +3,11 @@ package com.jraska.github.client;
 import android.app.Application;
 import android.os.Bundle;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.crash.FirebaseCrash;
 import com.jraska.github.client.common.AppBuildConfig;
 import com.jraska.github.client.http.DaggerHttpComponent;
 import com.jraska.github.client.http.HttpComponent;
 import com.jraska.github.client.http.HttpDependenciesModule;
+import com.jraska.github.client.logging.ErrorReportTree;
 import timber.log.Timber;
 
 import javax.inject.Inject;
@@ -17,6 +17,7 @@ public class GitHubClientApp extends Application {
   private AppComponent appComponent;
 
   @Inject FirebaseAnalytics analytics;
+  @Inject ErrorReportTree errorReportTree;
 
   public AppComponent component() {
     return appComponent;
@@ -33,7 +34,10 @@ public class GitHubClientApp extends Application {
 
     appComponent.inject(this);
 
-    Timber.plant(new Timber.DebugTree());
+    Timber.plant(errorReportTree);
+    if (BuildConfig.DEBUG) {
+      Timber.plant(new Timber.DebugTree());
+    }
 
     logAppCreateEvent();
   }

@@ -49,6 +49,37 @@
           "status": 2
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:979924508109:android:caa74eecd5cf5355",
+        "android_client_info": {
+          "package_name": "com.jraska.github.client"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "979924508109-afpc6h0luou5a4q6gdnrl3qpqgd9l1ev.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfulqNx4FdJs1j5qiKUxA4GkK9IX3v-FM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
     }
   ],
   "configuration_version": "1"
