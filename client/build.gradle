@@ -18,6 +18,23 @@ android {
     sourceCompatibility rootProject.ext.sourceCompatibility
     targetCompatibility rootProject.ext.sourceCompatibility
   }
+
+  buildTypes {
+    debug {
+      signingConfig signingConfigs.debug
+      applicationIdSuffix '.dev'
+      versionNameSuffix '-dev'
+    }
+  }
+
+  signingConfigs {
+    debug {
+      storeFile file("debug.keystore")
+      storePassword "github-client"
+      keyAlias "github-client"
+      keyPassword "github-client"
+    }
+  }
 }
 
 dependencies {
