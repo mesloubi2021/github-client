@@ -10,7 +10,7 @@ android {
     applicationId "com.jraska.github.client"
     minSdkVersion rootProject.ext.minSdkVersion
     targetSdkVersion rootProject.ext.targetSdkVersion
-    versionName version
+    versionName rootProject.ext.version
     versionCode rootProject.ext.versionCode
   }
 
