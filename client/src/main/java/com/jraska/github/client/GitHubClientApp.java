@@ -15,11 +15,14 @@ import javax.inject.Inject;
 import java.io.File;
 
 public class GitHubClientApp extends Application {
+  private static final String CONFIG_ANALYTICS_DISABLED = "analytics_disabled";
+
   private AppComponent appComponent;
 
   @Inject FirebaseAnalytics analytics;
   @Inject ErrorReportTree errorReportTree;
   @Inject CallbacksFactory callbacksFactory;
+  @Inject Config config;
 
   public AppComponent component() {
     return appComponent;
@@ -36,12 +39,17 @@ public class GitHubClientApp extends Application {
 
     appComponent.inject(this);
 
-    registerActivityLifecycleCallbacks(callbacksFactory.createViewCallbacks());
-
     Timber.plant(errorReportTree);
     if (BuildConfig.DEBUG) {
       Timber.plant(new Timber.DebugTree());
     }
+
+    if (config.getBoolean(CONFIG_ANALYTICS_DISABLED)) {
+      analytics.setAnalyticsCollectionEnabled(false);
+      Timber.d("Analytics disabled");
+    }
+
+    registerActivityLifecycleCallbacks(callbacksFactory.createViewCallbacks());
 
     logAppCreateEvent();
   }
