@@ -4,7 +4,7 @@ import com.jraska.github.client.common.Pair;
 import com.jraska.github.client.users.Repo;
 import com.jraska.github.client.users.UserDetail;
 import com.jraska.github.client.users.UserStats;
-import rx.Observable;
+import rx.Single;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -14,7 +14,7 @@ import java.util.*;
 import static java.util.Locale.ENGLISH;
 
 final class UserDetailWithReposTranslator
-    implements Observable.Transformer<Pair<GitHubUserDetail, List<GitHubRepo>>, UserDetail> {
+    implements Single.Transformer<Pair<GitHubUserDetail, List<GitHubRepo>>, UserDetail> {
   static final DateFormat GIT_HUB_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", ENGLISH);
   static final Comparator<GitHubRepo> BY_STARS_REPO_COMPARATOR = (lhs, rhs) -> rhs.stargazersCount.compareTo(lhs.stargazersCount);
   static final int MAX_REPOS_TO_DISPLAY = 5;
@@ -22,8 +22,8 @@ final class UserDetailWithReposTranslator
   static final UserDetailWithReposTranslator INSTANCE = new UserDetailWithReposTranslator();
 
   @Override
-  public Observable<UserDetail> call(Observable<Pair<GitHubUserDetail, List<GitHubRepo>>> observable) {
-    return observable.map(result -> translateUserDetail(result.first, result.second));
+  public Single<UserDetail> call(Single<Pair<GitHubUserDetail, List<GitHubRepo>>> single) {
+    return single.map(result -> translateUserDetail(result.first, result.second));
   }
 
   UserDetail translateUserDetail(GitHubUserDetail gitHubUserDetail, List<GitHubRepo> gitHubRepos) {
@@ -59,8 +59,7 @@ final class UserDetailWithReposTranslator
     synchronized (GIT_HUB_DATE_FORMAT) {
       try {
         return GIT_HUB_DATE_FORMAT.parse(text);
-      }
-      catch (ParseException e) {
+      } catch (ParseException e) {
         throw new RuntimeException(e); // being lazy now
       }
     }

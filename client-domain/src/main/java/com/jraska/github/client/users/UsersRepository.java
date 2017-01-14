@@ -1,11 +1,11 @@
 package com.jraska.github.client.users;
 
-import rx.Observable;
+import rx.Single;
 
 import java.util.List;
 
 public interface UsersRepository {
-  Observable<List<User>> getUsers(int since);
+  Single<List<User>> getUsers(int since);
 
-  Observable<UserDetail> getUserDetail(String login);
+  Single<UserDetail> getUserDetail(String login);
 }

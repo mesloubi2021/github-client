@@ -23,7 +23,7 @@ public class UsersPresenter implements UseCase, UsersViewEvents {
     subscription = usersRepository.getUsers(0)
         .compose(schedulers.ioLoadTransformer())
         .doOnSubscribe(view::startDisplayProgress)
-        .doOnTerminate(view::stopDisplayProgress)
+        .doOnUnsubscribe(view::stopDisplayProgress)
         .subscribe(this::onLoaded, this::onLoadError);
   }
 

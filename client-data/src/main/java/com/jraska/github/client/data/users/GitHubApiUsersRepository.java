@@ -5,11 +5,10 @@ import com.jraska.github.client.common.Pair;
 import com.jraska.github.client.users.User;
 import com.jraska.github.client.users.UserDetail;
 import com.jraska.github.client.users.UsersRepository;
-import rx.Observable;
+import rx.Single;
 import rx.schedulers.Schedulers;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -23,11 +22,11 @@ final class GitHubApiUsersRepository implements UsersRepository {
     this.gitHubUserDetailApi = gitHubUserDetailApi;
   }
 
-  @Override public Observable<List<User>> getUsers(int since) {
+  @Override public Single<List<User>> getUsers(int since) {
     return gitHubUsersApi.getUsers(since).map(this::translateUsers);
   }
 
-  @Override public Observable<UserDetail> getUserDetail(String login) {
+  @Override public Single<UserDetail> getUserDetail(String login) {
     return gitHubUserDetailApi.getUserDetail(login)
         .subscribeOn(Schedulers.io()) //this has to be here now to run requests in parallel
         .zipWith(gitHubUserDetailApi.getRepos(login), Pair::new)
