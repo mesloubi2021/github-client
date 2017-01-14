@@ -11,7 +11,6 @@ import dagger.Component;
 @Component(dependencies = HttpComponent.class,
     modules = {
         UsersModule.class,
-        SystemServicesModule.class,
         FirebaseModule.class,
         AppModule.class
     })
