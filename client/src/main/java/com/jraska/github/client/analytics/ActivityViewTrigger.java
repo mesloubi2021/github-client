@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.jraska.github.client.common.DeveloperError;
+import com.jraska.github.client.common.Preconditions;
 
 import java.util.Map;
 
@@ -13,8 +14,8 @@ public final class ActivityViewTrigger {
   private final Map<Class, AnalyticsExtractor<?>> extractorMap;
 
   ActivityViewTrigger(FirebaseAnalytics analytics, Map<Class, AnalyticsExtractor<?>> extractorMap) {
-    this.analytics = analytics;
-    this.extractorMap = extractorMap;
+    this.analytics = Preconditions.argNotNull(analytics);
+    this.extractorMap = Preconditions.argNotNull(extractorMap);
   }
 
   public void reportCurrent(@NonNull Activity activity) {
@@ -34,7 +35,7 @@ public final class ActivityViewTrigger {
     analytics.logEvent(FirebaseAnalytics.Event.VIEW_ITEM, parameters);
   }
 
-  private AnalyticsExtractor<Activity> extractor(@NonNull Activity activity) {
+  private AnalyticsExtractor<Activity> extractor(Activity activity) {
     @SuppressWarnings("unchecked")
     AnalyticsExtractor<Activity> extractor = (AnalyticsExtractor<Activity>) extractorMap.get(activity.getClass());
     if (extractor == null) {
