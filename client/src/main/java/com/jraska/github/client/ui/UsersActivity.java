@@ -9,7 +9,7 @@ import com.jraska.github.client.users.*;
 import javax.inject.Inject;
 import java.util.List;
 
-public class UsersActivity extends BaseActivity implements UsersAdapter.UserListener, UsersView {
+public class UsersActivity extends BaseActivity implements UsersFragment.UserListener, UsersView {
   @Inject UserOnWebStarter webStarter;
   @Inject UsersRepository repository;
   @Inject AppSchedulers schedulers;
@@ -25,7 +25,6 @@ public class UsersActivity extends BaseActivity implements UsersAdapter.UserList
     component().inject(this);
 
     usersFragment = (UsersFragment) findFragmentById(R.id.fragment_users);
-    usersFragment.setUsersListener(this);
 
     presenter = new UsersPresenter(this, repository, schedulers);
     events = presenter;

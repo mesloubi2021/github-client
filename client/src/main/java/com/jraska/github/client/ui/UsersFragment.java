@@ -11,9 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.airbnb.epoxy.SimpleEpoxyAdapter;
 import com.jraska.github.client.GitHubClientApp;
 import com.jraska.github.client.R;
+import com.jraska.github.client.common.Lists;
 import com.jraska.github.client.users.User;
+import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -22,7 +25,7 @@ public class UsersFragment extends Fragment {
   @BindView(R.id.users_refresh_swipe_layout) SwipeRefreshLayout swipeRefreshLayout;
   @BindView(R.id.users_recycler) RecyclerView usersRecyclerView;
 
-  @Inject UsersAdapter usersAdapter;
+  @Inject Picasso picasso;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -37,7 +40,6 @@ public class UsersFragment extends Fragment {
     ButterKnife.bind(this, view);
 
     usersRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-    usersRecyclerView.setAdapter(usersAdapter);
 
     swipeRefreshLayout.setOnRefreshListener(() -> ((UsersActivity) getActivity()).refresh());
 
@@ -49,12 +51,14 @@ public class UsersFragment extends Fragment {
       throw new IllegalStateException("View was not created yet");
     }
 
-    usersAdapter.setUsersList(users);
-    usersAdapter.notifyDataSetChanged();
-  }
+    UserListener listener = (UserListener) getActivity();
 
-  void setUsersListener(UsersAdapter.UserListener listener) {
-    usersAdapter.setUserListener(listener);
+    SimpleEpoxyAdapter adapter = new SimpleEpoxyAdapter();
+    List<UserModel> models = Lists.transform(users,
+        user -> new UserModel(user, picasso, listener));
+
+    adapter.addModels(models);
+    usersRecyclerView.setAdapter(adapter);
   }
 
   void showProgressIndicator() {
@@ -74,5 +78,11 @@ public class UsersFragment extends Fragment {
       int circleSize = getResources().getDimensionPixelSize(R.dimen.swipe_progress_circle_diameter);
       swipeRefreshLayout.setProgressViewOffset(false, 0, circleSize);
     }
+  }
+
+  interface UserListener {
+    void onUserClicked(User user);
+
+    void onUserGitHubIconClicked(User user);
   }
 }

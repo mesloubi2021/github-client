@@ -53,6 +53,8 @@ dependencies {
   compile 'com.jakewharton:butterknife:8.4.0'
   apt 'com.jakewharton:butterknife-compiler:8.4.0'
 
+  compile 'com.airbnb.android:epoxy:1.5.0'
+
   apt 'com.google.dagger:dagger-compiler:2.8'
 
   compile 'io.reactivex:rxandroid:1.2.1'
