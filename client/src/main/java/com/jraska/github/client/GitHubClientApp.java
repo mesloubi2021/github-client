@@ -3,7 +3,8 @@ package com.jraska.github.client;
 import android.app.Application;
 import android.os.Bundle;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.jraska.github.client.analytics.CallbacksFactory;
+import com.jraska.github.client.analytics.ActivityViewCallbacks;
+import com.jraska.github.client.analytics.ActivityViewTrigger;
 import com.jraska.github.client.common.AppBuildConfig;
 import com.jraska.github.client.http.DaggerHttpComponent;
 import com.jraska.github.client.http.HttpComponent;
@@ -21,7 +22,7 @@ public class GitHubClientApp extends Application {
 
   @Inject FirebaseAnalytics analytics;
   @Inject ErrorReportTree errorReportTree;
-  @Inject CallbacksFactory callbacksFactory;
+  @Inject ActivityViewTrigger viewTrigger;
   @Inject Config config;
 
   public AppComponent component() {
@@ -47,9 +48,12 @@ public class GitHubClientApp extends Application {
     if (config.getBoolean(CONFIG_ANALYTICS_DISABLED)) {
       analytics.setAnalyticsCollectionEnabled(false);
       Timber.d("Analytics disabled");
+    } else {
+      analytics.setAnalyticsCollectionEnabled(true);
+      Timber.d("Analytics enabled");
     }
 
-    registerActivityLifecycleCallbacks(callbacksFactory.createViewCallbacks());
+    registerActivityLifecycleCallbacks(new ActivityViewCallbacks(viewTrigger));
 
     logAppCreateEvent();
   }
