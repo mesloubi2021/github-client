@@ -1,6 +1,6 @@
 package com.jraska.github.client.common;
 
-public class DeveloperError extends Error {
+public final class DeveloperError extends Error {
   public DeveloperError() {
   }
 
