@@ -33,11 +33,7 @@ public class GitHubClientApp extends Application {
   public void onCreate() {
     super.onCreate();
 
-    appComponent = DaggerAppComponent.builder()
-        .appModule(new AppModule(this))
-        .httpComponent(httpComponent())
-        .build();
-
+    appComponent = componentBuilder().build();
     appComponent.inject(this);
 
     Timber.plant(errorReportTree);
@@ -56,6 +52,12 @@ public class GitHubClientApp extends Application {
     registerActivityLifecycleCallbacks(new ActivityViewCallbacks(viewTrigger));
 
     logAppCreateEvent();
+  }
+
+  protected DaggerAppComponent.Builder componentBuilder() {
+    return DaggerAppComponent.builder()
+        .appModule(new AppModule(this))
+        .httpComponent(httpComponent());
   }
 
   protected HttpComponent httpComponent() {

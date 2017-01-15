@@ -7,4 +7,9 @@ public final class TestGitHubClientApp extends GitHubClientApp {
   @Override protected HttpComponent httpComponent() {
     return FakeHttpComponent.create();
   }
+
+  @Override protected DaggerAppComponent.Builder componentBuilder() {
+    return super.componentBuilder()
+        .firebaseModule(new FakeFirebaseModule());
+  }
 }
