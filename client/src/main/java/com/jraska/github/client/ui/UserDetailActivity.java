@@ -4,30 +4,33 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.widget.ImageView;
 import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.OnClick;
+import com.airbnb.epoxy.EpoxyModel;
+import com.airbnb.epoxy.SimpleEpoxyAdapter;
 import com.jraska.github.client.R;
 import com.jraska.github.client.rx.AppSchedulers;
 import com.jraska.github.client.users.*;
 import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDetailActivity extends BaseActivity implements UserDetailView {
   static final String EXTRA_USER_KEY = "user";
 
   @BindView(R.id.user_detail_avatar) ImageView avatarView;
+  @BindView(R.id.user_detail_recycler) RecyclerView recyclerView;
 
   @Inject Picasso picasso;
   @Inject UserOnWebStarter userOnWebStarter;
   @Inject UsersRepository usersRepository;
   @Inject AppSchedulers schedulers;
-
-  private UserStatsFragment userStatsFragment;
-  private ReposFragment popularReposFragment;
-  private ReposFragment contributedReposFragment;
 
   private UserDetailPresenter userDetailPresenter;
 
@@ -41,11 +44,8 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView {
     setContentView(R.layout.activity_user_detail);
     component().inject(this);
 
-    userStatsFragment = (UserStatsFragment) findFragmentById(R.id.fragment_user_stats);
-    popularReposFragment = (ReposFragment) findFragmentById(R.id.fragment_user_popular_repos);
-    popularReposFragment.setTitle(getString(R.string.repos_popular));
-    contributedReposFragment = (ReposFragment) findFragmentById(R.id.fragment_user_contributed_repos);
-    contributedReposFragment.setTitle(getString(R.string.repos_contributed));
+    recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    recyclerView.setNestedScrollingEnabled(false);
 
     User user = getUser();
 
@@ -53,7 +53,6 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView {
     picasso.load(user.avatarUrl).into(avatarView);
 
     userDetailPresenter = new UserDetailPresenter(this, usersRepository, schedulers);
-
     userDetailPresenter.onCreate(user.login);
   }
 
@@ -69,10 +68,22 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView {
 
   @Override
   public void setUser(UserDetail userDetail) {
-    userStatsFragment.setUserStats(userDetail.basicStats);
+    SimpleEpoxyAdapter adapter = new SimpleEpoxyAdapter();
 
-    popularReposFragment.setRepos(userDetail.popularRepos);
-    contributedReposFragment.setRepos(userDetail.contributedRepos);
+    List<EpoxyModel<?>> models = new ArrayList<>();
+    models.add(new UserHeaderModel(userDetail.basicStats));
+
+    if (!userDetail.popularRepos.isEmpty()) {
+      models.add(new ReposSectionModel(getString(R.string.repos_popular), userDetail.popularRepos));
+    }
+
+    if (!userDetail.contributedRepos.isEmpty()) {
+      models.add(new ReposSectionModel(getString(R.string.repos_contributed), userDetail.contributedRepos));
+    }
+
+    adapter.addModels(models);
+
+    recyclerView.setAdapter(adapter);
   }
 
   @Override public void showMessage(String message) {
