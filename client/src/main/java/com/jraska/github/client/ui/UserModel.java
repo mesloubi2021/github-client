@@ -1,24 +1,21 @@
 package com.jraska.github.client.ui;
 
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.airbnb.epoxy.EpoxyHolder;
 import com.airbnb.epoxy.EpoxyModelWithHolder;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.jraska.github.client.R;
 import com.jraska.github.client.users.User;
-import com.squareup.picasso.Picasso;
 
 class UserModel extends EpoxyModelWithHolder<UserModel.UserHolder> {
   private final User user;
-  private final Picasso picasso;
   private final UsersFragment.UserListener userListener;
 
-  public UserModel(User user, Picasso picasso, UsersFragment.UserListener userListener) {
+  public UserModel(User user, UsersFragment.UserListener userListener) {
     this.user = user;
-    this.picasso = picasso;
     this.userListener = userListener;
   }
 
@@ -28,8 +25,8 @@ class UserModel extends EpoxyModelWithHolder<UserModel.UserHolder> {
 
   @Override public void bind(UserHolder holder) {
     holder.loginTextView.setText(user.login);
-    holder.avatarView.setImageDrawable(null);
-    picasso.load(user.avatarUrl).into(holder.avatarView);
+//    holder.avatarView.setImageDrawable(null);
+    holder.avatarView.setImageURI(user.avatarUrl);
 
     if (user.isAdmin) {
       holder.adminView.setVisibility(View.VISIBLE);
@@ -47,7 +44,7 @@ class UserModel extends EpoxyModelWithHolder<UserModel.UserHolder> {
 
   static class UserHolder extends EpoxyHolder {
     @BindView(R.id.user_login) TextView loginTextView;
-    @BindView(R.id.user_avatar) ImageView avatarView;
+    @BindView(R.id.user_avatar) SimpleDraweeView avatarView;
     @BindView(R.id.user_admin_image) View adminView;
     @BindView(R.id.user_container) View containerView;
     @BindView(R.id.user_item_gitHub_icon) View iconView;

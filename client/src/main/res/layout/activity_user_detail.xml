@@ -22,7 +22,7 @@
         app:layout_scrollFlags="scroll|exitUntilCollapsed"
         app:contentScrim="?attr/colorPrimary">
 
-      <ImageView
+      <com.facebook.drawee.view.SimpleDraweeView
           android:id="@+id/user_detail_avatar"
           android:layout_width="match_parent"
           android:layout_height="match_parent"

@@ -16,16 +16,12 @@ import com.jraska.github.client.GitHubClientApp;
 import com.jraska.github.client.R;
 import com.jraska.github.client.common.Lists;
 import com.jraska.github.client.users.User;
-import com.squareup.picasso.Picasso;
 
-import javax.inject.Inject;
 import java.util.List;
 
 public class UsersFragment extends Fragment {
   @BindView(R.id.users_refresh_swipe_layout) SwipeRefreshLayout swipeRefreshLayout;
   @BindView(R.id.users_recycler) RecyclerView usersRecyclerView;
-
-  @Inject Picasso picasso;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -55,7 +51,7 @@ public class UsersFragment extends Fragment {
 
     SimpleEpoxyAdapter adapter = new SimpleEpoxyAdapter();
     List<UserModel> models = Lists.transform(users,
-        user -> new UserModel(user, picasso, listener));
+        user -> new UserModel(user, listener));
 
     adapter.addModels(models);
     usersRecyclerView.setAdapter(adapter);

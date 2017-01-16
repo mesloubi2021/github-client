@@ -2,6 +2,7 @@ package com.jraska.github.client;
 
 import android.app.Application;
 import android.os.Bundle;
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.jraska.github.client.analytics.ActivityViewCallbacks;
 import com.jraska.github.client.analytics.ActivityViewReporter;
@@ -35,6 +36,8 @@ public class GitHubClientApp extends Application {
 
     appComponent = componentBuilder().build();
     appComponent.inject(this);
+
+    Fresco.initialize(this);
 
     Timber.plant(errorReportTree);
     if (BuildConfig.DEBUG) {

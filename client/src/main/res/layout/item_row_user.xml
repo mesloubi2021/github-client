@@ -8,7 +8,7 @@
     android:background="@android:drawable/list_selector_background"
     tools:background="#bbbbbb">
 
-  <ImageView
+  <com.facebook.drawee.view.SimpleDraweeView
       android:id="@+id/user_avatar"
       android:layout_width="@dimen/icon_size"
       android:layout_height="@dimen/icon_size"

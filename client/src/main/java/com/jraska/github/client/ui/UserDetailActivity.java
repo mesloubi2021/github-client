@@ -6,16 +6,15 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.ImageView;
 import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.OnClick;
 import com.airbnb.epoxy.EpoxyModel;
 import com.airbnb.epoxy.SimpleEpoxyAdapter;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.jraska.github.client.R;
 import com.jraska.github.client.rx.AppSchedulers;
 import com.jraska.github.client.users.*;
-import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -24,10 +23,9 @@ import java.util.List;
 public class UserDetailActivity extends BaseActivity implements UserDetailView {
   static final String EXTRA_USER_KEY = "user";
 
-  @BindView(R.id.user_detail_avatar) ImageView avatarView;
+  @BindView(R.id.user_detail_avatar) SimpleDraweeView avatarView;
   @BindView(R.id.user_detail_recycler) RecyclerView recyclerView;
 
-  @Inject Picasso picasso;
   @Inject UserOnWebStarter userOnWebStarter;
   @Inject UsersRepository usersRepository;
   @Inject AppSchedulers schedulers;
@@ -50,7 +48,7 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView {
     User user = getUser();
 
     setTitle(user.login);
-    picasso.load(user.avatarUrl).into(avatarView);
+    avatarView.setImageURI(user.avatarUrl);
 
     userDetailPresenter = new UserDetailPresenter(this, usersRepository, schedulers);
     userDetailPresenter.onCreate(user.login);
