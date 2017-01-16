@@ -4,7 +4,7 @@ import android.app.Application;
 import android.os.Bundle;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.jraska.github.client.analytics.ActivityViewCallbacks;
-import com.jraska.github.client.analytics.ActivityViewTrigger;
+import com.jraska.github.client.analytics.ActivityViewReporter;
 import com.jraska.github.client.common.AppBuildConfig;
 import com.jraska.github.client.http.DaggerHttpComponent;
 import com.jraska.github.client.http.HttpComponent;
@@ -22,7 +22,7 @@ public class GitHubClientApp extends Application {
 
   @Inject FirebaseAnalytics analytics;
   @Inject ErrorReportTree errorReportTree;
-  @Inject ActivityViewTrigger viewTrigger;
+  @Inject ActivityViewReporter viewReporter;
   @Inject Config config;
 
   public AppComponent component() {
@@ -49,7 +49,7 @@ public class GitHubClientApp extends Application {
       Timber.d("Analytics enabled");
     }
 
-    registerActivityLifecycleCallbacks(new ActivityViewCallbacks(viewTrigger));
+    registerActivityLifecycleCallbacks(new ActivityViewCallbacks(viewReporter));
 
     logAppCreateEvent();
   }

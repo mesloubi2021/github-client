@@ -5,9 +5,9 @@ import android.app.Application;
 import android.os.Bundle;
 
 public final class ActivityViewCallbacks implements Application.ActivityLifecycleCallbacks {
-  private final ActivityViewTrigger viewTrigger;
+  private final ActivityViewReporter viewTrigger;
 
-  public ActivityViewCallbacks(ActivityViewTrigger viewTrigger) {
+  public ActivityViewCallbacks(ActivityViewReporter viewTrigger) {
     this.viewTrigger = viewTrigger;
   }
 

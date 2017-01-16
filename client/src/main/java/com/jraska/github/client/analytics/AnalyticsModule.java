@@ -12,7 +12,7 @@ import java.util.HashMap;
 @Module
 public final class AnalyticsModule {
   @Provides @PerApp
-  public ActivityViewTrigger viewTrigger(FirebaseAnalytics analytics) {
+  public ActivityViewReporter viewTrigger(FirebaseAnalytics analytics) {
     HashMap<Class, AnalyticsExtractor<?>> extractorsMap = new HashMap<>();
 
     extractorsMap.put(UsersActivity.class, AnalyticsExtractor.Simple.INSTANCE);
@@ -20,6 +20,6 @@ public final class AnalyticsModule {
 //    extractorsMap.put(SomeOtherActivity.class, new StaticFieldsAnalyticsExtractor("nameUrlScreen",
 //        "http://name.com", "nameMe"));
 
-    return new ActivityViewTrigger(analytics, extractorsMap);
+    return new ActivityViewReporter(analytics, extractorsMap);
   }
 }

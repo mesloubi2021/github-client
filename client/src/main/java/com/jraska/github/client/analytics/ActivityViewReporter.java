@@ -9,11 +9,11 @@ import com.jraska.github.client.common.Preconditions;
 
 import java.util.Map;
 
-public final class ActivityViewTrigger {
+public final class ActivityViewReporter {
   private final FirebaseAnalytics analytics;
   private final Map<Class, AnalyticsExtractor<?>> extractorMap;
 
-  ActivityViewTrigger(FirebaseAnalytics analytics, Map<Class, AnalyticsExtractor<?>> extractorMap) {
+  ActivityViewReporter(FirebaseAnalytics analytics, Map<Class, AnalyticsExtractor<?>> extractorMap) {
     this.analytics = Preconditions.argNotNull(analytics);
     this.extractorMap = Preconditions.argNotNull(extractorMap);
   }
@@ -23,16 +23,18 @@ public final class ActivityViewTrigger {
     ActivityAnalytics analytics = extractor.analytics(activity);
 
     this.analytics.setCurrentScreen(activity, analytics.screenName, null);
-    reportProperties(analytics.properties);
+
+    Bundle properties = propertiesBundle(analytics.properties);
+    this.analytics.logEvent("view_" + analytics.screenName, properties);
   }
 
-  private void reportProperties(Map<String, String> properties) {
+  private Bundle propertiesBundle(Map<String, String> properties) {
     Bundle parameters = new Bundle();
     for (Map.Entry<String, String> analytic : properties.entrySet()) {
       parameters.putString(analytic.getKey(), analytic.getValue());
     }
 
-    analytics.logEvent(FirebaseAnalytics.Event.VIEW_ITEM, parameters);
+    return parameters;
   }
 
   private AnalyticsExtractor<Activity> extractor(Activity activity) {
