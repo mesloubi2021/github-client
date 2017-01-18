@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import com.jraska.github.client.common.AppBuildConfig;
-import com.jraska.github.client.logging.Logger;
+import com.jraska.github.client.logging.VerboseLogger;
 import com.jraska.github.client.rx.AppSchedulers;
 import dagger.Module;
 import dagger.Provides;
@@ -43,7 +43,7 @@ public class AppModule {
 //    return new OkHttp3Downloader(builder.build());
 //  }
 
-  @Provides Logger timberLogger() {
+  @Provides VerboseLogger timberLogger() {
     return message -> Timber.tag("Network").v(message);
   }
 

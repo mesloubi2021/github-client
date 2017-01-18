@@ -1,10 +1,9 @@
 package com.jraska.github.client.http;
 
 import com.jraska.github.client.common.AppBuildConfig;
-import com.jraska.github.client.logging.Logger;
+import com.jraska.github.client.logging.VerboseLogger;
 import dagger.Module;
 import dagger.Provides;
-import dagger.Reusable;
 import timber.log.Timber;
 
 import java.io.File;
@@ -23,7 +22,7 @@ public class HttpDependenciesModule {
     return config;
   }
 
-  @Provides Logger timberLogger() {
+  @Provides VerboseLogger timberLogger() {
     return message -> Timber.tag("Network").v(message);
   }
 
