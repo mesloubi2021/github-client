@@ -1,6 +1,5 @@
 apply plugin: 'com.android.library'
 apply plugin: 'me.tatarka.retrolambda'
-apply plugin: 'com.neenbedankt.android-apt'
 
 android {
   compileSdkVersion rootProject.ext.compileSdkVersion
@@ -20,22 +19,22 @@ android {
 }
 
 dependencies {
-  retrolambdaConfig 'net.orfjackal.retrolambda:retrolambda:2.4.0'
+  retrolambdaConfig 'net.orfjackal.retrolambda:retrolambda:2.5.0'
 
-  apt 'com.google.dagger:dagger-compiler:2.8'
+  annotationProcessor 'com.google.dagger:dagger-compiler:2.9'
 
   compile project(':client-domain')
 
-  compile 'com.android.support:support-annotations:25.0.1'
+  compile 'com.android.support:support-annotations:25.1.0'
 
   compile 'com.squareup.retrofit2:retrofit:2.1.0'
   compile 'com.squareup.retrofit2:converter-gson:2.1.0'
   compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
   compile 'com.google.code.gson:gson:2.8.0'
-  compile 'com.squareup.okhttp3:okhttp:3.5.0'
-  compile 'com.squareup.okhttp3:logging-interceptor:3.5.0'
+  compile 'com.squareup.okhttp3:okhttp:3.6.0'
+  compile 'com.squareup.okhttp3:logging-interceptor:3.6.0'
   compile 'com.squareup.okio:okio:1.11.0'
 
   testCompile 'junit:junit:4.12'
-  testCompile 'org.assertj:assertj-core:3.6.1'
+  testCompile 'org.assertj:assertj-core:3.6.2'
 }
