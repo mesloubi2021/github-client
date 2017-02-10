@@ -11,10 +11,6 @@ sourceSets {
   }
 }
 
-retrolambda{
-  oldJdk System.getenv("JAVA_HOME")
-}
-
 dependencies {
   retrolambdaConfig 'net.orfjackal.retrolambda:retrolambda:2.5.0'
 
