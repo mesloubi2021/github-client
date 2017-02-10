@@ -9,8 +9,8 @@ import com.jraska.github.client.rx.AppSchedulers;
 import dagger.Module;
 import dagger.Provides;
 import dagger.Reusable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 @Module

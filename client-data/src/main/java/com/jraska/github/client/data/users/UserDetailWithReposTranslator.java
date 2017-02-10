@@ -4,7 +4,8 @@ import com.jraska.github.client.common.Pair;
 import com.jraska.github.client.users.Repo;
 import com.jraska.github.client.users.UserDetail;
 import com.jraska.github.client.users.UserStats;
-import rx.Single;
+import io.reactivex.Single;
+import io.reactivex.SingleTransformer;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -14,7 +15,7 @@ import java.util.*;
 import static java.util.Locale.ENGLISH;
 
 final class UserDetailWithReposTranslator
-    implements Single.Transformer<Pair<GitHubUserDetail, List<GitHubRepo>>, UserDetail> {
+    implements SingleTransformer<Pair<GitHubUserDetail, List<GitHubRepo>>, UserDetail> {
   static final DateFormat GIT_HUB_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", ENGLISH);
   static final Comparator<GitHubRepo> BY_STARS_REPO_COMPARATOR = (lhs, rhs) -> rhs.stargazersCount.compareTo(lhs.stargazersCount);
   static final int MAX_REPOS_TO_DISPLAY = 5;
@@ -22,7 +23,7 @@ final class UserDetailWithReposTranslator
   static final UserDetailWithReposTranslator INSTANCE = new UserDetailWithReposTranslator();
 
   @Override
-  public Single<UserDetail> call(Single<Pair<GitHubUserDetail, List<GitHubRepo>>> single) {
+  public Single<UserDetail> apply(Single<Pair<GitHubUserDetail, List<GitHubRepo>>> single) {
     return single.map(result -> translateUserDetail(result.first, result.second));
   }
 

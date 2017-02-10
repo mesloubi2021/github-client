@@ -1,13 +1,13 @@
 package com.jraska.github.client.users;
 
 import com.jraska.github.client.rx.AppSchedulers;
-import rx.Subscription;
+import io.reactivex.disposables.Disposable;
 
 public class UserDetailPresenter implements UserDetailViewEvents {
   private final UserDetailView view;
   private final UsersRepository usersRepository;
   private final AppSchedulers schedulers;
-  private Subscription subscription;
+  private Disposable subscription;
 
   public UserDetailPresenter(UserDetailView view, UsersRepository usersRepository,
                              AppSchedulers schedulers) {
@@ -24,7 +24,7 @@ public class UserDetailPresenter implements UserDetailViewEvents {
 
   public void onDestroy() {
     if (subscription != null) {
-      subscription.unsubscribe();
+      subscription.dispose();
     }
   }
 
@@ -36,7 +36,7 @@ public class UserDetailPresenter implements UserDetailViewEvents {
     view.showMessage(throwable.toString());
   }
 
-  @Override public void   onUserGitHubIconClick(User user) {
+  @Override public void onUserGitHubIconClick(User user) {
     view.viewUserOnWeb(user);
   }
 }

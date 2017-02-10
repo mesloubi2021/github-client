@@ -1,6 +1,6 @@
 package com.jraska.github.client.users;
 
-import rx.Single;
+import io.reactivex.Single;
 
 import java.util.List;
 

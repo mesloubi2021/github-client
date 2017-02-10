@@ -2,7 +2,7 @@ package com.jraska.github.client.data.users;
 
 import retrofit2.http.GET;
 import retrofit2.http.Query;
-import rx.Single;
+import io.reactivex.Single;
 
 import java.util.List;
 

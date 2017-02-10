@@ -5,8 +5,8 @@ import com.jraska.github.client.common.Pair;
 import com.jraska.github.client.users.User;
 import com.jraska.github.client.users.UserDetail;
 import com.jraska.github.client.users.UsersRepository;
-import rx.Single;
-import rx.schedulers.Schedulers;
+import io.reactivex.Single;
+import io.reactivex.schedulers.Schedulers;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -1,5 +1,6 @@
 package com.jraska.github.client.http;
 
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.jraska.github.client.common.AppBuildConfig;
 import com.jraska.github.client.logging.VerboseLogger;
 import dagger.Module;
@@ -9,7 +10,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import okhttp3.logging.HttpLoggingInterceptor.Level;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.io.File;
@@ -23,7 +23,7 @@ public class HttpModule {
         .validateEagerly(config.debug)
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create())
-        .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .build();
 
     return retrofit;

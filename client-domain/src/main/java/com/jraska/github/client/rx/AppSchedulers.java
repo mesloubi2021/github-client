@@ -1,14 +1,15 @@
 package com.jraska.github.client.rx;
 
-import rx.Scheduler;
-import rx.Single;
+import io.reactivex.Scheduler;
+import io.reactivex.Single;
+import io.reactivex.SingleTransformer;
 
 public final class AppSchedulers {
   private final Scheduler mainThread;
   private final Scheduler io;
   private final Scheduler computation;
 
-  private final Single.Transformer<?, ?> dataLoadTransformer;
+  private final SingleTransformer<?, ?> dataLoadTransformer;
 
   public AppSchedulers(Scheduler mainThread, Scheduler io, Scheduler computation) {
     this.mainThread = mainThread;
@@ -31,18 +32,18 @@ public final class AppSchedulers {
   }
 
   @SuppressWarnings("unchecked")
-  public <T> Single.Transformer<T, T> ioLoadTransformer() {
-    return (Single.Transformer<T, T>) dataLoadTransformer;
+  public <T> SingleTransformer<T, T> ioLoadTransformer() {
+    return (SingleTransformer<T, T>) dataLoadTransformer;
   }
 
-  static class IoMainTransformer<T> implements Single.Transformer<T, T> {
+  static class IoMainTransformer<T> implements SingleTransformer<T, T> {
     private final AppSchedulers schedulers;
 
     IoMainTransformer(AppSchedulers schedulers) {
       this.schedulers = schedulers;
     }
 
-    @Override public Single<T> call(Single<T> observable) {
+    @Override public Single<T> apply(Single<T> observable) {
       return observable.subscribeOn(schedulers.io())
           .observeOn(schedulers.mainThread());
     }

@@ -17,7 +17,8 @@ dependencies {
   compile 'com.google.dagger:dagger:2.9'
   provided 'com.google.dagger:dagger-compiler:2.9'
 
-  compile 'io.reactivex:rxjava:1.2.6'
+  compile 'io.reactivex.rxjava2:rxjava:2.0.5'
+  compile 'io.reactivex.rxjava2:rxjava:2.0.5'
 
   testCompile 'junit:junit:4.12'
   testCompile 'org.hamcrest:hamcrest-library:1.3'
