@@ -21,7 +21,7 @@ android {
 dependencies {
   retrolambdaConfig 'net.orfjackal.retrolambda:retrolambda:2.5.1'
 
-  annotationProcessor 'com.google.dagger:dagger-compiler:2.9'
+  annotationProcessor 'com.google.dagger:dagger-compiler:2.10'
 
   compile project(':client-domain')
 
