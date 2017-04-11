@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'me.tatarka.retrolambda'
 
 android {
   compileSdkVersion rootProject.ext.compileSdkVersion
@@ -37,8 +36,6 @@ android {
 }
 
 dependencies {
-  retrolambdaConfig 'net.orfjackal.retrolambda:retrolambda:2.5.1'
-
   compile project(':client-domain')
   compile project(':client-data')
 
