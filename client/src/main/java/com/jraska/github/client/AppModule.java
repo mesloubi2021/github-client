@@ -25,24 +25,6 @@ public class AppModule {
     return app;
   }
 
-  // TODO: 16/01/17 Configure Fresco
-//  @Provides
-//  Downloader downloader(Context context, Logger logger, AppBuildConfig config) {
-//    OkHttpClient.Builder builder = new OkHttpClient.Builder();
-//
-//    if (config.debug) {
-//      HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(logger::v)
-//          .setLevel(HttpLoggingInterceptor.Level.BASIC);
-//      builder.addInterceptor(loggingInterceptor);
-//    }
-//
-//    File cacheDir = new File(context.getCacheDir(), "images");
-//    Cache imageCache = new Cache(cacheDir, 4 * 1024 * 1024);
-//    builder.cache(imageCache);
-//
-//    return new OkHttp3Downloader(builder.build());
-//  }
-
   @Provides VerboseLogger timberLogger() {
     return message -> Timber.tag("Network").v(message);
   }
