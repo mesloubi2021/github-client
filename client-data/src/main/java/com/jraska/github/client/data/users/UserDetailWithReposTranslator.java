@@ -4,13 +4,19 @@ import com.jraska.github.client.common.Pair;
 import com.jraska.github.client.users.Repo;
 import com.jraska.github.client.users.UserDetail;
 import com.jraska.github.client.users.UserStats;
-import io.reactivex.Single;
-import io.reactivex.SingleTransformer;
+
+import org.threeten.bp.LocalDateTime;
+import org.threeten.bp.format.DateTimeFormatter;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import io.reactivex.Single;
+import io.reactivex.SingleTransformer;
 
 import static java.util.Locale.ENGLISH;
 
@@ -28,7 +34,7 @@ final class UserDetailWithReposTranslator
   }
 
   UserDetail translateUserDetail(GitHubUserDetail gitHubUserDetail, List<GitHubRepo> gitHubRepos) {
-    Date joined = parseDate(gitHubUserDetail.createdAt);
+    LocalDateTime joined = parseDate(gitHubUserDetail.createdAt);
 
     UserStats stats = new UserStats(gitHubUserDetail.followers, gitHubUserDetail.following,
         gitHubUserDetail.publicRepos, joined);
@@ -56,13 +62,7 @@ final class UserDetailWithReposTranslator
         gitHubRepo.stargazersCount, gitHubRepo.forks, gitHubRepo.size);
   }
 
-  private static Date parseDate(String text) {
-    synchronized (GIT_HUB_DATE_FORMAT) {
-      try {
-        return GIT_HUB_DATE_FORMAT.parse(text);
-      } catch (ParseException e) {
-        throw new RuntimeException(e); // being lazy now
-      }
-    }
+  private static LocalDateTime parseDate(String text) {
+    return LocalDateTime.parse(text, DateTimeFormatter.ISO_DATE_TIME);
   }
 }

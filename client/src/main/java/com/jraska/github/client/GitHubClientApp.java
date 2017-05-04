@@ -2,8 +2,10 @@ package com.jraska.github.client;
 
 import android.app.Application;
 import android.os.Bundle;
+
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.jraska.github.client.analytics.ActivityViewCallbacks;
 import com.jraska.github.client.analytics.ActivityViewReporter;
 import com.jraska.github.client.common.AppBuildConfig;
@@ -11,10 +13,12 @@ import com.jraska.github.client.http.DaggerHttpComponent;
 import com.jraska.github.client.http.HttpComponent;
 import com.jraska.github.client.http.HttpDependenciesModule;
 import com.jraska.github.client.logging.ErrorReportTree;
-import timber.log.Timber;
+
+import java.io.File;
 
 import javax.inject.Inject;
-import java.io.File;
+
+import timber.log.Timber;
 
 public class GitHubClientApp extends Application {
   private static final String CONFIG_ANALYTICS_DISABLED = "analytics_disabled";
@@ -38,6 +42,7 @@ public class GitHubClientApp extends Application {
     appComponent.inject(this);
 
     Fresco.initialize(this);
+    AndroidThreeTen.init(this);
 
     Timber.plant(errorReportTree);
     if (BuildConfig.DEBUG) {

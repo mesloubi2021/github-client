@@ -2,18 +2,19 @@ package com.jraska.github.client.ui;
 
 import android.view.View;
 import android.widget.TextView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
 import com.airbnb.epoxy.EpoxyHolder;
 import com.airbnb.epoxy.EpoxyModelWithHolder;
 import com.jraska.github.client.R;
 import com.jraska.github.client.users.UserStats;
 
-import java.text.DateFormat;
-import java.util.Date;
+import org.threeten.bp.format.DateTimeFormatter;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class UserHeaderModel extends EpoxyModelWithHolder<UserHeaderModel.HeaderHolder> {
-  static final DateFormat JOINED_FORMAT = DateFormat.getDateInstance(DateFormat.MEDIUM);
+  static final DateTimeFormatter JOINED_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
   private final UserStats basicStats;
 
@@ -34,16 +35,10 @@ public class UserHeaderModel extends EpoxyModelWithHolder<UserHeaderModel.Header
     holder.followingTextView.setText(String.valueOf(basicStats.following));
     holder.reposCountTextView.setText(String.valueOf(basicStats.publicRepos));
 
-    String joinedDateText = formatJoinedDate(basicStats.joined);
+    String joinedDateText = JOINED_FORMAT.format(basicStats.joined);
     String joinedText = holder.joinedTextView.getContext()
         .getString(R.string.user_detail_joined_template, joinedDateText);
     holder.joinedTextView.setText(joinedText);
-  }
-
-  static String formatJoinedDate(Date joinedDate) {
-    synchronized (JOINED_FORMAT) {
-      return JOINED_FORMAT.format(joinedDate);
-    }
   }
 
   static class HeaderHolder extends EpoxyHolder {
