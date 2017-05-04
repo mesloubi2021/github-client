@@ -8,8 +8,6 @@ import com.jraska.github.client.users.UserStats;
 import org.threeten.bp.LocalDateTime;
 import org.threeten.bp.format.DateTimeFormatter;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -18,11 +16,8 @@ import java.util.List;
 import io.reactivex.Single;
 import io.reactivex.SingleTransformer;
 
-import static java.util.Locale.ENGLISH;
-
 final class UserDetailWithReposTranslator
     implements SingleTransformer<Pair<GitHubUserDetail, List<GitHubRepo>>, UserDetail> {
-  static final DateFormat GIT_HUB_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", ENGLISH);
   static final Comparator<GitHubRepo> BY_STARS_REPO_COMPARATOR = (lhs, rhs) -> rhs.stargazersCount.compareTo(lhs.stargazersCount);
   static final int MAX_REPOS_TO_DISPLAY = 5;
 
@@ -34,7 +29,7 @@ final class UserDetailWithReposTranslator
   }
 
   UserDetail translateUserDetail(GitHubUserDetail gitHubUserDetail, List<GitHubRepo> gitHubRepos) {
-    LocalDateTime joined = parseDate(gitHubUserDetail.createdAt);
+    LocalDateTime joined = LocalDateTime.parse(gitHubUserDetail.createdAt, DateTimeFormatter.ISO_DATE_TIME);
 
     UserStats stats = new UserStats(gitHubUserDetail.followers, gitHubUserDetail.following,
         gitHubUserDetail.publicRepos, joined);
@@ -60,9 +55,5 @@ final class UserDetailWithReposTranslator
   Repo translateRepo(GitHubRepo gitHubRepo) {
     return new Repo(gitHubRepo.name, gitHubRepo.description, gitHubRepo.watchersCount,
         gitHubRepo.stargazersCount, gitHubRepo.forks, gitHubRepo.size);
-  }
-
-  private static LocalDateTime parseDate(String text) {
-    return LocalDateTime.parse(text, DateTimeFormatter.ISO_DATE_TIME);
   }
 }
