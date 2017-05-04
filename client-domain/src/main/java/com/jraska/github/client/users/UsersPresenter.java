@@ -1,13 +1,12 @@
 package com.jraska.github.client.users;
 
-import com.jraska.github.client.common.UseCase;
 import com.jraska.github.client.rx.AppSchedulers;
 
 import java.util.List;
 
 import io.reactivex.disposables.Disposable;
 
-public class UsersPresenter implements UseCase, UsersViewEvents {
+public class UsersPresenter implements UsersViewEvents {
   private final UsersView view;
   private final UsersRepository usersRepository;
   private final AppSchedulers schedulers;
