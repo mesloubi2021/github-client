@@ -8,8 +8,8 @@ import retrofit2.Retrofit;
 import javax.inject.Singleton;
 
 @Module
-public final class UsersModule {
-  @Provides UsersRepository provideUsersRepository(Retrofit retrofit) {
+public abstract class UsersModule {
+  @Provides public static UsersRepository provideUsersRepository(Retrofit retrofit) {
     GitHubUsersApi usersApi = retrofit.create(GitHubUsersApi.class);
     GitHubUserDetailApi detailApi = retrofit.create(GitHubUserDetailApi.class);
 

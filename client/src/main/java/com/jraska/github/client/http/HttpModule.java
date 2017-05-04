@@ -15,9 +15,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import java.io.File;
 
 @Module
-public class HttpModule {
+public abstract class HttpModule {
   @Provides @Http
-  static Retrofit provideRetrofit(OkHttpClient okHttpClient, AppBuildConfig config) {
+  public static Retrofit provideRetrofit(OkHttpClient okHttpClient, AppBuildConfig config) {
     Retrofit retrofit = new Retrofit.Builder()
         .baseUrl("https://api.github.com")
         .validateEagerly(config.debug)
@@ -30,7 +30,7 @@ public class HttpModule {
   }
 
   @Provides @Http
-  OkHttpClient provideOkHttpClient(@Http File cacheDir, @Http VerboseLogger logger, AppBuildConfig config) {
+  public static OkHttpClient provideOkHttpClient(@Http File cacheDir, @Http VerboseLogger logger, AppBuildConfig config) {
     OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
     if (config.debug) {

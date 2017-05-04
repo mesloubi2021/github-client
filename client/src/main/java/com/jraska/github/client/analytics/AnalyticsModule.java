@@ -10,9 +10,9 @@ import dagger.Provides;
 import java.util.HashMap;
 
 @Module
-public final class AnalyticsModule {
+public abstract class AnalyticsModule {
   @Provides @PerApp
-  public ActivityViewReporter viewTrigger(FirebaseAnalytics analytics) {
+  public static ActivityViewReporter viewTrigger(FirebaseAnalytics analytics) {
     HashMap<Class, AnalyticsExtractor<?>> extractorsMap = new HashMap<>();
 
     extractorsMap.put(UsersActivity.class, AnalyticsExtractor.Simple.INSTANCE);
