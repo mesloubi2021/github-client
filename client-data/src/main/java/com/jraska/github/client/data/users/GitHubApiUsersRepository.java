@@ -1,16 +1,18 @@
 package com.jraska.github.client.data.users;
 
 import android.support.annotation.NonNull;
+
 import com.jraska.github.client.common.Pair;
 import com.jraska.github.client.users.User;
 import com.jraska.github.client.users.UserDetail;
 import com.jraska.github.client.users.UsersRepository;
-import io.reactivex.Single;
-import io.reactivex.schedulers.Schedulers;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import io.reactivex.Single;
+import io.reactivex.schedulers.Schedulers;
 
 final class GitHubApiUsersRepository implements UsersRepository {
   private final GitHubUsersApi gitHubUsersApi;
@@ -30,7 +32,7 @@ final class GitHubApiUsersRepository implements UsersRepository {
     return gitHubUserDetailApi.getUserDetail(login)
         .subscribeOn(Schedulers.io()) //this has to be here now to run requests in parallel
         .zipWith(gitHubUserDetailApi.getRepos(login), Pair::new)
-        .compose(UserDetailWithReposTranslator.INSTANCE);
+        .compose(UserDetailWithReposConverter.INSTANCE);
   }
 
   List<User> translateUsers(List<GitHubUser> gitHubUsers) {

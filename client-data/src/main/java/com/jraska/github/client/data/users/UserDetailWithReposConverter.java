@@ -16,12 +16,12 @@ import java.util.List;
 import io.reactivex.Single;
 import io.reactivex.SingleTransformer;
 
-final class UserDetailWithReposTranslator
+final class UserDetailWithReposConverter
     implements SingleTransformer<Pair<GitHubUserDetail, List<GitHubRepo>>, UserDetail> {
   static final Comparator<GitHubRepo> BY_STARS_REPO_COMPARATOR = (lhs, rhs) -> rhs.stargazersCount.compareTo(lhs.stargazersCount);
   static final int MAX_REPOS_TO_DISPLAY = 5;
 
-  static final UserDetailWithReposTranslator INSTANCE = new UserDetailWithReposTranslator();
+  static final UserDetailWithReposConverter INSTANCE = new UserDetailWithReposConverter();
 
   @Override
   public Single<UserDetail> apply(Single<Pair<GitHubUserDetail, List<GitHubRepo>>> single) {
