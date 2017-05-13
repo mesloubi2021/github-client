@@ -7,21 +7,27 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
-import butterknife.BindView;
-import butterknife.OnClick;
+
 import com.airbnb.epoxy.EpoxyModel;
 import com.airbnb.epoxy.SimpleEpoxyAdapter;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.jraska.github.client.R;
 import com.jraska.github.client.rx.AppSchedulers;
-import com.jraska.github.client.users.*;
+import com.jraska.github.client.users.UserDetail;
+import com.jraska.github.client.users.UserDetailPresenter;
+import com.jraska.github.client.users.UserDetailView;
+import com.jraska.github.client.users.UsersRepository;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import butterknife.BindView;
+import butterknife.OnClick;
+
 public class UserDetailActivity extends BaseActivity implements UserDetailView {
-  static final String EXTRA_USER_KEY = "user";
+  static final String EXTRA_USER_LOGIN = "login";
 
   @BindView(R.id.user_detail_avatar) SimpleDraweeView avatarView;
   @BindView(R.id.user_detail_recycler) RecyclerView recyclerView;
@@ -32,8 +38,8 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView {
 
   private UserDetailPresenter userDetailPresenter;
 
-  public User getUser() {
-    return (User) getIntent().getSerializableExtra(EXTRA_USER_KEY);
+  public String login() {
+    return getIntent().getStringExtra(EXTRA_USER_LOGIN);
   }
 
   @Override
@@ -45,13 +51,11 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView {
     recyclerView.setLayoutManager(new LinearLayoutManager(this));
     recyclerView.setNestedScrollingEnabled(false);
 
-    User user = getUser();
+    setTitle(login());
 
-    setTitle(user.login);
-    avatarView.setImageURI(user.avatarUrl);
 
     userDetailPresenter = new UserDetailPresenter(this, usersRepository, schedulers);
-    userDetailPresenter.onCreate(user.login);
+    userDetailPresenter.onCreate(login());
   }
 
   @Override protected void onDestroy() {
@@ -61,11 +65,17 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView {
   }
 
   @OnClick(R.id.user_detail_github_fab) void gitHubFabClicked() {
-    userDetailPresenter.onUserGitHubIconClick(getUser());
+    userDetailPresenter.onUserGitHubIconClick(login());
   }
 
   @Override
   public void setUser(UserDetail userDetail) {
+    avatarView.setImageURI(userDetail.user.avatarUrl);
+
+    if (userDetail.basicStats == null) {
+      return;
+    }
+
     SimpleEpoxyAdapter adapter = new SimpleEpoxyAdapter();
 
     List<EpoxyModel<?>> models = new ArrayList<>();
@@ -88,13 +98,13 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView {
     Toast.makeText(this, message, Toast.LENGTH_LONG).show();
   }
 
-  @Override public void viewUserOnWeb(User user) {
-    userOnWebStarter.viewUserOnWeb(user);
+  @Override public void viewUserOnWeb(String login) {
+    userOnWebStarter.viewUserOnWeb(login);
   }
 
-  public static void start(Activity inActivity, @NonNull User user) {
+  public static void start(Activity inActivity, @NonNull String login) {
     Intent intent = new Intent(inActivity, UserDetailActivity.class);
-    intent.putExtra(EXTRA_USER_KEY, user);
+    intent.putExtra(EXTRA_USER_LOGIN, login);
 
     inActivity.startActivity(intent);
   }

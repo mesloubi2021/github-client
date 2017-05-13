@@ -18,7 +18,8 @@ public class UserDetailPresenter implements UserDetailViewEvents {
 
   public void onCreate(String login) {
     subscription = usersRepository.getUserDetail(login)
-        .compose(schedulers.ioLoadTransformer())
+        .subscribeOn(schedulers.io())
+        .observeOn(schedulers.mainThread())
         .subscribe(this::onLoaded, this::onLoadError);
   }
 
@@ -36,7 +37,7 @@ public class UserDetailPresenter implements UserDetailViewEvents {
     view.showMessage(throwable.toString());
   }
 
-  @Override public void onUserGitHubIconClick(User user) {
-    view.viewUserOnWeb(user);
+  @Override public void onUserGitHubIconClick(String login) {
+    view.viewUserOnWeb(login);
   }
 }

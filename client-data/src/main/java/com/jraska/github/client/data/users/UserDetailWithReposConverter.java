@@ -2,6 +2,7 @@ package com.jraska.github.client.data.users;
 
 import com.jraska.github.client.common.Pair;
 import com.jraska.github.client.users.Repo;
+import com.jraska.github.client.users.User;
 import com.jraska.github.client.users.UserDetail;
 import com.jraska.github.client.users.UserStats;
 
@@ -41,19 +42,25 @@ final class UserDetailWithReposConverter
 
     for (GitHubRepo gitHubRepo : gitHubRepos) {
       if (usersRepos.size() < MAX_REPOS_TO_DISPLAY && gitHubUserDetail.login.equals(gitHubRepo.owner.login)) {
-        Repo repo = translateRepo(gitHubRepo);
+        Repo repo = convert(gitHubRepo);
         usersRepos.add(repo);
       } else if (contributedRepos.size() < MAX_REPOS_TO_DISPLAY) {
-        Repo repo = translateRepo(gitHubRepo);
+        Repo repo = convert(gitHubRepo);
         contributedRepos.add(repo);
       }
     }
 
-    return new UserDetail(stats, usersRepos, contributedRepos);
+    User user = convert(gitHubUserDetail);
+    return new UserDetail(user, stats, usersRepos, contributedRepos);
   }
 
-  Repo translateRepo(GitHubRepo gitHubRepo) {
+  Repo convert(GitHubRepo gitHubRepo) {
     return new Repo(gitHubRepo.name, gitHubRepo.description, gitHubRepo.watchersCount,
         gitHubRepo.stargazersCount, gitHubRepo.forks, gitHubRepo.size);
+  }
+
+  private User convert(GitHubUserDetail gitHubUser) {
+    boolean isAdmin = gitHubUser.siteAdmin == null ? false : gitHubUser.siteAdmin;
+    return new User(gitHubUser.login, gitHubUser.avatarUrl, isAdmin, gitHubUser.htmlUrl);
   }
 }

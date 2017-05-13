@@ -5,5 +5,5 @@ public interface UserDetailView {
 
   void showMessage(String message);
 
-  void viewUserOnWeb(User user);
+  void viewUserOnWeb(String login);
 }

@@ -21,7 +21,8 @@ public class UsersPresenter implements UsersViewEvents {
 
   public void onCreate() {
     subscription = usersRepository.getUsers(0)
-        .compose(schedulers.ioLoadTransformer())
+        .subscribeOn(schedulers.io())
+        .observeOn(schedulers.mainThread())
         .doOnSubscribe(disposable -> view.startDisplayProgress())
         .doFinally(view::stopDisplayProgress)
         .subscribe(this::onLoaded, this::onLoadError);
@@ -42,11 +43,11 @@ public class UsersPresenter implements UsersViewEvents {
   }
 
   @Override public void onUserItemClick(User user) {
-    view.startUserDetail(user);
+    view.startUserDetail(user.login);
   }
 
   @Override public void onUserGitHubIconClick(User user) {
-    view.viewUserOnWeb(user);
+    view.viewUserOnWeb(user.login);
   }
 
   @Override public void onRefresh() {
