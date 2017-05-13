@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.airbnb.epoxy.EpoxyModel;
 import com.airbnb.epoxy.SimpleEpoxyAdapter;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.jraska.github.client.Navigator;
 import com.jraska.github.client.R;
 import com.jraska.github.client.rx.AppSchedulers;
 import com.jraska.github.client.users.UserDetail;
@@ -32,9 +33,9 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView {
   @BindView(R.id.user_detail_avatar) SimpleDraweeView avatarView;
   @BindView(R.id.user_detail_recycler) RecyclerView recyclerView;
 
-  @Inject UserOnWebStarter userOnWebStarter;
   @Inject UsersRepository usersRepository;
   @Inject AppSchedulers schedulers;
+  @Inject Navigator navigator;
 
   private UserDetailPresenter userDetailPresenter;
 
@@ -54,7 +55,7 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView {
     setTitle(login());
 
 
-    userDetailPresenter = new UserDetailPresenter(this, usersRepository, schedulers);
+    userDetailPresenter = new UserDetailPresenter(this, usersRepository, schedulers, navigator);
     userDetailPresenter.onCreate(login());
   }
 
@@ -96,10 +97,6 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView {
 
   @Override public void showMessage(String message) {
     Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-  }
-
-  @Override public void viewUserOnWeb(String login) {
-    userOnWebStarter.viewUserOnWeb(login);
   }
 
   public static void start(Activity inActivity, @NonNull String login) {

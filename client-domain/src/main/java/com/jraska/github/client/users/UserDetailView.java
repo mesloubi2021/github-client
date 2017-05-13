@@ -4,6 +4,4 @@ public interface UserDetailView {
   void setUser(UserDetail detail);
 
   void showMessage(String message);
-
-  void viewUserOnWeb(String login);
 }

@@ -1,8 +1,11 @@
 package com.jraska.github.client.ui;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.jraska.github.client.Navigator;
 import com.jraska.github.client.R;
 import com.jraska.github.client.rx.AppSchedulers;
 import com.jraska.github.client.users.User;
@@ -16,9 +19,9 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class UsersActivity extends BaseActivity implements UsersFragment.UserListener, UsersView {
-  @Inject UserOnWebStarter webStarter;
   @Inject UsersRepository repository;
   @Inject AppSchedulers schedulers;
+  @Inject Navigator navigator;
 
   private UsersFragment usersFragment;
   private UsersPresenter presenter;
@@ -32,7 +35,7 @@ public class UsersActivity extends BaseActivity implements UsersFragment.UserLis
 
     usersFragment = (UsersFragment) findFragmentById(R.id.fragment_users);
 
-    presenter = new UsersPresenter(this, repository, schedulers);
+    presenter = new UsersPresenter(this, repository, schedulers, navigator);
     events = presenter;
 
     presenter.onCreate();
@@ -74,11 +77,8 @@ public class UsersActivity extends BaseActivity implements UsersFragment.UserLis
     Toast.makeText(this, message, Toast.LENGTH_LONG).show();
   }
 
-  @Override public void startUserDetail(String login) {
-    UserDetailActivity.start(this, login);
-  }
-
-  @Override public void viewUserOnWeb(String login) {
-    webStarter.viewUserOnWeb(login);
+  public static void start(Activity inActivity) {
+    Intent intent = new Intent(inActivity, UsersActivity.class);
+    inActivity.startActivity(intent);
   }
 }
