@@ -1,5 +1,7 @@
 package com.jraska.github.client;
 
+import com.jraska.github.client.common.Preconditions;
+
 import okhttp3.HttpUrl;
 
 public final class Urls {
@@ -8,5 +10,6 @@ public final class Urls {
   }
 
   private Urls() {
+    Preconditions.throwNoInstances();
   }
 }
