@@ -29,9 +29,10 @@ public class UsersActivity extends BaseActivity implements UsersFragment.UserLis
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
+    component().inject(this);
+
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_users_list);
-    component().inject(this);
 
     usersFragment = (UsersFragment) findFragmentById(R.id.fragment_users);
 

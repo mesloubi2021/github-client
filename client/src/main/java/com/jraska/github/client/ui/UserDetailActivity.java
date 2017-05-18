@@ -11,6 +11,8 @@ import android.widget.Toast;
 import com.airbnb.epoxy.EpoxyModel;
 import com.airbnb.epoxy.SimpleEpoxyAdapter;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.firebase.perf.FirebasePerformance;
+import com.google.firebase.perf.metrics.Trace;
 import com.jraska.github.client.Navigator;
 import com.jraska.github.client.R;
 import com.jraska.github.client.rx.AppSchedulers;
@@ -36,8 +38,10 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView {
   @Inject UsersRepository usersRepository;
   @Inject AppSchedulers schedulers;
   @Inject Navigator navigator;
+  @Inject FirebasePerformance performance;
 
   private UserDetailPresenter userDetailPresenter;
+  private Trace loadTrace;
 
   public String login() {
     return getIntent().getStringExtra(EXTRA_USER_LOGIN);
@@ -45,15 +49,18 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
+    component().inject(this);
+
+    loadTrace = performance.newTrace("user_detail_load");
+    loadTrace.start();
+
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_user_detail);
-    component().inject(this);
 
     recyclerView.setLayoutManager(new LinearLayoutManager(this));
     recyclerView.setNestedScrollingEnabled(false);
 
     setTitle(login());
-
 
     userDetailPresenter = new UserDetailPresenter(this, usersRepository, schedulers, navigator);
     userDetailPresenter.onCreate(login());
@@ -71,9 +78,11 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView {
 
   @Override
   public void setUser(UserDetail userDetail) {
+    loadTrace.incrementCounter("set_user_detail");
     avatarView.setImageURI(userDetail.user.avatarUrl);
 
     if (userDetail.basicStats == null) {
+      loadTrace.incrementCounter("set_user_detail_incomplete");
       return;
     }
 
@@ -93,6 +102,7 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView {
     adapter.addModels(models);
 
     recyclerView.setAdapter(adapter);
+    loadTrace.stop();
   }
 
   @Override public void showMessage(String message) {
