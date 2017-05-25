@@ -8,7 +8,4 @@
   <issue id="ResourceType">
     <ignore path="*$$ViewBinder*" />
   </issue>
-  <issue id="ValidFragment">
-    <ignore path="*/rx/ObservableLoadFragment*" />
-  </issue>
 </lint>
