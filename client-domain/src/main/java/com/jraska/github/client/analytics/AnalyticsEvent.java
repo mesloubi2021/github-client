@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class AnalyticsEvent {
-  final String name;
-  final Map<String, String> properties;
+  public final String name;
+  public final Map<String, String> properties;
 
   private AnalyticsEvent(String name, Map<String, String> properties) {
     this.name = name;

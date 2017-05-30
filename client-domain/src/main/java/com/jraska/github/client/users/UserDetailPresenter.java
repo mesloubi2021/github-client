@@ -3,7 +3,7 @@ package com.jraska.github.client.users;
 import com.jraska.github.client.Urls;
 import com.jraska.github.client.Navigator;
 import com.jraska.github.client.analytics.AnalyticsEvent;
-import com.jraska.github.client.analytics.EventReporter;
+import com.jraska.github.client.analytics.EventAnalytics;
 import com.jraska.github.client.rx.AppSchedulers;
 
 import io.reactivex.disposables.Disposable;
@@ -13,17 +13,17 @@ public class UserDetailPresenter implements UserDetailViewEvents {
   private final UsersRepository usersRepository;
   private final AppSchedulers schedulers;
   private final Navigator navigator;
-  private final EventReporter eventReporter;
+  private final EventAnalytics eventAnalytics;
 
   private Disposable subscription;
 
   public UserDetailPresenter(UserDetailView view, UsersRepository usersRepository,
-                             AppSchedulers schedulers, Navigator navigator, EventReporter eventReporter) {
+                             AppSchedulers schedulers, Navigator navigator, EventAnalytics eventAnalytics) {
     this.view = view;
     this.usersRepository = usersRepository;
     this.schedulers = schedulers;
     this.navigator = navigator;
-    this.eventReporter = eventReporter;
+    this.eventAnalytics = eventAnalytics;
   }
 
   public void onCreate(String login) {
@@ -52,7 +52,7 @@ public class UserDetailPresenter implements UserDetailViewEvents {
         .addProperty("login", login)
         .build();
 
-    eventReporter.report(event);
+    eventAnalytics.report(event);
 
     navigator.launchOnWeb(Urls.user(login));
   }

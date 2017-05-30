@@ -1,16 +1,18 @@
-package com.jraska.github.client.analytics;
+package com.jraska.github.client;
 
 import android.os.Bundle;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.jraska.github.client.analytics.AnalyticsEvent;
+import com.jraska.github.client.analytics.EventAnalytics;
 import com.jraska.github.client.common.Preconditions;
 
 import java.util.Map;
 
-final class FirebaseEventReporter implements EventReporter {
+final class FirebaseEventAnalytics implements EventAnalytics {
   private final FirebaseAnalytics analytics;
 
-  FirebaseEventReporter(FirebaseAnalytics analytics) {
+  FirebaseEventAnalytics(FirebaseAnalytics analytics) {
     this.analytics = Preconditions.argNotNull(analytics);
   }
 

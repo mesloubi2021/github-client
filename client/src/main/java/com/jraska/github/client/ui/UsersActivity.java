@@ -7,7 +7,7 @@ import android.widget.Toast;
 
 import com.jraska.github.client.Navigator;
 import com.jraska.github.client.R;
-import com.jraska.github.client.analytics.EventReporter;
+import com.jraska.github.client.analytics.EventAnalytics;
 import com.jraska.github.client.rx.AppSchedulers;
 import com.jraska.github.client.users.User;
 import com.jraska.github.client.users.UsersPresenter;
@@ -23,7 +23,7 @@ public class UsersActivity extends BaseActivity implements UsersFragment.UserLis
   @Inject UsersRepository repository;
   @Inject AppSchedulers schedulers;
   @Inject Navigator navigator;
-  @Inject EventReporter eventReporter;
+  @Inject EventAnalytics eventAnalytics;
 
   private UsersFragment usersFragment;
   private UsersPresenter presenter;
@@ -38,7 +38,7 @@ public class UsersActivity extends BaseActivity implements UsersFragment.UserLis
 
     usersFragment = (UsersFragment) findFragmentById(R.id.fragment_users);
 
-    presenter = new UsersPresenter(this, repository, schedulers, navigator, eventReporter);
+    presenter = new UsersPresenter(this, repository, schedulers, navigator, eventAnalytics);
     events = presenter;
 
     presenter.onCreate();

@@ -1,6 +1,5 @@
 package com.jraska.github.client;
 
-import com.jraska.github.client.analytics.AnalyticsModule;
 import com.jraska.github.client.data.users.UsersModule;
 import com.jraska.github.client.http.HttpComponent;
 import com.jraska.github.client.ui.ActivityComponent;
@@ -12,7 +11,6 @@ import dagger.Component;
 @Component(dependencies = HttpComponent.class,
     modules = {
         UsersModule.class,
-        AnalyticsModule.class,
         FirebaseModule.class,
         AppModule.class
     })

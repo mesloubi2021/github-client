@@ -1,16 +1,14 @@
 package com.jraska.github.client;
 
 import android.content.Context;
-import com.google.firebase.analytics.FirebaseAnalytics;
+import com.jraska.github.client.analytics.EventAnalytics;
 import com.jraska.github.client.logging.CrashReporter;
 
 import static org.mockito.Mockito.mock;
 
 public class FakeFirebaseModule extends FirebaseModule {
-  @Override FirebaseAnalytics firebaseAnalytics(Context context) {
-    FirebaseAnalytics analytics = super.firebaseAnalytics(context);
-    analytics.setAnalyticsCollectionEnabled(false);
-    return analytics;
+  @Override EventAnalytics eventAnalytics(Context context, Config config) {
+    return mock(EventAnalytics.class);
   }
 
   @Override CrashReporter firebaseCrash() {
