@@ -6,7 +6,7 @@ import com.google.firebase.perf.FirebasePerformance;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.jraska.github.client.analytics.EventAnalytics;
 import com.jraska.github.client.logging.CrashReporter;
-import com.jraska.github.client.logging.FirebaseCrashProxy;
+import com.jraska.github.client.logging.FirebaseCrashReporter;
 import dagger.Module;
 import dagger.Provides;
 import timber.log.Timber;
@@ -29,7 +29,7 @@ public class FirebaseModule {
   }
 
   @Provides @PerApp CrashReporter firebaseCrash() {
-    return new FirebaseCrashProxy();
+    return new FirebaseCrashReporter();
   }
 
   @Provides @PerApp Config config() {

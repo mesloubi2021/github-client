@@ -2,14 +2,12 @@ package com.jraska.github.client.logging;
 
 import com.google.firebase.crash.FirebaseCrash;
 
-public final class FirebaseCrashProxy implements CrashReporter {
-  @Override public CrashReporter log(String error) {
-    FirebaseCrash.log(error);
-    return this;
+class FirebaseCrashProxy {
+  void log(String message) {
+    FirebaseCrash.log(message);
   }
 
-  @Override public CrashReporter report(Throwable error) {
+  void report(Throwable error) {
     FirebaseCrash.report(error);
-    return this;
   }
 }

@@ -1,6 +1,7 @@
 package com.jraska.github.client.logging;
 
 import android.util.Log;
+import com.jraska.github.client.common.DeveloperError;
 import timber.log.Timber;
 
 import javax.inject.Inject;
@@ -26,11 +27,13 @@ public final class ErrorReportTree extends Timber.Tree {
       tag = createStackTag();
     }
 
-    if (tag != null || message != null) {
-      crashReporter.log(tag + "/" + message);
+    if (error == null) {
+      error = new DeveloperError("Error without exception");
     }
 
-    if (error != null) {
+    if (tag != null || message != null) {
+      crashReporter.report(error, tag + "/" + message);
+    } else {
       crashReporter.report(error);
     }
   }
