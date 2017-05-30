@@ -3,10 +3,9 @@ package com.jraska.github.client;
 import com.jraska.github.client.analytics.AnalyticsEvent;
 import com.jraska.github.client.analytics.EventAnalytics;
 import com.jraska.github.client.logging.CrashReporter;
+import okhttp3.HttpUrl;
 
 import javax.inject.Inject;
-
-import okhttp3.HttpUrl;
 
 public final class DeepLinkHandler {
   private final DeepLinkLauncher linkLauncher;
@@ -29,9 +28,10 @@ public final class DeepLinkHandler {
       .build();
     eventAnalytics.report(event);
 
-    boolean launch = linkLauncher.launch(deepLink);
-    if (!launch) {
-      crashReporter.log("Unhandled deep link: " + deepLink);
+    try {
+      linkLauncher.launch(deepLink);
+    } catch (IllegalArgumentException ex) {
+      crashReporter.report(ex, "Invalid deep link", deepLink.toString());
       fallbackLauncher.launch(deepLink);
     }
   }

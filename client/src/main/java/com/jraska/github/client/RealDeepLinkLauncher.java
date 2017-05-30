@@ -1,10 +1,8 @@
 package com.jraska.github.client;
 
 import android.app.Activity;
-
 import com.jraska.github.client.ui.UserDetailActivity;
 import com.jraska.github.client.ui.UsersActivity;
-
 import okhttp3.HttpUrl;
 
 final class RealDeepLinkLauncher implements DeepLinkLauncher {
@@ -14,22 +12,22 @@ final class RealDeepLinkLauncher implements DeepLinkLauncher {
     this.activity = activity;
   }
 
-  @Override public boolean launch(HttpUrl deepLink) {
+  @Override public void launch(HttpUrl deepLink) {
     if (!deepLink.host().equals("github.com")) {
-      throw new IllegalArgumentException("We handle only GitHub deep links");
+      throw new IllegalArgumentException("We handle only GitHub deep links, not: " + deepLink);
     }
 
     if ("/users".equals(deepLink.encodedPath())) {
       UsersActivity.start(activity);
-      return true;
+      return;
     }
 
     if (deepLink.pathSize() == 1) {
       String login = deepLink.pathSegments().get(0);
       UserDetailActivity.start(activity, login);
-      return true;
+      return;
     }
 
-    return false;
+    throw new IllegalArgumentException("Unexpected deep link: " + deepLink);
   }
 }
