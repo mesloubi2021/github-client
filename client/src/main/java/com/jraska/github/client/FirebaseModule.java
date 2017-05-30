@@ -1,10 +1,13 @@
 package com.jraska.github.client;
 
 import android.content.Context;
+
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.perf.FirebasePerformance;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.jraska.github.client.logging.CrashReporter;
 import com.jraska.github.client.logging.FirebaseCrashProxy;
+
 import dagger.Module;
 import dagger.Provides;
 
@@ -24,5 +27,9 @@ public class FirebaseModule {
     configProxy.fetch();
 
     return configProxy;
+  }
+
+  @Provides @PerApp FirebasePerformance firebasePerformance() {
+    return FirebasePerformance.getInstance();
   }
 }

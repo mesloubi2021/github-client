@@ -5,9 +5,9 @@ import android.os.Bundle;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.perf.FirebasePerformance;
+import com.google.firebase.perf.metrics.AddTrace;
 import com.jakewharton.threetenabp.AndroidThreeTen;
-import com.jraska.github.client.analytics.ActivityViewCallbacks;
-import com.jraska.github.client.analytics.ActivityViewReporter;
 import com.jraska.github.client.common.AppBuildConfig;
 import com.jraska.github.client.http.DaggerHttpComponent;
 import com.jraska.github.client.http.HttpComponent;
@@ -22,18 +22,20 @@ import timber.log.Timber;
 
 public class GitHubClientApp extends Application {
   private static final String CONFIG_ANALYTICS_DISABLED = "analytics_disabled";
+  private static final String CONFIG_PERFORMANCE_COLLECTION_DISABLED = "performance_collection_disabled";
 
   private AppComponent appComponent;
 
   @Inject FirebaseAnalytics analytics;
+  @Inject FirebasePerformance performance;
   @Inject ErrorReportTree errorReportTree;
-  @Inject ActivityViewReporter viewReporter;
   @Inject Config config;
 
   public AppComponent component() {
     return appComponent;
   }
 
+  @AddTrace(name = "App.onCreate")
   @Override
   public void onCreate() {
     super.onCreate();
@@ -49,15 +51,8 @@ public class GitHubClientApp extends Application {
       Timber.plant(new Timber.DebugTree());
     }
 
-    if (config.getBoolean(CONFIG_ANALYTICS_DISABLED)) {
-      analytics.setAnalyticsCollectionEnabled(false);
-      Timber.d("Analytics disabled");
-    } else {
-      analytics.setAnalyticsCollectionEnabled(true);
-      Timber.d("Analytics enabled");
-    }
-
-    registerActivityLifecycleCallbacks(new ActivityViewCallbacks(viewReporter));
+    setupAnalytics();
+    setupPerformanceCollection();
 
     logAppCreateEvent();
   }
@@ -82,5 +77,25 @@ public class GitHubClientApp extends Application {
     bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "app_create");
     bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "app_create");
     analytics.logEvent("app_create", bundle);
+  }
+
+  private void setupPerformanceCollection() {
+    if (config.getBoolean(CONFIG_PERFORMANCE_COLLECTION_DISABLED)) {
+      performance.setPerformanceCollectionEnabled(false);
+      Timber.d("Performance collection disabled");
+    } else {
+      performance.setPerformanceCollectionEnabled(true);
+      Timber.d("Performance collection enabled");
+    }
+  }
+
+  private void setupAnalytics() {
+    if (config.getBoolean(CONFIG_ANALYTICS_DISABLED)) {
+      analytics.setAnalyticsCollectionEnabled(false);
+      Timber.d("Analytics disabled");
+    } else {
+      analytics.setAnalyticsCollectionEnabled(true);
+      Timber.d("Analytics enabled");
+    }
   }
 }

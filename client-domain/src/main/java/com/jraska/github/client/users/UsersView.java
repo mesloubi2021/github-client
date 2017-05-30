@@ -10,8 +10,4 @@ public interface UsersView {
   void stopDisplayProgress();
 
   void showMessage(String message);
-
-  void startUserDetail(User user); // TODO: 18/08/16 Remove this from View interface
-
-  void viewUserOnWeb(User user); // TODO: 18/08/16 Remove this from View interface
 }

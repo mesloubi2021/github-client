@@ -2,6 +2,7 @@ package com.jraska.github.client.data.users;
 
 import com.jraska.github.client.common.Pair;
 import com.jraska.github.client.users.Repo;
+import com.jraska.github.client.users.User;
 import com.jraska.github.client.users.UserDetail;
 import com.jraska.github.client.users.UserStats;
 
@@ -16,12 +17,12 @@ import java.util.List;
 import io.reactivex.Single;
 import io.reactivex.SingleTransformer;
 
-final class UserDetailWithReposTranslator
+final class UserDetailWithReposConverter
     implements SingleTransformer<Pair<GitHubUserDetail, List<GitHubRepo>>, UserDetail> {
   static final Comparator<GitHubRepo> BY_STARS_REPO_COMPARATOR = (lhs, rhs) -> rhs.stargazersCount.compareTo(lhs.stargazersCount);
   static final int MAX_REPOS_TO_DISPLAY = 5;
 
-  static final UserDetailWithReposTranslator INSTANCE = new UserDetailWithReposTranslator();
+  static final UserDetailWithReposConverter INSTANCE = new UserDetailWithReposConverter();
 
   @Override
   public Single<UserDetail> apply(Single<Pair<GitHubUserDetail, List<GitHubRepo>>> single) {
@@ -41,19 +42,25 @@ final class UserDetailWithReposTranslator
 
     for (GitHubRepo gitHubRepo : gitHubRepos) {
       if (usersRepos.size() < MAX_REPOS_TO_DISPLAY && gitHubUserDetail.login.equals(gitHubRepo.owner.login)) {
-        Repo repo = translateRepo(gitHubRepo);
+        Repo repo = convert(gitHubRepo);
         usersRepos.add(repo);
       } else if (contributedRepos.size() < MAX_REPOS_TO_DISPLAY) {
-        Repo repo = translateRepo(gitHubRepo);
+        Repo repo = convert(gitHubRepo);
         contributedRepos.add(repo);
       }
     }
 
-    return new UserDetail(stats, usersRepos, contributedRepos);
+    User user = convert(gitHubUserDetail);
+    return new UserDetail(user, stats, usersRepos, contributedRepos);
   }
 
-  Repo translateRepo(GitHubRepo gitHubRepo) {
+  Repo convert(GitHubRepo gitHubRepo) {
     return new Repo(gitHubRepo.name, gitHubRepo.description, gitHubRepo.watchersCount,
         gitHubRepo.stargazersCount, gitHubRepo.forks, gitHubRepo.size);
+  }
+
+  private User convert(GitHubUserDetail gitHubUser) {
+    boolean isAdmin = gitHubUser.siteAdmin == null ? false : gitHubUser.siteAdmin;
+    return new User(gitHubUser.login, gitHubUser.avatarUrl, isAdmin, gitHubUser.htmlUrl);
   }
 }

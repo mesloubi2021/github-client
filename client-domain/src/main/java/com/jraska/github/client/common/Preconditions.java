@@ -13,7 +13,7 @@ public final class Preconditions {
     return arg;
   }
 
-  static void throwNoInstances() {
+  public static void throwNoInstances() {
     throw new DeveloperError("No instances");
   }
 }
