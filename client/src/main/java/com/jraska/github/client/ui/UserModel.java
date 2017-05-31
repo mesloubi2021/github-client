@@ -2,19 +2,21 @@ package com.jraska.github.client.ui;
 
 import android.view.View;
 import android.widget.TextView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
 import com.airbnb.epoxy.EpoxyHolder;
 import com.airbnb.epoxy.EpoxyModelWithHolder;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.jraska.github.client.R;
 import com.jraska.github.client.users.User;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 class UserModel extends EpoxyModelWithHolder<UserModel.UserHolder> {
   private final User user;
-  private final UsersFragment.UserListener userListener;
+  private final UserListener userListener;
 
-  public UserModel(User user, UsersFragment.UserListener userListener) {
+  public UserModel(User user, UserListener userListener) {
     this.user = user;
     this.userListener = userListener;
   }
@@ -52,5 +54,11 @@ class UserModel extends EpoxyModelWithHolder<UserModel.UserHolder> {
     @Override protected void bindView(View itemView) {
       ButterKnife.bind(this, itemView);
     }
+  }
+
+  interface UserListener {
+    void onUserClicked(User user);
+
+    void onUserGitHubIconClicked(User user);
   }
 }
