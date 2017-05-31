@@ -9,26 +9,20 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
 import com.airbnb.epoxy.SimpleEpoxyAdapter;
-import com.jraska.github.client.GitHubClientApp;
 import com.jraska.github.client.R;
 import com.jraska.github.client.common.Lists;
 import com.jraska.github.client.users.User;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class UsersFragment extends Fragment {
   @BindView(R.id.users_refresh_swipe_layout) SwipeRefreshLayout swipeRefreshLayout;
   @BindView(R.id.users_recycler) RecyclerView usersRecyclerView;
-
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-
-    GitHubClientApp application = (GitHubClientApp) getActivity().getApplication();
-    application.component().inject(this);
-  }
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
