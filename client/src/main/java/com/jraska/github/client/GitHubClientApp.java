@@ -1,6 +1,7 @@
 package com.jraska.github.client;
 
 import android.app.Application;
+import android.arch.lifecycle.ViewModelProvider;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.firebase.perf.metrics.AddTrace;
 import com.jakewharton.threetenabp.AndroidThreeTen;
@@ -21,12 +22,18 @@ public class GitHubClientApp extends Application {
 
   @Inject EventAnalytics eventAnalytics;
   @Inject ErrorReportTree errorReportTree;
+  @Inject TopActivityProvider topActivityProvider;
+  @Inject ViewModelFactory viewModelFactory;
 
   public AppComponent component() {
     return appComponent;
   }
 
-  @AddTrace(name = "App.onCreate")
+  public ViewModelProvider.Factory viewModelFactory() {
+    return viewModelFactory;
+  }
+
+  @AddTrace(name = "App.userDetail")
   @Override
   public void onCreate() {
     super.onCreate();
@@ -42,6 +49,7 @@ public class GitHubClientApp extends Application {
       Timber.plant(new Timber.DebugTree());
     }
 
+    registerActivityLifecycleCallbacks(topActivityProvider.callbacks);
     logAppCreateEvent();
   }
 

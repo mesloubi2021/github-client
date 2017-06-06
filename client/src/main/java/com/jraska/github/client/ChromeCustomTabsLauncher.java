@@ -1,22 +1,23 @@
 package com.jraska.github.client;
 
-import android.app.Activity;
 import android.net.Uri;
 import android.support.customtabs.CustomTabsIntent;
-
+import com.jraska.github.client.ui.BaseActivity;
 import okhttp3.HttpUrl;
 
-final class ChromeCustomTabsLauncher implements WebLinkLauncher {
-  private final Activity activity;
+import javax.inject.Provider;
 
-  ChromeCustomTabsLauncher(Activity activity) {
-    this.activity = activity;
+final class ChromeCustomTabsLauncher implements WebLinkLauncher {
+  private final Provider<BaseActivity> provider;
+
+  ChromeCustomTabsLauncher(Provider<BaseActivity> provider) {
+    this.provider = provider;
   }
 
   public void launch(HttpUrl url) {
     CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder().build();
     Uri uri = Uri.parse(url.toString());
 
-    customTabsIntent.launchUrl(activity, uri);
+    customTabsIntent.launchUrl(provider.get(), uri);
   }
 }

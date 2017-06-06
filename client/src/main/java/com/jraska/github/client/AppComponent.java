@@ -1,21 +1,19 @@
 package com.jraska.github.client;
 
-import com.jraska.github.client.data.users.UsersModule;
+import com.jraska.github.client.users.data.UsersDataModule;
 import com.jraska.github.client.http.HttpComponent;
-import com.jraska.github.client.ui.ActivityComponent;
-import com.jraska.github.client.ui.ActivityModule;
-
+import com.jraska.github.client.users.UserViewModelModule;
 import dagger.Component;
 
 @PerApp
 @Component(dependencies = HttpComponent.class,
-    modules = {
-        UsersModule.class,
-        FirebaseModule.class,
-        AppModule.class
-    })
+  modules = {
+    UsersDataModule.class,
+    UserViewModelModule.class,
+    FirebaseModule.class,
+    NavigationModule.class,
+    AppModule.class
+  })
 public interface AppComponent {
-  ActivityComponent activityComponent(ActivityModule activityModule);
-
   void inject(GitHubClientApp app);
 }

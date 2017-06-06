@@ -1,6 +1,6 @@
 package com.jraska.github.client.ui;
 
-import android.support.v4.app.Fragment;
+import android.arch.lifecycle.*;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -10,9 +10,24 @@ import butterknife.ButterKnife;
 import com.jraska.github.client.GitHubClientApp;
 import com.jraska.github.client.R;
 
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity implements LifecycleRegistryOwner {
+
+  private final LifecycleRegistry registry = new LifecycleRegistry(this);
 
   @BindView(R.id.toolbar) Toolbar toolbar;
+
+  @Override public LifecycleRegistry getLifecycle() {
+    return registry;
+  }
+
+  protected final GitHubClientApp app() {
+    return (GitHubClientApp) getApplication();
+  }
+
+  protected final <T extends ViewModel> T viewModel(Class<T> modelClass) {
+    ViewModelProvider.Factory factory = app().viewModelFactory();
+    return ViewModelProviders.of(this, factory).get(modelClass);
+  }
 
   @Override
   public void setContentView(int layoutResID) {
@@ -35,17 +50,5 @@ public abstract class BaseActivity extends AppCompatActivity {
   protected void onSetContentView() {
     ButterKnife.bind(this);
     setSupportActionBar(toolbar);
-  }
-
-  protected Fragment findFragmentById(int id) {
-    return getSupportFragmentManager().findFragmentById(id);
-  }
-
-  protected GitHubClientApp app() {
-    return (GitHubClientApp) getApplication();
-  }
-
-  protected ActivityComponent component() {
-    return app().component().activityComponent(new ActivityModule(this));
   }
 }
