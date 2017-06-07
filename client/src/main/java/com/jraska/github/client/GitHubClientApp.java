@@ -2,6 +2,7 @@ package com.jraska.github.client;
 
 import android.app.Application;
 import android.arch.lifecycle.ViewModelProvider;
+
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.firebase.perf.metrics.AddTrace;
 import com.jakewharton.threetenabp.AndroidThreeTen;
@@ -12,22 +13,19 @@ import com.jraska.github.client.http.DaggerHttpComponent;
 import com.jraska.github.client.http.HttpComponent;
 import com.jraska.github.client.http.HttpDependenciesModule;
 import com.jraska.github.client.logging.ErrorReportTree;
-import timber.log.Timber;
 
-import javax.inject.Inject;
 import java.io.File;
 
+import javax.inject.Inject;
+
+import timber.log.Timber;
+
 public class GitHubClientApp extends Application {
-  private AppComponent appComponent;
 
   @Inject EventAnalytics eventAnalytics;
   @Inject ErrorReportTree errorReportTree;
   @Inject TopActivityProvider topActivityProvider;
   @Inject ViewModelFactory viewModelFactory;
-
-  public AppComponent component() {
-    return appComponent;
-  }
 
   public ViewModelProvider.Factory viewModelFactory() {
     return viewModelFactory;
@@ -38,7 +36,7 @@ public class GitHubClientApp extends Application {
   public void onCreate() {
     super.onCreate();
 
-    appComponent = componentBuilder().build();
+    AppComponent appComponent = componentBuilder().build();
     appComponent.inject(this);
 
     Fresco.initialize(this);

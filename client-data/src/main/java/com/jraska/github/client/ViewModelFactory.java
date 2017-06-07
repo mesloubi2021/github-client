@@ -3,10 +3,11 @@ package com.jraska.github.client;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
 import java.util.Collections;
 import java.util.Map;
+
+import javax.inject.Inject;
+import javax.inject.Provider;
 
 public final class ViewModelFactory implements ViewModelProvider.Factory {
   private final Map<Class, Provider<ViewModel>> providersMap;
