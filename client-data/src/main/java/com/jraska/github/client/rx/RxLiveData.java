@@ -4,6 +4,7 @@ import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.support.annotation.Nullable;
+
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.disposables.Disposable;
@@ -24,20 +25,24 @@ public abstract class RxLiveData<T> extends LiveData<T> {
   RxLiveData() {
   }
 
-  @Override protected void onActive() {
-    super.onActive();
-    subscription = subscribe();
+  @Override public void observe(LifecycleOwner owner, Observer<T> observer) {
+    super.observe(owner, observer);
+    if (subscription == null) {
+      subscription = subscribe();
+    }
   }
 
-  @Override protected void onInactive() {
-    dispose();
-    super.onInactive();
+  @Override public void removeObserver(Observer<T> observer) {
+    super.removeObserver(observer);
+    if (!hasObservers()) {
+      dispose();
+    }
   }
 
   public RxLiveData<T> resubscribe() {
     if (subscription != null) {
       dispose();
-      subscribe();
+      subscription = subscribe();
     }
 
     return this;
@@ -48,7 +53,7 @@ public abstract class RxLiveData<T> extends LiveData<T> {
   public RxLiveData<T> observe(LifecycleOwner owner, Observer<T> observer,
                                Consumer<? super Throwable> onError) {
     this.onError = onError;
-    super.observe(owner, observer);
+    observe(owner, observer);
     return this;
   }
 
