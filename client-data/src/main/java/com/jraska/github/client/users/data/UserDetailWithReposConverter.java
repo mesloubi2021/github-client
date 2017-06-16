@@ -1,7 +1,7 @@
 package com.jraska.github.client.users.data;
 
 import com.jraska.github.client.common.Pair;
-import com.jraska.github.client.users.Repo;
+import com.jraska.github.client.users.RepoHeader;
 import com.jraska.github.client.users.User;
 import com.jraska.github.client.users.UserDetail;
 import com.jraska.github.client.users.UserStats;
@@ -18,7 +18,7 @@ import io.reactivex.Single;
 import io.reactivex.SingleTransformer;
 
 final class UserDetailWithReposConverter
-    implements SingleTransformer<Pair<GitHubUserDetail, List<GitHubRepo>>, UserDetail> {
+  implements SingleTransformer<Pair<GitHubUserDetail, List<GitHubRepo>>, UserDetail> {
   static final Comparator<GitHubRepo> BY_STARS_REPO_COMPARATOR = (lhs, rhs) -> rhs.stargazersCount.compareTo(lhs.stargazersCount);
   static final int MAX_REPOS_TO_DISPLAY = 5;
 
@@ -33,19 +33,19 @@ final class UserDetailWithReposConverter
     LocalDateTime joined = LocalDateTime.parse(gitHubUserDetail.createdAt, DateTimeFormatter.ISO_DATE_TIME);
 
     UserStats stats = new UserStats(gitHubUserDetail.followers, gitHubUserDetail.following,
-        gitHubUserDetail.publicRepos, joined);
+      gitHubUserDetail.publicRepos, joined);
 
     Collections.sort(gitHubRepos, BY_STARS_REPO_COMPARATOR);
 
-    List<Repo> usersRepos = new ArrayList<>();
-    List<Repo> contributedRepos = new ArrayList<>();
+    List<RepoHeader> usersRepos = new ArrayList<>();
+    List<RepoHeader> contributedRepos = new ArrayList<>();
 
     for (GitHubRepo gitHubRepo : gitHubRepos) {
       if (usersRepos.size() < MAX_REPOS_TO_DISPLAY && gitHubUserDetail.login.equals(gitHubRepo.owner.login)) {
-        Repo repo = convert(gitHubRepo);
+        RepoHeader repo = convert(gitHubRepo);
         usersRepos.add(repo);
       } else if (contributedRepos.size() < MAX_REPOS_TO_DISPLAY) {
-        Repo repo = convert(gitHubRepo);
+        RepoHeader repo = convert(gitHubRepo);
         contributedRepos.add(repo);
       }
     }
@@ -54,9 +54,8 @@ final class UserDetailWithReposConverter
     return new UserDetail(user, stats, usersRepos, contributedRepos);
   }
 
-  Repo convert(GitHubRepo gitHubRepo) {
-    return new Repo(gitHubRepo.name, gitHubRepo.description, gitHubRepo.watchersCount,
-        gitHubRepo.stargazersCount, gitHubRepo.forks, gitHubRepo.size);
+  RepoHeader convert(GitHubRepo gitHubRepo) {
+    return RepoConverter.INSTANCE.convert(gitHubRepo);
   }
 
   private User convert(GitHubUserDetail gitHubUser) {

@@ -7,13 +7,19 @@ import butterknife.ButterKnife;
 import com.airbnb.epoxy.EpoxyHolder;
 import com.airbnb.epoxy.EpoxyModelWithHolder;
 import com.jraska.github.client.R;
-import com.jraska.github.client.users.Repo;
+import com.jraska.github.client.common.Preconditions;
+import com.jraska.github.client.users.RepoHeader;
+import io.reactivex.annotations.Nullable;
 
-public class RepoModel extends EpoxyModelWithHolder<RepoModel.RepoHolder> {
-  private final Repo repo;
+public class RepoHeaderModel extends EpoxyModelWithHolder<RepoHeaderModel.RepoHolder> {
+  private final RepoHeader repo;
+  private final View.OnClickListener itemClickListener;
 
-  public RepoModel(Repo repo) {
-    this.repo = repo;
+  public RepoHeaderModel(RepoHeader repo, RepoListener repoListener) {
+    Preconditions.argNotNull(repoListener);
+
+    this.repo = Preconditions.argNotNull(repo);
+    this.itemClickListener = (v) -> repoListener.onRepoClicked(repo);
   }
 
   @Override protected RepoHolder createNewHolder() {
@@ -27,20 +33,28 @@ public class RepoModel extends EpoxyModelWithHolder<RepoModel.RepoHolder> {
   @Override public void bind(RepoHolder holder) {
     holder.titleTextView.setText(repo.name);
     holder.descriptionTextView.setText(repo.description);
-    holder.watchersTextView.setText(String.valueOf(repo.watchers));
     holder.starsTextView.setText(String.valueOf(repo.stars));
     holder.forksTextView.setText(String.valueOf(repo.forks));
+
+    holder.itemView.setOnClickListener(itemClickListener);
+
   }
 
   static class RepoHolder extends EpoxyHolder {
+    View itemView;
+
     @BindView(R.id.repo_item_title) TextView titleTextView;
     @BindView(R.id.repo_item_description) TextView descriptionTextView;
-    @BindView(R.id.repo_item_watchers) TextView watchersTextView;
     @BindView(R.id.repo_item_stars) TextView starsTextView;
     @BindView(R.id.repo_item_forks) TextView forksTextView;
 
     @Override protected void bindView(View itemView) {
       ButterKnife.bind(this, itemView);
+      this.itemView = itemView;
     }
+  }
+
+  interface RepoListener {
+    void onRepoClicked(RepoHeader header);
   }
 }

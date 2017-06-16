@@ -1,18 +1,17 @@
 package com.jraska.github.client.users;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
-
 import com.jraska.github.client.Navigator;
 import com.jraska.github.client.Urls;
 import com.jraska.github.client.analytics.AnalyticsEvent;
 import com.jraska.github.client.analytics.EventAnalytics;
 import com.jraska.github.client.rx.AppSchedulers;
 import com.jraska.github.client.rx.RxLiveData;
+import io.reactivex.Observable;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import io.reactivex.Observable;
 
 public class UserDetailViewModel extends ViewModel {
   private final UsersRepository usersRepository;
@@ -30,7 +29,7 @@ public class UserDetailViewModel extends ViewModel {
     this.eventAnalytics = eventAnalytics;
   }
 
-  public RxLiveData<ViewState> userDetail(String login) {
+  public LiveData<ViewState> userDetail(String login) {
     RxLiveData<ViewState> liveData = liveDataMapping.get(login);
     if (liveData == null) {
       liveData = newUserLiveData(login);
@@ -61,11 +60,22 @@ public class UserDetailViewModel extends ViewModel {
     navigator.launchOnWeb(Urls.user(login));
   }
 
+  public void onRepoClicked(RepoHeader header) {
+    AnalyticsEvent event = AnalyticsEvent.builder("open_repo_from_detail")
+      .addProperty("owner", header.owner)
+      .addProperty("name", header.name)
+      .build();
+
+    eventAnalytics.report(event);
+
+    navigator.startRepoDetail(header.fullName());
+  }
+
   public static class ViewState {
     private final Throwable error;
     private final UserDetail result;
 
-    public ViewState(Throwable error, UserDetail result) {
+    ViewState(Throwable error, UserDetail result) {
       this.error = error;
       this.result = result;
     }
