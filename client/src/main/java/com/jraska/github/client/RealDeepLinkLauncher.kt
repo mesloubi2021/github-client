@@ -1,6 +1,5 @@
 package com.jraska.github.client
 
-import com.jraska.github.client.common.DeveloperError
 import com.jraska.github.client.ui.BaseActivity
 import com.jraska.github.client.ui.RepoDetailActivity
 import com.jraska.github.client.ui.UserDetailActivity
