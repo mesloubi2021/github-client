@@ -1,36 +1,13 @@
 package com.jraska.github.client
 
-import android.arch.lifecycle.*
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.Observer
+import com.jraska.livedata.TestLiveDataObserver
 
-class TestLiveDateObserver<T> : Observer<T>, LifecycleOwner {
-  private val fakeRegistry = LifecycleRegistry(this)
-  private val values = ArrayList<T?>()
-
-  override fun getLifecycle(): Lifecycle {
-    return fakeRegistry
-  }
-
-  override fun onChanged(t: T?) {
-    values.add(t)
-  }
-
-  fun value(): T {
-    return values.last()!!
-  }
-
-  fun dispose() {
-    markState(Lifecycle.State.DESTROYED)
-  }
-
-  fun markState(state: Lifecycle.State): TestLiveDateObserver<T> {
-    fakeRegistry.markState(state)
-    return this
-  }
+fun <T> LiveData<T>.test(): TestLiveDataObserver<T> {
+  return TestLiveDataObserver.test(this)
 }
 
-fun <T> LiveData<T>.test(): TestLiveDateObserver<T> {
-  val observer = TestLiveDateObserver<T>()
-  observe(observer, observer)
-  observer.markState(Lifecycle.State.STARTED)
-  return observer
+fun <T> LiveData<T>.test(delegate: Observer<T>): TestLiveDataObserver<T> {
+  return TestLiveDataObserver.test(this, delegate)
 }

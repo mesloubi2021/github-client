@@ -5,7 +5,6 @@ import com.jraska.github.client.Navigator
 import com.jraska.github.client.analytics.EventAnalytics
 import com.jraska.github.client.test
 import io.reactivex.Single
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -35,7 +34,10 @@ class UsersViewModelTest {
 
   @Test
   fun refreshesProperly() {
-    assertThat(viewModel.users().test().value().result()).isEmpty()
+    val testObserver = viewModel.users()
+      .test()
+      .assertValue { it.result()!!.isEmpty() }
+      .assertValueCount(2)
 
     users.add(GitHubUser().apply {
       login = "jraska"
@@ -43,10 +45,12 @@ class UsersViewModelTest {
       htmlUrl = "https://github.com/jraska"
     })
 
-    assertThat(viewModel.users().test().value().result()).isEmpty()
+    testObserver.assertValue { it.result()!!.isEmpty() }
 
     viewModel.onRefresh()
 
-    assertThat(viewModel.users().test().value().result()!!.first().login).isEqualTo("jraska")
+    testObserver.assertNever { it == null }
+      .assertValue { it.result()!!.first().login == "jraska" }
+      .assertValueCount(4)
   }
 }
