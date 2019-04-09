@@ -1,8 +1,8 @@
 package com.jraska.github.client.ui
 
 import android.os.Bundle
-
-import okhttp3.HttpUrl
+import com.jraska.github.client.inputUrl
+import com.jraska.github.client.viewModel
 
 class ShortcutHandlerActivity : BaseActivity() {
 
@@ -11,7 +11,7 @@ class ShortcutHandlerActivity : BaseActivity() {
 
     val handlerModel = viewModel(ShortcutHandlerModel::class.java)
 
-    val httpUrl = HttpUrl.get(intent.data.toString())
+    val httpUrl = inputUrl()
     handlerModel.handleDeepLink(httpUrl)
 
     finish()
