@@ -1,9 +1,14 @@
 package com.jraska.github.client
 
+import android.app.Application
 import android.app.NotificationManager
-import androidx.lifecycle.ViewModelProvider
 import android.content.Context
 import android.view.LayoutInflater
+import androidx.lifecycle.ViewModelProvider
+import com.facebook.drawee.backends.pipeline.Fresco
+import com.jakewharton.threetenabp.AndroidThreeTen
+import com.jraska.github.client.analytics.AnalyticsEvent
+import com.jraska.github.client.analytics.EventAnalytics
 import com.jraska.github.client.common.AppBuildConfig
 import com.jraska.github.client.rx.AppSchedulers
 import com.jraska.github.client.time.DateTimeProvider
@@ -11,6 +16,7 @@ import com.jraska.github.client.time.RealDateTimeProvider
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
+import dagger.multibindings.IntoSet
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -32,11 +38,18 @@ class AppModule(private val app: GitHubClientApp) {
   }
 
   @Provides
+  @IntoSet
+  fun topActivityOnCreate(setup: TopActivityProvider.OnCreateSetup): OnAppCreate {
+    return setup
+  }
+
+  @Provides
   @PerApp internal fun provideLayoutInflater(context: Context): LayoutInflater {
     return LayoutInflater.from(context)
   }
 
-  @Provides internal fun provideViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory {
+  @Provides
+  internal fun provideViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory {
     return factory
   }
 
@@ -54,5 +67,44 @@ class AppModule(private val app: GitHubClientApp) {
   fun schedulers(): AppSchedulers {
     return AppSchedulers(AndroidSchedulers.mainThread(),
       Schedulers.io(), Schedulers.computation())
+  }
+
+  @Provides
+  @IntoSet
+  internal fun setupLoggingOnCreate(setupLogging: SetupLogging): OnAppCreate {
+    return setupLogging
+  }
+
+  @Provides
+  @IntoSet
+  fun reportAppCreateEvent(eventAnalytics: EventAnalytics): OnAppCreate {
+    return object : OnAppCreate {
+      override fun onCreate(app: Application) {
+        val createEvent = AnalyticsEvent.create("app_create")
+        eventAnalytics.report(createEvent)
+      }
+    }
+  }
+
+  @Provides
+  @IntoSet
+  fun setupNotificationsOnCreate(notificationSetup: NotificationSetup): OnAppCreate {
+    return notificationSetup
+  }
+
+  @Provides
+  @IntoSet
+  fun setupFresco(): OnAppCreate {
+    return object : OnAppCreate {
+      override fun onCreate(app: Application) = Fresco.initialize(app)
+    }
+  }
+
+  @Provides
+  @IntoSet
+  fun setupThreeTen(): OnAppCreate {
+    return object : OnAppCreate {
+      override fun onCreate(app: Application) = AndroidThreeTen.init(app)
+    }
   }
 }
