@@ -56,8 +56,9 @@ android {
 dependencies {
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-  api project(':client-domain')
-  api project(':client-data')
+  api project(':core')
+  api project(':core-android')
+  api project(':feature-users')
 
   implementation 'androidx.appcompat:appcompat:1.1.0-alpha04'
   implementation 'androidx.legacy:legacy-support-v4:1.0.0'
