@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 if (project.hasProperty("enable-performance-plugin")) {
   apply plugin: 'com.google.firebase.firebase-perf'
@@ -77,9 +78,6 @@ dependencies {
   implementation 'androidx.lifecycle:lifecycle-runtime:2.0.0'
 
   implementation 'com.facebook.fresco:fresco:1.11.0'
-
-  implementation 'com.jakewharton:butterknife:10.1.0'
-  kapt 'com.jakewharton:butterknife-compiler:10.1.0'
 
   implementation 'com.airbnb.android:epoxy:3.3.0'
 
