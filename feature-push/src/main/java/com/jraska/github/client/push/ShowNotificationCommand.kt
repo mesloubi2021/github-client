@@ -6,21 +6,25 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.core.app.NotificationCompat
+import com.jraska.github.client.common.BooleanResult
+import com.jraska.github.client.common.BooleanResult.FAILURE
+import com.jraska.github.client.common.BooleanResult.SUCCESS
 import com.jraska.github.client.core.android.UriHandlerActivity
+import javax.inject.Inject
 
-internal class ShowNotificationPushCommand constructor(
+internal class ShowNotificationCommand @Inject constructor(
   private val context: Context,
   private val notificationManager: NotificationManager
 ) : PushActionCommand {
-  override fun execute(action: PushAction): Boolean {
-    val title = action.parameters["title"] ?: return false
-    val message = action.parameters["message"] ?: return false
-    val deepLink = action.parameters["clickDeepLink"] ?: return false
+  override fun execute(action: PushAction): BooleanResult {
+    val title = action.parameters["title"] ?: return FAILURE
+    val message = action.parameters["message"] ?: return FAILURE
+    val deepLink = action.parameters["clickDeepLink"] ?: return FAILURE
 
-    val intent = Intent(context, UriHandlerActivity::class.java)
-    intent.data = Uri.parse(deepLink)
+    val uriActivityIntent = Intent(context, UriHandlerActivity::class.java)
+    uriActivityIntent.data = Uri.parse(deepLink)
 
-    val linkContentIntent = PendingIntent.getActivity(context, 0, intent, 0)
+    val linkContentIntent = PendingIntent.getActivity(context, 0, uriActivityIntent, 0)
 
     val notification = NotificationCompat.Builder(context, NotificationSetup.PUSH_CHANNEL_ID)
       .setSmallIcon(android.R.drawable.ic_dialog_info)
@@ -31,6 +35,6 @@ internal class ShowNotificationPushCommand constructor(
       .build()
 
     notificationManager.notify(1, notification)
-    return true
+    return SUCCESS
   }
 }

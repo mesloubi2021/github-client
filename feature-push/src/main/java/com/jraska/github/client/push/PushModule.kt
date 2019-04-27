@@ -1,12 +1,10 @@
 package com.jraska.github.client.push
 
-import android.app.NotificationManager
-import android.content.Context
-import com.jraska.github.client.Config
-import com.jraska.github.client.analytics.AnalyticsProperty
 import com.jraska.github.client.core.android.OnAppCreate
+import com.jraska.github.client.core.android.ServiceModel
 import dagger.Module
 import dagger.Provides
+import dagger.multibindings.ClassKey
 import dagger.multibindings.IntoMap
 import dagger.multibindings.IntoSet
 import dagger.multibindings.StringKey
@@ -30,32 +28,48 @@ object PushModule {
   @JvmStatic
   @Provides
   @IntoMap
+  @ClassKey(PushHandleModel::class)
+  internal fun bindServiceModel(pushHandleModel: PushHandleModel): ServiceModel {
+    return pushHandleModel
+  }
+
+  @JvmStatic
+  @Provides
+  @IntoMap
   @StringKey("refresh_config")
-  internal fun refreshConfigCommand(config: Config): PushActionCommand {
-    return RefreshConfigCommand(config)
+  internal fun refreshConfigCommand(command: RefreshConfigCommand): PushActionCommand {
+    return command
   }
 
   @JvmStatic
   @Provides
   @IntoMap
   @StringKey("set_config_as_property")
-  internal fun configAsPropertyCommand(config: Config, analyticsProperty: AnalyticsProperty): PushActionCommand {
-    return ConfigAsPropertyCommand(config, analyticsProperty)
+  internal fun configAsPropertyCommand(command: ConfigAsPropertyCommand): PushActionCommand {
+    return command
   }
 
   @JvmStatic
   @Provides
   @IntoMap
   @StringKey("set_analytics_property")
-  internal fun setAnalyticsProperty(analyticsProperty: AnalyticsProperty): PushActionCommand {
-    return SetAnalyticsPropertyPushCommand(analyticsProperty)
+  internal fun setAnalyticsProperty(command: SetAnalyticsPropertyCommand): PushActionCommand {
+    return command
   }
 
   @JvmStatic
   @Provides
   @IntoMap
   @StringKey("notification")
-  internal fun notificationCommand(context: Context, notificationManager: NotificationManager): PushActionCommand {
-    return ShowNotificationPushCommand(context, notificationManager)
+  internal fun notificationCommand(command: ShowNotificationCommand): PushActionCommand {
+    return command
+  }
+
+  @JvmStatic
+  @Provides
+  @IntoMap
+  @StringKey("launch_deep_link")
+  internal fun deepLinkCommand(command: LaunchDeepLinkCommand): PushActionCommand {
+    return command
   }
 }

@@ -2,20 +2,12 @@ package com.jraska.github.client.push
 
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.jraska.github.client.core.android.serviceModel
 
 internal class PushHandleService : FirebaseMessagingService() {
-  override fun onMessageReceived(remoteMessage: RemoteMessage) {
-    val action = RemoteMessageToActionConverter.convert(remoteMessage)
+  private val model: PushHandleModel by lazy { serviceModel(PushHandleModel::class.java) }
 
-    pushHandler().handlePush(action)
-  }
+  override fun onMessageReceived(message: RemoteMessage) = model.onMessageReceived(message)
 
-  override fun onNewToken(p0: String?) {
-    pushHandler().onTokenRefresh()
-  }
-
-  fun pushHandler(): PushHandler {
-    val app = application as HasPushHandler
-    return app.pushHandler()
-  }
+  override fun onNewToken(token: String?) = model.onNewToken(token)
 }
