@@ -4,8 +4,8 @@ include ':client',
   ':core-testing',
   ':core-android',
 
-  ':lib-identity',
-  ':lib-dynamic-features',
+  ':lib:identity',
+  ':lib:dynamic-features',
 
   ':feature:users',
   ':feature:push',
