@@ -132,6 +132,14 @@ dependencies {
   androidTestImplementation project(':core-testing')
 }
 
+apply plugin: 'com.jraska.module.graph'
+
+moduleGraphRules {
+  maxHeight = 4
+  moduleLayersFromTheTop = [":feature", ":lib", ":core"]
+  restrinctInLayerDependencies = [":feature", ":lib"]
+}
+
 apply plugin: 'com.google.gms.google-services'
 repositories {
   mavenCentral()
