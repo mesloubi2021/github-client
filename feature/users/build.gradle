@@ -23,9 +23,9 @@ dependencies {
   kapt rootProject.ext.daggerAnnotationProcessor
   implementation rootProject.ext.dagger
 
-  api 'com.squareup.retrofit2:retrofit:2.8.1'
-  api 'com.squareup.retrofit2:converter-gson:2.8.1'
-  api 'com.squareup.retrofit2:adapter-rxjava2:2.8.1'
+  api rootProject.ext.retrofit
+  api rootProject.ext.retrofitGsonConverter
+  api rootProject.ext.retrofitRxJavaAdapter
   api 'com.google.code.gson:gson:2.8.6'
 
   implementation 'com.airbnb.android:epoxy:3.11.0'
