@@ -83,11 +83,11 @@ dependencies {
   implementation project(':core-api')
   implementation project(':core')
   implementation project(':core-android-api')
-  implementation project(':navigation')
-  implementation project(':lib:navigation-deeplink')
-  implementation project(':lib:identity')
-  implementation project(':lib:identity-api')
-  implementation project(':lib:network-status')
+  implementation project(':navigation-api')
+  implementation project(':feature:navigation-deeplink')
+  implementation project(':feature:identity')
+  implementation project(':feature:identity-api')
+  implementation project(':feature:network-status')
   implementation project(':feature:push')
   implementation project(':feature:users')
   implementation project(':feature:settings')
@@ -142,8 +142,9 @@ apply plugin: 'com.jraska.module.graph.assertion'
 
 moduleGraphAssert {
   maxHeight = 2
-  moduleLayers = [":feature\\S*", "\\S*-api"]
-  restricted = [":feature:\\S* -X> :not-wanted-module"]
+  moduleLayers = ["[\\S:]*(?<!-api)", "[\\S:]*-api"]
+  moduleLayersExclude = [":app -> [\\S:]*"]
+  restricted = [":feature:\\S* -X> :not-wanted-module-example"]
 }
 
 apply plugin: 'com.google.gms.google-services'
