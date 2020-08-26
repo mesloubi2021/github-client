@@ -86,6 +86,7 @@ dependencies {
   implementation project(':navigation')
   implementation project(':lib:navigation-deeplink')
   implementation project(':lib:identity')
+  implementation project(':lib:identity-api')
   implementation project(':lib:network-status')
   implementation project(':feature:push')
   implementation project(':feature:users')
@@ -140,9 +141,8 @@ dependencies {
 apply plugin: 'com.jraska.module.graph.assertion'
 
 moduleGraphAssert {
-  maxHeight = 3
-  moduleLayers = [":feature\\S*", ":lib\\S*", ":core\\S*"]
-  moduleLayersExclude = [":core -> :core-\\S*"]
+  maxHeight = 2
+  moduleLayers = [":feature\\S*", "\\S*-api"]
   restricted = [":feature:\\S* -X> :not-wanted-module"]
 }
 
