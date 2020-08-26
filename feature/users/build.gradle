@@ -13,11 +13,15 @@ android {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
   }
+
+  kotlinOptions {
+    jvmTarget = JavaVersion.VERSION_1_8.toString()
+  }
 }
 
 dependencies {
-  implementation project(':core')
-  implementation project(':core-android')
+  implementation project(':core-api')
+  implementation project(':core-android-api')
   implementation project(':navigation')
 
   kapt rootProject.ext.daggerAnnotationProcessor
@@ -30,6 +34,8 @@ dependencies {
 
   implementation 'com.airbnb.android:epoxy:3.11.0'
   implementation rootProject.ext.fresco
+
+  implementation 'androidx.lifecycle:lifecycle-reactivestreams-ktx:2.2.0'
 
   testImplementation 'com.jraska.livedata:testing:1.1.2'
   testImplementation 'com.jraska.livedata:testing-ktx:1.1.2'

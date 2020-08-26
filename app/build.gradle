@@ -80,8 +80,9 @@ android {
 dependencies {
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
+  implementation project(':core-api')
   implementation project(':core')
-  implementation project(':core-android')
+  implementation project(':core-android-api')
   implementation project(':navigation')
   implementation project(':lib:navigation-deeplink')
   implementation project(':lib:identity')
@@ -139,9 +140,9 @@ dependencies {
 apply plugin: 'com.jraska.module.graph.assertion'
 
 moduleGraphAssert {
-  maxHeight = 4
+  maxHeight = 3
   moduleLayers = [":feature\\S*", ":lib\\S*", ":core\\S*"]
-  moduleLayersExclude = [":core-android -> :core"]
+  moduleLayersExclude = [":core -> :core-\\S*"]
   restricted = [":feature:\\S* -X> :not-wanted-module"]
 }
 

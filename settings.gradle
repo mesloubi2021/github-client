@@ -4,8 +4,9 @@ include ':app',
   ':app-partial-users',
 
   ':core',
+  ':core-api',
   ':core-testing',
-  ':core-android',
+  ':core-android-api',
   ':navigation',
 
   ':lib:identity',

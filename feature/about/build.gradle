@@ -17,8 +17,8 @@ android {
 
 dependencies {
 
-  implementation project(':core')
-  implementation project(':core-android')
+  implementation project(':core-api')
+  implementation project(':core-android-api')
   implementation project(':navigation')
   implementation project(':lib:identity')
 

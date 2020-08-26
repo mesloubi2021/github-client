@@ -16,8 +16,8 @@ android {
 }
 
 dependencies {
-  implementation project(':core')
-  implementation project(':core-android')
+  implementation project(':core-api')
+  implementation project(':core-android-api')
 
   kapt rootProject.ext.daggerAnnotationProcessor
   implementation rootProject.ext.dagger
