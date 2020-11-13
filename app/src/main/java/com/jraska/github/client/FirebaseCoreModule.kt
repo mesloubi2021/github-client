@@ -45,13 +45,4 @@ object FirebaseCoreModule {
   internal fun firebaseCrash(): CrashReporter {
     return FirebaseCrashlyticsReporter()
   }
-
-  @Provides
-  @Singleton internal fun config(): Config {
-    val configProxy = FirebaseConfigProxy(FirebaseRemoteConfig.getInstance())
-
-    configProxy.setupDefaults().fetch()
-
-    return configProxy
-  }
 }
