@@ -13,6 +13,8 @@ import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 object BuildDataFactory {
+
+  @Suppress("UnstableApiUsage")
   fun buildData(result: BuildResult, statistics: TaskExecutionStatistics): BuildData {
     val start = nowMillis()
 
