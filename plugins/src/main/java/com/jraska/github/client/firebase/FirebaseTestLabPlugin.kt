@@ -29,23 +29,22 @@ class FirebaseTestLabPlugin : Plugin<Project> {
 
         val appApk = "${project.buildDir}/outputs/apk/debug/app-debug.apk"
         val testApk = "${project.buildDir}/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
-        val deviceName = "flame"
-        val androidVersion = "29"
-        val device = "model=$deviceName,version=$androidVersion,locale=en,orientation=portrait"
+        val firstDevice = Device.Pixel4
+        val secondDevice = Device.Pixel2
         val resultDir = DateTimeFormatter.ISO_DATE_TIME.format(LocalDateTime.now())
 
         val fcmKey = System.getenv("FCM_API_KEY")
-
-        val resultsFileToPull = "gs://test-lab-twsawhz0hy5am-h35y3vymzadax/$resultDir/$deviceName-$androidVersion-en-portrait/test_result_1.xml"
 
         firebaseTask.commandLine =
           ("gcloud " +
             "firebase test android run " +
             "--app $appApk " +
             "--test $testApk " +
-            "--device $device " +
+            "--device ${firstDevice.firebaseCommandString()} " +
+            "--device ${secondDevice.firebaseCommandString()} " +
             "--results-dir $resultDir " +
             "--no-performance-metrics " +
+            "--timeout 3m " +
             "--environment-variables FCM_API_KEY=$fcmKey")
             .split(' ')
         firebaseTask.isIgnoreExitValue = true
@@ -54,12 +53,19 @@ class FirebaseTestLabPlugin : Plugin<Project> {
         firebaseTask.errorOutput = TeeOutputStream(decorativeStream, System.err)
 
         firebaseTask.doLast {
-          val outputFile = "${project.buildDir}/test-results/firebase-tests-results.xml"
-          project.exec("gsutil cp $resultsFileToPull $outputFile")
+          val firstOutputFile = "${project.buildDir}/test-results/${firstDevice.cloudStoragePath()}/firebase-tests-results.xml"
+          val firstResultsFileToPull = "gs://test-lab-twsawhz0hy5am-h35y3vymzadax/$resultDir/${firstDevice.cloudStoragePath()}/test_result_1.xml"
+          project.exec("gsutil cp $firstResultsFileToPull $firstOutputFile")
 
           val firebaseUrl = FirebaseUrlParser.parse(decorativeStream.toString())
+          val firstResult = FirebaseResultExtractor(firebaseUrl, GitInfoProvider.gitInfo(project), firstDevice).extract(File(firstOutputFile).readText())
 
-          val result = FirebaseResultExtractor(firebaseUrl, GitInfoProvider.gitInfo(project), device).extract(File(outputFile).readText())
+          val secondOutputFile = "${project.buildDir}/test-results/${secondDevice.cloudStoragePath()}/firebase-tests-results.xml"
+          val secondResultsFileToPull = "gs://test-lab-twsawhz0hy5am-h35y3vymzadax/$resultDir/${secondDevice.cloudStoragePath()}/test_result_1.xml"
+          project.exec("gsutil cp $secondResultsFileToPull $secondOutputFile")
+
+          val secondResult = FirebaseResultExtractor(firebaseUrl, GitInfoProvider.gitInfo(project), secondDevice).extract(File(secondOutputFile).readText())
+
           val mixpanelToken: String? = System.getenv("GITHUB_CLIENT_MIXPANEL_API_KEY")
           val reporter = if (mixpanelToken == null) {
             println("'GITHUB_CLIENT_MIXPANEL_API_KEY' not set, data will be reported to console only")
@@ -68,7 +74,8 @@ class FirebaseTestLabPlugin : Plugin<Project> {
             MixpanelTestResultsReporter(mixpanelToken, MixpanelAPI())
           }
 
-          reporter.report(result)
+          reporter.report(firstResult)
+          reporter.report(secondResult)
           firebaseTask.execResult!!.assertNormalExitValue()
         }
 
