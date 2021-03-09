@@ -1,0 +1,39 @@
+name: Daily Reporting
+on:
+  schedule:
+    - cron: "0 8 * * *" # Every Day at 8:00 UTC
+jobs:
+  moduleStatisticsReport:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v2
+      - name: Cache Dependencies
+        id: cache-dependencies
+        uses: actions/cache@v2.1.4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: key-{{ checksum "build.gradle" }}-{{ checksum  "dependencies.gradle" }}-{{ checksum  "app/build.gradle" }}
+      - name: Run Tests
+        env:
+          GITHUB_CLIENT_MIXPANEL_API_KEY: ${{ secrets.MIXPANEL_KEY }}
+        run: ./gradlew reportModuleStatistics --stacktrace --no-configure-on-demand
+  lintReport:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v2
+      - name: Cache Dependencies
+        id: cache-dependencies
+        uses: actions/cache@v2.1.4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: key-{{ checksum "build.gradle" }}-{{ checksum  "dependencies.gradle" }}-{{ checksum  "app/build.gradle" }}
+      - name: Run Lint Report
+        env:
+          GITHUB_CLIENT_MIXPANEL_API_KEY: ${{ secrets.MIXPANEL_KEY }}
+        run: ./gradlew lintStatisticsReport --stacktrace
