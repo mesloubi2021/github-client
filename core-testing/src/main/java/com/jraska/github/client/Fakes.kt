@@ -1,7 +1,7 @@
 package com.jraska.github.client
 
 import com.jraska.github.client.analytics.EventAnalytics
-import com.jraska.github.client.logging.CrashReporter
+import com.jraska.github.client.android.RecordingNavigator
 import com.jraska.github.client.rx.AppSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -28,5 +28,9 @@ object Fakes {
 
   fun recordingAnalyticsProperty(): RecordingAnalyticsProperty {
     return RecordingAnalyticsProperty()
+  }
+
+  fun recordingNavigator() : RecordingNavigator {
+    return RecordingNavigator()
   }
 }
