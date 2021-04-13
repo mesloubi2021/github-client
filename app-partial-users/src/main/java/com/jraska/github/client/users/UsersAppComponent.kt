@@ -11,7 +11,6 @@ import com.jraska.github.client.WebLinkLauncher
 import com.jraska.github.client.core.android.CoreAndroidModule
 import com.jraska.github.client.core.android.OnAppCreate
 import com.jraska.github.client.http.HttpModule
-import com.jraska.github.client.navigation.deeplink.DeepLinkNavigationModule
 import dagger.BindsInstance
 import dagger.Component
 import dagger.Module
@@ -25,7 +24,6 @@ import javax.inject.Singleton
   modules = [
     AppModule::class,
     CoreAndroidModule::class,
-    DeepLinkNavigationModule::class,
     FakeCoreModule::class,
     FakeConfigModule::class,
     HttpModule::class,
@@ -47,7 +45,7 @@ object AppModule {
   @Provides
   fun provideLinkLauncher(): WebLinkLauncher {
     return object : WebLinkLauncher {
-      override fun launch(url: HttpUrl) {
+      override fun launchOnWeb(url: HttpUrl) {
         throw UnsupportedOperationException("Partial app tried to open $url")
       }
     }

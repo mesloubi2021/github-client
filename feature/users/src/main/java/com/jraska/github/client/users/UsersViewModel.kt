@@ -2,11 +2,12 @@ package com.jraska.github.client.users
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import com.jraska.github.client.DeepLinkLauncher
 import com.jraska.github.client.Owner
+import com.jraska.github.client.WebLinkLauncher
 import com.jraska.github.client.analytics.AnalyticsEvent
 import com.jraska.github.client.analytics.EventAnalytics
 import com.jraska.github.client.users.rx.toLiveData
-import com.jraska.github.client.navigation.Navigator
 import com.jraska.github.client.navigation.Urls
 import com.jraska.github.client.rx.AppSchedulers
 import com.jraska.github.client.users.model.User
@@ -17,7 +18,8 @@ import javax.inject.Inject
 internal class UsersViewModel @Inject constructor(
   usersRepository: UsersRepository,
   appSchedulers: AppSchedulers,
-  private val navigator: Navigator,
+  private val deepLinkLauncher: DeepLinkLauncher,
+  private val webLinkLauncher: WebLinkLauncher,
   private val eventAnalytics: EventAnalytics
 ) : ViewModel() {
 
@@ -52,7 +54,7 @@ internal class UsersViewModel @Inject constructor(
 
     eventAnalytics.report(event)
 
-    navigator.startUserDetail(user.login)
+    deepLinkLauncher.launch(Urls.user(user.login))
   }
 
   fun onUserGitHubIconClicked(user: User) {
@@ -62,19 +64,19 @@ internal class UsersViewModel @Inject constructor(
 
     eventAnalytics.report(event)
 
-    navigator.launchOnWeb(Urls.user(user.login))
+    webLinkLauncher.launchOnWeb(Urls.user(user.login))
   }
 
   fun onSettingsIconClicked() {
     eventAnalytics.report(AnalyticsEvent.create(ANALYTICS_OPEN_SETTINGS))
 
-    navigator.showSettings()
+    deepLinkLauncher.launch(Urls.settings())
   }
 
   fun onAboutIconClicked() {
     eventAnalytics.report(AnalyticsEvent.create(ANALYTICS_OPEN_ABOUT))
 
-    navigator.showAbout()
+    deepLinkLauncher.launch(Urls.about())
   }
 
   sealed class ViewState {
