@@ -5,7 +5,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath 'com.android.tools.build:gradle:4.2.2'
+    classpath 'com.android.tools.build:gradle:7.0.0'
     classpath 'com.google.firebase:perf-plugin:1.4.0'
     classpath 'com.google.firebase:firebase-crashlytics-gradle:2.6.1'
     classpath 'com.google.gms:google-services:4.3.8'
@@ -44,6 +44,13 @@ subprojects {
     tasks.configureEach {
       if (name.startsWith("lint")) {
         enabled = false
+      }
+    }
+  } else {
+    // https://github.com/JakeWharton/timber/issues/408
+    it.afterEvaluate {
+      if (it.plugins.hasPlugin("com.android.application") || it.plugins.hasPlugin("com.android.library")) {
+        it.android.lintOptions.disable = ["LogNotTimber", "StringFormatInTimber", "ThrowableNotAtBeginning", "BinaryOperationInTimber", "TimberArgCount", "TimberArgTypes", "TimberTagLength", "TimberExceptionLogging"]
       }
     }
   }
