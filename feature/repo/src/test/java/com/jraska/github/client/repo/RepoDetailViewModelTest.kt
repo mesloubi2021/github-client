@@ -7,6 +7,8 @@ import com.jraska.github.client.repo.di.DaggerTestRepoComponent
 import com.jraska.github.client.repo.di.TestRepoComponent
 import com.jraska.github.client.repo.model.GitHubApiRepoRepositoryTest
 import com.jraska.livedata.test
+import kotlinx.coroutines.flow.toCollection
+import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockWebServer
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -18,9 +20,11 @@ internal class RepoDetailViewModelTest {
   @get:Rule
   val testRule = InstantTaskExecutorRule()
 
-  @get:Rule val mockWebServer = MockWebServer()
+  @get:Rule
+  val mockWebServer = MockWebServer()
 
-  @get:Rule val mockWebServerInterceptorRule = MockWebServerInterceptorRule(mockWebServer)
+  @get:Rule
+  val mockWebServerInterceptorRule = MockWebServerInterceptorRule(mockWebServer)
 
   lateinit var component: TestRepoComponent
   lateinit var repoDetailViewModel: RepoDetailViewModel

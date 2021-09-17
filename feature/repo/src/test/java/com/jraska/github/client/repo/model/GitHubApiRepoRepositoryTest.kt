@@ -2,6 +2,8 @@ package com.jraska.github.client.repo.model
 
 import com.jraska.github.client.http.HttpTest
 import com.jraska.github.client.http.enqueue
+import kotlinx.coroutines.flow.toCollection
+import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockWebServer
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
@@ -14,18 +16,16 @@ internal class GitHubApiRepoRepositoryTest {
   val mockWebServer = MockWebServer()
 
   @Test
-  fun getsTheDetailProperly() {
-    val gitHubApiRepoRepository = GitHubApiRepoRepository(repoGitHubApi())
-    mockWebServer.enqueue("response/repo_detail.json")
-    mockWebServer.enqueue("response/repo_pulls.json")
+  fun getsTheDetailProperlyCoroutines() {
+    runBlocking {
+      val gitHubApiRepoRepository = GitHubApiRepoRepository(repoGitHubApi())
+      mockWebServer.enqueue("response/repo_detail.json")
+      mockWebServer.enqueue("response/repo_pulls.json")
 
-    val repoDetail = gitHubApiRepoRepository.getRepoDetail("jraska", "github-client")
-      .test()
-      .assertValueCount(2)
-      .values()
-      .last()
+      val repoDetail = gitHubApiRepoRepository.getRepoDetail("jraska", "github-client").toCollection(mutableListOf())
 
-    assertThat(repoDetail).usingRecursiveComparison().isEqualTo(expectedRepoDetail())
+      assertThat(repoDetail[1]).usingRecursiveComparison().isEqualTo(expectedRepoDetail())
+    }
   }
 
   private fun repoGitHubApi() = HttpTest.retrofit(mockWebServer).create(RepoGitHubApi::class.java)

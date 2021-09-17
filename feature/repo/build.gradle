@@ -27,9 +27,12 @@ dependencies {
   kapt rootProject.ext.daggerAnnotationProcessor
   implementation rootProject.ext.dagger
 
+  implementation coroutinesAndroid
+  implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1"
+  implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.3.1"
+
   implementation rootProject.ext.retrofit
   implementation rootProject.ext.retrofitGsonConverter
-  implementation rootProject.ext.retrofitRxJavaAdapter
   implementation 'com.google.code.gson:gson:2.8.8'
 
   implementation 'com.google.android.material:material:1.4.0'
@@ -38,8 +41,6 @@ dependencies {
   implementation rootProject.ext.fresco
   implementation 'org.threeten:threetenbp:1.4.4:no-tzdb'
 
-  implementation 'androidx.lifecycle:lifecycle-reactivestreams-ktx:2.3.1'
-
   testImplementation okHttpMockWebServer
   testImplementation okHttpLoggingInterceptor
   testImplementation 'junit:junit:4.13.2'
@@ -47,5 +48,6 @@ dependencies {
   testImplementation project(':core-testing')
   testImplementation 'androidx.arch.core:core-testing:2.1.0'
   testImplementation 'com.jraska.livedata:testing-ktx:1.2.0'
+  testImplementation coroutinesTest
   kaptTest rootProject.ext.daggerAnnotationProcessor
 }
