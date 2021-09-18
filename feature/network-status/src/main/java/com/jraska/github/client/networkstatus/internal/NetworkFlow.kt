@@ -4,40 +4,40 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkRequest
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.subjects.PublishSubject
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import javax.inject.Inject
 
-internal class NetworkObservable @Inject constructor(
+internal class NetworkFlow @Inject constructor(
   private val context: Context
 ) {
-  private val networkObservable: Observable<Boolean> by lazy {
-    setupNetworkObservable()
+  private val networkFlow: Flow<Boolean> by lazy {
+    setupNetworkFlow()
   }
 
-  fun connectedObservable(): Observable<Boolean> {
-    return networkObservable.startWith(Single.just(isConnected()))
-      .distinctUntilChanged()
+  fun connectedFlow(): Flow<Boolean> {
+    return networkFlow.distinctUntilChanged()
   }
 
   private val connectivityManager
     get() = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-  private fun setupNetworkObservable(): Observable<Boolean> {
-    val publishSubject = PublishSubject.create<Boolean>()
+  private fun setupNetworkFlow(): Flow<Boolean> {
+    val sharedFlow = MutableSharedFlow<Boolean>(replay = 1, extraBufferCapacity = 1, BufferOverflow.DROP_OLDEST)
 
     connectivityManager.registerNetworkCallback(allChangesRequest(), object : ConnectivityManager.NetworkCallback() {
       override fun onAvailable(network: Network) {
-        publishSubject.onNext(isConnected())
+        sharedFlow.tryEmit(isConnected())
       }
 
       override fun onLost(network: Network) {
-        publishSubject.onNext(isConnected())
+        sharedFlow.tryEmit(isConnected())
       }
     })
 
-    return publishSubject
+    return sharedFlow
   }
 
   private fun allChangesRequest() = NetworkRequest.Builder().build()
