@@ -13,6 +13,7 @@ import okhttp3.mockwebserver.MockWebServer
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
 import org.junit.Test
+import kotlin.random.Random
 
 class UsersActivityTest {
 
@@ -37,6 +38,7 @@ class UsersActivityTest {
 
       onView(withText("mojombo")).perform(click())
       val nextScreen = it.linksLaunched.last()
+
       assertThat(nextScreen.toString()).isEqualTo("https://github.com/mojombo")
     }
   }

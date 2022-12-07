@@ -1,8 +1,9 @@
 package com.jraska.github.client.firebase
 
 import com.jraska.analytics.AnalyticsReporter
+import com.jraska.github.client.firebase.report.DeviceRunOutcome
+import com.jraska.github.client.firebase.report.FirebaseOutputParser
 import com.jraska.github.client.firebase.report.FirebaseResultExtractor
-import com.jraska.github.client.firebase.report.FirebaseUrlParser
 import com.jraska.github.client.firebase.report.TestResultsReporter
 import com.jraska.gradle.CiInfo
 import com.jraska.gradle.git.GitInfoProvider
@@ -13,8 +14,6 @@ import org.gradle.api.tasks.Exec
 import org.gradle.process.ExecResult
 import java.io.ByteArrayOutputStream
 import java.io.File
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 class FirebaseTestLabPlugin : Plugin<Project> {
   override fun apply(theProject: Project) {
@@ -27,56 +26,68 @@ class FirebaseTestLabPlugin : Plugin<Project> {
           project.exec("gcloud auth activate-service-account --key-file $credentialsPath")
         }
 
-        val appApk = "${project.buildDir}/outputs/apk/debug/app-debug.apk"
-        val testApk = "${project.buildDir}/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
-        val firstDevice = Device.Pixel7Pro
-        val secondDevice = Device.Pixel6a
-        val resultDir = DateTimeFormatter.ISO_DATE_TIME.format(LocalDateTime.now())
+        val testConfiguration = TestConfiguration.create(project)
 
-        val fcmKey = System.getenv("FCM_API_KEY")
-
+        val envVars = mapOf("FCM_API_KEY" to System.getenv("FCM_API_KEY"))
         firebaseTask.commandLine =
-          ("gcloud " +
-            "firebase test android run " +
-            "--app $appApk " +
-            "--test $testApk " +
-            "--device ${firstDevice.firebaseCommandString()} " +
-            "--device ${secondDevice.firebaseCommandString()} " +
-            "--results-dir $resultDir " +
-            "--no-performance-metrics " +
-            "--timeout 3m " +
-            "--environment-variables FCM_API_KEY=$fcmKey")
-            .split(' ')
+          GCloudCommands.firebaseRunCommand(testConfiguration, envVars).split(' ')
         firebaseTask.isIgnoreExitValue = true
 
-        val decorativeStream = ByteArrayOutputStream()
-        firebaseTask.errorOutput = TeeOutputStream(decorativeStream, System.err)
+        val decorativeErrorStream = ByteArrayOutputStream()
+        firebaseTask.errorOutput = TeeOutputStream(decorativeErrorStream, System.err)
+
+        val decorativeStdStream = ByteArrayOutputStream()
+        firebaseTask.standardOutput = TeeOutputStream(decorativeStdStream, System.out)
 
         firebaseTask.doLast {
-          val firstOutputFile = "${project.buildDir}/test-results/${firstDevice.cloudStoragePath()}/firebase-tests-results.xml"
-          val firstResultsFileToPull = "gs://test-lab-twsawhz0hy5am-h35y3vymzadax/$resultDir/${firstDevice.cloudStoragePath()}/test_result_1.xml"
-          project.exec("gsutil cp $firstResultsFileToPull $firstOutputFile")
+          val firebaseUrl = FirebaseOutputParser.parseUrl(decorativeErrorStream.toString())
 
-          val firebaseUrl = FirebaseUrlParser.parse(decorativeStream.toString())
-          val firstResult = FirebaseResultExtractor(firebaseUrl, GitInfoProvider.gitInfo(project), CiInfo.collectGitHubActions(), firstDevice).extract(File(firstOutputFile).readText())
+          val deviceResults =
+            FirebaseOutputParser.deviceResults(testConfiguration.devices, decorativeStdStream.toString())
 
-          val secondOutputFile = "${project.buildDir}/test-results/${secondDevice.cloudStoragePath()}/firebase-tests-results.xml"
-          val secondResultsFileToPull = "gs://test-lab-twsawhz0hy5am-h35y3vymzadax/$resultDir/${secondDevice.cloudStoragePath()}/test_result_1.xml"
-          project.exec("gsutil cp $secondResultsFileToPull $secondOutputFile")
+          val testSuiteResults = deviceResults.map {
+            testSuiteResult(project, it, testConfiguration.resultDir)
+          }
 
-          val secondResult = FirebaseResultExtractor(firebaseUrl, GitInfoProvider.gitInfo(project), CiInfo.collectGitHubActions(), secondDevice).extract(File(secondOutputFile).readText())
+          val reporter = TestResultsReporter(
+            AnalyticsReporter.create("Test Reporter"),
+            firebaseUrl,
+            GitInfoProvider.gitInfo(project),
+            CiInfo.collectGitHubActions()
+          )
 
-          val reporter = TestResultsReporter(AnalyticsReporter.create("Test Reporter"))
+          testSuiteResults.forEach {
+            reporter.report(it)
+          }
 
-          reporter.report(firstResult)
-          reporter.report(secondResult)
-          firebaseTask.execResult!!.assertNormalExitValue()
+          firebaseTask.executionResult.get().assertNormalExitValue()
         }
 
         firebaseTask.dependsOn(project.tasks.named("assembleDebugAndroidTest"))
         firebaseTask.dependsOn(project.tasks.named("assembleDebug"))
       }
     }
+  }
+
+  private fun testSuiteResult(
+    project: Project,
+    deviceOutcome: DeviceRunOutcome,
+    resultDir: String
+  ): TestSuiteResult {
+    val device = deviceOutcome.device
+
+    val outputFile =
+      "${project.buildDir}/test-results/${device.cloudStoragePath()}/firebase-tests-results.xml"
+
+    val resultsFileToPull = if (deviceOutcome.outcome == TestOutcome.FLAKY) {
+      "gs://test-lab-twsawhz0hy5am-h35y3vymzadax/$resultDir/${device.cloudStoragePath()}-test_results_merged.xml"
+    } else {
+      "gs://test-lab-twsawhz0hy5am-h35y3vymzadax/$resultDir/${device.cloudStoragePath()}/test_result_1.xml"
+    }
+
+    project.exec("gsutil cp $resultsFileToPull $outputFile")
+
+    return FirebaseResultExtractor(device).extract(File(outputFile).readText())
   }
 
   private fun Project.exec(command: String): ExecResult {
@@ -93,4 +104,6 @@ class FirebaseTestLabPlugin : Plugin<Project> {
     }
     return credentialsPath
   }
+
+  // ./gsutil cp gs://test-lab-twsawhz0hy5am-h35y3vymzadax/2022-12-07T09:08:49.257735/cheetah-33-en-portrait/test_result_1.xml file.xml
 }
