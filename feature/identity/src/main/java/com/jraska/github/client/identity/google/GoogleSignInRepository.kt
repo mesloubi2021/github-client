@@ -7,14 +7,20 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.Task
+import com.jraska.github.client.Owner
+import com.jraska.github.client.analytics.AnalyticsEvent
+import com.jraska.github.client.analytics.EventAnalytics
 import com.jraska.github.client.core.android.TopActivityProvider
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.*
+import timber.log.Timber
 import javax.inject.Inject
 
 class GoogleSignInRepository @Inject constructor(
   private val context: Context,
-  private val topActivityProvider: TopActivityProvider
+  private val topActivityProvider: TopActivityProvider,
+  private val eventAnalytics: EventAnalytics
 ) {
 
   private val signInStatus: MutableSharedFlow<GoogleSignInStatus> by lazy {
@@ -46,6 +52,7 @@ class GoogleSignInRepository @Inject constructor(
 
     val toStatus = currentStatus()
     stateFlow.tryEmit(toStatus)
+
     return stateFlow
   }
 
@@ -64,8 +71,27 @@ class GoogleSignInRepository @Inject constructor(
     val signedInTask = GoogleSignIn.getSignedInAccountFromIntent(data)
     if (signedInTask.isSuccessful) {
       signInStatus.tryEmit(toStatus(signedInTask.result))
+
+      eventAnalytics.report(AnalyticsEvent.create(SIGN_IN_SUCCESS))
     } else {
+      val theError = errorMessage(signedInTask)
+      val errorEvent = AnalyticsEvent.builder(SIGN_IN_FAILURE)
+        .addProperty("error", theError)
+        .build()
+
+      eventAnalytics.report(errorEvent)
+
       signInStatus.tryEmit(toStatus(null))
+    }
+  }
+
+  private fun errorMessage(task: Task<*>): String {
+    val exception = task.exception ?: return "unknown - null exception"
+    if(exception is ApiException) {
+      return "Status code: ${exception.statusCode}"
+    } else {
+      Timber.e("Unexpected type of error %s", exception.javaClass.name)
+      return "Unknown type"
     }
   }
 
@@ -89,5 +115,8 @@ class GoogleSignInRepository @Inject constructor(
 
   companion object {
     const val REQUEST_CODE_SIGN_IN = 1
+
+    private val SIGN_IN_SUCCESS = AnalyticsEvent.Key("google_sign_in_success", Owner.CORE_TEAM)
+    private val SIGN_IN_FAILURE = AnalyticsEvent.Key("google_sign_in_failure", Owner.CORE_TEAM)
   }
 }
