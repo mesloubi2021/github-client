@@ -9,6 +9,10 @@ android {
 
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
+
+  buildFeatures.buildConfig = true
+
+  namespace 'com.jraska.github.client.about'
 }
 
 dependencies {
